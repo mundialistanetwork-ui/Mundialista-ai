@@ -1,0 +1,10 @@
+streamlit
+pymc
+arviz
+numpy
+scipy
+pandas
+matplotlib
+seaborn
+pytensor
+requests
