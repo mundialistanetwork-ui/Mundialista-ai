@@ -165,18 +165,14 @@ def quick_simulate(home_team, away_team, n_sims=10200):
     # Apply home advantage (moderate - 4% boost)
     home_blend *= 1.04
     away_blend *= 0.96
-    # Cap lambda RATIO for top teams (prevent runaway predictions)
+    # Cap lambda spread for top teams (prevent runaway predictions)
     if both_top:
-        ratio = home_blend / away_blend if away_blend > 0 else 1.0
-        max_ratio = 1.15  # home can be at most 15% higher than away
-        if ratio > max_ratio:
-            avg_lam = (home_blend + away_blend) / 2
-            home_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
-            away_blend = avg_lam * (1 / (1 + max_ratio)) * 2
-        elif ratio < 1 / max_ratio:
-            avg_lam = (home_blend + away_blend) / 2
-            home_blend = avg_lam * (1 / (1 + max_ratio)) * 2
-            away_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
+        avg_lam = (home_blend + away_blend) / 2
+        max_spread = 0.18  # max 18% difference from average
+        home_blend = min(home_blend, avg_lam * (1 + max_spread))
+        home_blend = max(home_blend, avg_lam * (1 - max_spread))
+        away_blend = min(away_blend, avg_lam * (1 + max_spread))
+        away_blend = max(away_blend, avg_lam * (1 - max_spread))
     home_lambda = max(0.3, home_blend)
     away_lambda = max(0.3, away_blend)
     rng = np.random.default_rng(42)
