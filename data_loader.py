@@ -207,78 +207,114 @@ def resolve_team_name(name: str, available_teams: list) -> str:
     return name  # Return as-is, will get no matches
 
 
+
+def _tournament_weight(tournament_name):
+    """Return importance weight for a tournament type."""
+    if tournament_name is None:
+        return 1.0
+    t = str(tournament_name).lower()
+    # World Cup and qualifiers
+    if "world cup" in t and "qualification" not in t:
+        return 1.5
+    if "world cup qualification" in t or "world cup qualifier" in t:
+        return 1.5
+    # Continental championships
+    if any(comp in t for comp in ["copa am", "euro ", "european championship",
+                                   "afcon", "africa cup", "african cup",
+                                   "asian cup", "gold cup", "concacaf championship",
+                                   "ofc nations"]):
+        return 1.3
+    # Continental qualifiers
+    if "qualification" in t and any(comp in t for comp in ["euro", "africa", "asian", "copa"]):
+        return 1.3
+    # Nations leagues
+    if "nations league" in t:
+        return 1.2
+    # Confederations cup, intercontinental
+    if any(comp in t for comp in ["confederations", "intercontinental",
+                                   "finalissima", "copa centenario"]):
+        return 1.3
+    # Friendlies
+    if "friendly" in t or "fifa series" in t:
+        return 0.7
+    # Everything else (minor tournaments, regional cups)
+    return 1.0
+
+
 def get_team_stats_for_app(results, team, opponent, last_n=40):
     """
-    Returns stats in the EXACT format app.py expects:
-    {
-        "avg_gf": float, "avg_ga": float,
-        "std_gf": float, "std_ga": float,
-        "n_matches": int,
-        "goals_for": np.array, "goals_against": np.array,
-        "found": bool,
-        "h2h_gf": float or None, "h2h_ga": float or None, "h2h_n": int,
-        "competitive_pct": float,
-    }
+    Get team stats with tournament weighting.
+    Competitive matches count more than friendlies.
     """
-    available = get_all_teams(results)
-    resolved_team = resolve_team_name(team, available)
-    resolved_opponent = resolve_team_name(opponent, available)
+    matches = get_team_matches(results, team)
+    if len(matches) == 0:
+        return None
 
-    # Get team matches for goals_for/goals_against arrays
-    team_matches = get_team_matches(results, resolved_team)
+    # Get last N matches
+    matches = matches.tail(last_n).copy()
 
-    if len(team_matches) == 0:
-        return None  # Falls back to TEAM_DATABASE or manual entry in app.py
+    # Calculate tournament weights
+    matches["weight"] = matches["tournament"].apply(_tournament_weight)
 
-    # Get the full stats dict (includes h2h, form, etc.)
-    stats = get_team_stats(results, resolved_team, resolved_opponent, last_n=last_n)
+    gf = matches["goals_for"].values.astype(float)
+    ga = matches["goals_against"].values.astype(float)
+    weights = matches["weight"].values.astype(float)
 
-    # Build goals_for / goals_against arrays from recent matches
-    recent = team_matches.head(last_n)  # uses last 40 matches for robust stats
-    goals_for = recent["goals_for"].values.astype(int)
-    goals_against = recent["goals_against"].values.astype(int)
+    # Weighted averages
+    total_weight = weights.sum()
+    if total_weight == 0:
+        total_weight = 1.0
 
-    # If we have h2h data, append those too (matches what get_team_stats does)
-    h2h_cutoff = pd.Timestamp.now() - pd.DateOffset(years=DEFAULT_H2H_YEARS)
-    h2h_matches = team_matches[
-        (team_matches["opponent"] == resolved_opponent) &
-        (team_matches["date"] >= h2h_cutoff)
-    ]
-    if len(h2h_matches) > 0:
-        goals_for = np.concatenate([goals_for, h2h_matches["goals_for"].values.astype(int)])
-        goals_against = np.concatenate([goals_against, h2h_matches["goals_against"].values.astype(int)])
+    avg_gf = float(np.sum(gf * weights) / total_weight)
+    avg_ga = float(np.sum(ga * weights) / total_weight)
+
+    # Weighted standard deviation
+    mean_gf = avg_gf
+    mean_ga = avg_ga
+    std_gf = float(np.sqrt(np.sum(weights * (gf - mean_gf) ** 2) / total_weight))
+    std_ga = float(np.sqrt(np.sum(weights * (ga - mean_ga) ** 2) / total_weight))
+    std_gf = max(std_gf, 0.3)
+    std_ga = max(std_ga, 0.3)
+
+    n_matches = len(matches)
+
+    # Head-to-head
+    h2h = matches[matches["opponent"] == opponent] if "opponent" in matches.columns else None
+    if h2h is not None and len(h2h) > 0:
+        h2h_gf = float(h2h["goals_for"].mean())
+        h2h_ga = float(h2h["goals_against"].mean())
+        h2h_n = len(h2h)
+    else:
+        h2h_gf = None
+        h2h_ga = None
+        h2h_n = 0
+
+    # Competitive match percentage
+    comp_count = len(matches[matches["weight"] >= 1.0])
+    competitive_pct = comp_count / n_matches if n_matches > 0 else 0.0
+
+    # Recent form (last 10, also weighted)
+    recent = matches.tail(10)
+    recent_w = recent["weight"].values.astype(float)
+    recent_gf = recent["goals_for"].values.astype(float)
+    recent_ga = recent["goals_against"].values.astype(float)
+    rw_total = recent_w.sum() if recent_w.sum() > 0 else 1.0
+    form_gf = float(np.sum(recent_gf * recent_w) / rw_total)
+    form_ga = float(np.sum(recent_ga * recent_w) / rw_total)
 
     return {
-        "avg_gf": stats["avg_gf"],
-        "avg_ga": stats["avg_ga"],
-        "std_gf": max(stats["std_gf"], 0.3),
-        "std_ga": max(stats["std_ga"], 0.3),
-        "n_matches": stats["n_matches"],
-        "goals_for": goals_for,
-        "goals_against": goals_against,
+        "avg_gf": avg_gf,
+        "avg_ga": avg_ga,
+        "std_gf": std_gf,
+        "std_ga": std_ga,
+        "n_matches": n_matches,
+        "goals_for": matches["goals_for"].values,
+        "goals_against": matches["goals_against"].values,
         "found": True,
-        "h2h_gf": stats["h2h_gf"],
-        "h2h_ga": stats["h2h_ga"],
-        "h2h_n": stats["h2h_n"],
-        "competitive_pct": stats["competitive_pct"],
-        "form_gf": stats["form_gf"],
-        "form_ga": stats["form_ga"],
+        "h2h_gf": h2h_gf,
+        "h2h_ga": h2h_ga,
+        "h2h_n": h2h_n,
+        "competitive_pct": competitive_pct,
+        "form_gf": form_gf,
+        "form_ga": form_ga,
     }
-
-if __name__ == "__main__":
-    print("="*60)
-    print("  DATA LOADER TEST")
-    print("="*60)
-    try:
-        results = load_results(4)
-        teams = get_all_teams(results)
-        print(f"  Teams: {len(teams)}")
-        stats = get_team_stats(results, "Brazil", "Argentina")
-        print(f"  Brazil avg_gf: {stats['avg_gf']:.2f}")
-        mult = compute_empirical_lambda_multipliers()
-        print(f"  Lambda multipliers: {mult}")
-        print("  ALL TESTS PASSED ✅")
-    except FileNotFoundError:
-        print("  CSV files not found in data/ folder")
-        print("  Run: python get_data.py")
-    print("="*60)

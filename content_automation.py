@@ -8,6 +8,7 @@ import pandas as pd
 from collections import Counter
 from datetime import datetime
 import os, sys
+from data_loader import get_team_ranking
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 RESULTS_CSV = os.path.join(DATA_DIR, "results.csv")
@@ -102,8 +103,41 @@ def quick_simulate(home_team, away_team, n_sims=10200):
     h_ga = (h_n * home_stats["avg_ga"] + shrink_k * GLOBAL_GA) / (h_n + shrink_k)
     a_gf = (a_n * away_stats["avg_gf"] + shrink_k * GLOBAL_GF) / (a_n + shrink_k)
     a_ga = (a_n * away_stats["avg_ga"] + shrink_k * GLOBAL_GA) / (a_n + shrink_k)
-    home_lambda = max(0.3, h_gf * (a_ga / GLOBAL_GA) * 1.05)
-    away_lambda = max(0.3, a_gf * (h_ga / GLOBAL_GA) * 0.95)
+    # --- FIFA Ranking adjustment ---
+    h_rank_info = get_team_ranking(home_team)
+    a_rank_info = get_team_ranking(away_team)
+    h_rank = h_rank_info.get('rank', 100) if isinstance(h_rank_info, dict) else 100
+    a_rank = a_rank_info.get('rank', 100) if isinstance(a_rank_info, dict) else 100
+    import math
+    # Rank-implied lambda: log curve so top-10 gaps are small, 50+ gaps are big
+    rank_diff = a_rank - h_rank  # positive = home ranked higher
+    sign = 1 if rank_diff >= 0 else -1
+    log_diff = sign * math.log1p(abs(rank_diff)) * 0.10
+    rank_factor = max(0.50, min(2.0, math.exp(log_diff)))
+    rank_home_lambda = GLOBAL_GF * rank_factor
+    rank_away_lambda = GLOBAL_GF / rank_factor
+    # Form-based expected goals
+    home_lambda_raw = h_gf * (a_ga / GLOBAL_GA)
+    away_lambda_raw = a_gf * (h_ga / GLOBAL_GA)
+    # Dynamic blend: 35% ranking baseline, up to 60% for huge gaps
+    rank_gap = abs(h_rank - a_rank)
+    rank_weight = min(0.60, 0.35 + rank_gap * 0.003)
+    form_weight = 1.0 - rank_weight
+    # Regress form toward global mean for stability
+    home_lambda_form = 0.7 * home_lambda_raw + 0.3 * GLOBAL_GF
+    away_lambda_form = 0.7 * away_lambda_raw + 0.3 * GLOBAL_GF
+    # Blend form + ranking
+    home_blend = form_weight * home_lambda_form + rank_weight * rank_home_lambda
+    away_blend = form_weight * away_lambda_form + rank_weight * rank_away_lambda
+    # Close-match convergence: when teams are close, push lambdas together
+    if rank_gap < 20:
+        avg_lambda = (home_blend + away_blend) / 2
+        converge = 0.15 * (1 - rank_gap / 20)
+        home_blend = home_blend * (1 - converge) + avg_lambda * converge
+        away_blend = away_blend * (1 - converge) + avg_lambda * converge
+    # Apply home advantage
+    home_lambda = max(0.3, home_blend * 1.08)
+    away_lambda = max(0.3, away_blend * 0.92)
     rng = np.random.default_rng(42)
     home_goals = rng.poisson(home_lambda, n_sims)
     away_goals = rng.poisson(away_lambda, n_sims)
