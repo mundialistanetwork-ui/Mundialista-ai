@@ -27,6 +27,8 @@ import warnings, time, requests, json
 warnings.filterwarnings("ignore")
 from data_loader import load_results, get_all_teams, get_team_stats_for_app, resolve_team_name, get_team_matches
 from strength_adjust import compute_team_ratings, get_adjusted_stats
+from data_loader import get_team_ranking
+from player_impact import get_team_star_impact, get_player_summary, STAR_PLAYERS
 sns.set_theme(style="darkgrid", palette="muted")
 
 TOTAL_MINUTES = 90
@@ -265,11 +267,11 @@ def compute_global_priors(results_df=None):
     return {"global_gf": avg_gf, "global_ga": avg_ga}
 
 
-def shrink_to_global(stats, global_priors, shrink_k=8):
+def shrink_to_global(stats, global_priors, shrink_k=10):
     """
     Bayesian shrinkage toward global mean.
     Teams with fewer matches get pulled harder toward the average.
-    shrink_k=8: Mexico (n=40) barely moves, Iceland/Bhutan (n=5) pulled ~60% toward mean.
+    shrink_k=10: Mexico (n=40) barely moves, Iceland/Bhutan (n=5) pulled ~60% toward mean.
     """
     n = stats["n_matches"]
     g_gf = global_priors["global_gf"]
@@ -743,6 +745,33 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.caption(f"**Simulations:** {NUM_SIMULATIONS:,}")
     st.sidebar.caption("**Engine:** Inhomogeneous Poisson + Bayesian PyMC")
+    
+    # FIFA Rankings Panel
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**🏆 FIFA Rankings**")
+    try:
+        h_rank_info = get_team_ranking(home_team)
+        a_rank_info = get_team_ranking(away_team)
+        h_rank = h_rank_info.get('rank', '?') if isinstance(h_rank_info, dict) else '?'
+        a_rank = a_rank_info.get('rank', '?') if isinstance(a_rank_info, dict) else '?'
+        h_pts = h_rank_info.get('total_points', 0) if isinstance(h_rank_info, dict) else 0
+        a_pts = a_rank_info.get('total_points', 0) if isinstance(a_rank_info, dict) else 0
+        st.sidebar.markdown(f"  {home_team}: **#{h_rank}** ({h_pts:.0f} pts)")
+        st.sidebar.markdown(f"  {away_team}: **#{a_rank}** ({a_pts:.0f} pts)")
+    except Exception:
+        st.sidebar.caption("Rankings unavailable")
+    
+    # Star Players Panel
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**⭐ Star Players**")
+    for team_name in [home_team, away_team]:
+        star_mult = get_team_star_impact(team_name)
+        if team_name in STAR_PLAYERS:
+            active = [p for p, info in STAR_PLAYERS[team_name].items() if info["status"] == "active"]
+            stars_str = ", ".join(active[:3])
+            st.sidebar.markdown(f"  {team_name}: {stars_str} ({star_mult:.0%} boost)")
+        else:
+            st.sidebar.markdown(f"  {team_name}: No tracked stars")
     st.sidebar.markdown("---")
     quick_mode = st.sidebar.toggle("⚡ Quick Mode", value=True,
                                     help="Quick: ~5-10 sec (500 draws). Full: ~30-60 sec (2000 draws)")
@@ -797,7 +826,66 @@ def main():
         st.write("🎯 Opponent-strength adjustment applied")
         st.write(f"**{home_team}** — Shrunk GF: {home_stats['avg_gf']:.2f}, Shrunk GA: {home_stats['avg_ga']:.2f}")
         st.write(f"**{away_team}** — Shrunk GF: {away_stats['avg_gf']:.2f}, Shrunk GA: {away_stats['avg_ga']:.2f}")
-        st.caption(f"🌍 Global baseline: {global_priors['global_gf']:.2f} GF / {global_priors['global_ga']:.2f} GA (shrink_k=8)")
+        st.caption(f"🌍 Global baseline: {global_priors['global_gf']:.2f} GF / {global_priors['global_ga']:.2f} GA (shrink_k=10)")
+
+        # ── FIFA Ranking Adjustment ──
+        import math
+        try:
+            h_rank_info = get_team_ranking(home_team)
+            a_rank_info = get_team_ranking(away_team)
+            h_rank = h_rank_info.get('rank', 100) if isinstance(h_rank_info, dict) else 100
+            a_rank = a_rank_info.get('rank', 100) if isinstance(a_rank_info, dict) else 100
+            
+            rank_diff = a_rank - h_rank  # positive = home ranked higher
+            sign = 1 if rank_diff >= 0 else -1
+            log_diff = sign * math.log1p(abs(rank_diff)) * 0.10
+            rank_factor = max(0.50, min(2.0, math.exp(log_diff)))
+            
+            global_gf = global_priors['global_gf']
+            rank_home_gf = global_gf * rank_factor
+            rank_away_gf = global_gf / rank_factor
+            
+            rank_gap = abs(h_rank - a_rank)
+            both_top = h_rank <= 30 and a_rank <= 30
+            
+            # Blend ranking into stats
+            rank_w = min(0.60, 0.55 + rank_gap * 0.002) if both_top else min(0.65, 0.35 + rank_gap * 0.004)
+            form_w = 1.0 - rank_w
+            
+            home_stats['avg_gf'] = form_w * home_stats['avg_gf'] + rank_w * rank_home_gf
+            away_stats['avg_gf'] = form_w * away_stats['avg_gf'] + rank_w * rank_away_gf
+            
+            # Also adjust defense (opponent's attack implies your defense)
+            home_stats['avg_ga'] = form_w * home_stats['avg_ga'] + rank_w * rank_away_gf
+            away_stats['avg_ga'] = form_w * away_stats['avg_ga'] + rank_w * rank_home_gf
+            
+            # Star player impact (relative)
+            h_star = get_team_star_impact(home_team)
+            a_star = get_team_star_impact(away_team)
+            avg_star = (h_star + a_star) / 2
+            home_stats['avg_gf'] *= (h_star / avg_star) if avg_star > 0 else 1.0
+            away_stats['avg_gf'] *= (a_star / avg_star) if avg_star > 0 else 1.0
+            
+            # Home advantage
+            home_stats['avg_gf'] *= 1.04
+            away_stats['avg_gf'] *= 0.96
+            
+            # Ratio cap for top teams
+            if both_top:
+                ratio = home_stats['avg_gf'] / away_stats['avg_gf'] if away_stats['avg_gf'] > 0 else 1.0
+                max_ratio = 1.15
+                if ratio > max_ratio or ratio < 1/max_ratio:
+                    avg_gf = (home_stats['avg_gf'] + away_stats['avg_gf']) / 2
+                    if ratio > max_ratio:
+                        home_stats['avg_gf'] = avg_gf * (max_ratio / (1 + max_ratio)) * 2
+                        away_stats['avg_gf'] = avg_gf * (1 / (1 + max_ratio)) * 2
+                    else:
+                        home_stats['avg_gf'] = avg_gf * (1 / (1 + max_ratio)) * 2
+                        away_stats['avg_gf'] = avg_gf * (max_ratio / (1 + max_ratio)) * 2
+            
+            st.write(f"🏆 Ranking-adjusted — **{home_team}** (#{h_rank}): GF={home_stats['avg_gf']:.2f} | **{away_team}** (#{a_rank}): GF={away_stats['avg_gf']:.2f}")
+        except Exception as e:
+            st.caption(f"⚠️ Rankings adjustment skipped: {e}")
 
     mode_label = "⚡ Quick" if quick_mode else "🔬 Full Precision"
     with st.status(f"🧠 Running Bayesian inference ({mode_label})…", expanded=False) as status_bayes:
@@ -827,6 +915,52 @@ def main():
     # ── RESULTS ─────────────────────────────────────────────────
     st.divider()
     st.header(f"🏆 {home_team}  vs  {away_team} — Prediction Results")
+    
+    # Rankings & Star Player Insight
+    try:
+        import math
+        h_ri = get_team_ranking(home_team)
+        a_ri = get_team_ranking(away_team)
+        h_r = h_ri.get('rank', 100) if isinstance(h_ri, dict) else 100
+        a_r = a_ri.get('rank', 100) if isinstance(a_ri, dict) else 100
+        rank_gap = abs(h_r - a_r)
+        
+        col_r1, col_r2, col_r3 = st.columns(3)
+        with col_r1:
+            st.metric(f"🏆 {home_team} Rank", f"#{h_r}")
+        with col_r2:
+            if rank_gap < 15:
+                st.metric("Match Type", "⚔️ Elite Clash")
+            elif rank_gap < 40:
+                st.metric("Match Type", "📊 Clear Favorite")
+            else:
+                st.metric("Match Type", "🔥 Major Mismatch")
+        with col_r3:
+            st.metric(f"🏆 {away_team} Rank", f"#{a_r}")
+        
+        # Star players display
+        h_stars = STAR_PLAYERS.get(home_team, {})
+        a_stars = STAR_PLAYERS.get(away_team, {})
+        if h_stars or a_stars:
+            col_s1, col_s2 = st.columns(2)
+            with col_s1:
+                if h_stars:
+                    st.markdown(f"**⭐ {home_team} Key Players:**")
+                    for p, info in h_stars.items():
+                        if info["status"] == "active":
+                            boost = (info["attack"] - 1) * 100
+                            st.markdown(f"- {p} (+{boost:.0f}%)")
+            with col_s2:
+                if a_stars:
+                    st.markdown(f"**⭐ {away_team} Key Players:**")
+                    for p, info in a_stars.items():
+                        if info["status"] == "active":
+                            boost = (info["attack"] - 1) * 100
+                            st.markdown(f"- {p} (+{boost:.0f}%)")
+        st.markdown("---")
+    except Exception as e:
+        pass  # Silently skip if rankings unavailable
+    
     
     fig_wdw = plot_wdw_bar(analytics, home_team, away_team)
     st.pyplot(fig_wdw)
