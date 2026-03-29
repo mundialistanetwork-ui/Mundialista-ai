@@ -479,3 +479,4 @@ if __name__ == "__main__":
     print(f"Result: {result['team_a_win']}% | {result['draw']}% | {result['team_b_win']}%")
     print(f"Match Type: {result['match_type']}")
     print("\nEngine working correctly!")
+

@@ -623,3 +623,4 @@ if 'result' in st.session_state:
 st.divider()
 st.caption(f"Mundialista-AI v4 | {CONFIG['N_SIMULATIONS']:,} Poisson simulations | Same engine as CLI")
 st.caption("Built with Streamlit + Plotly | Data: FIFA Rankings + 4,200+ international matches")
+

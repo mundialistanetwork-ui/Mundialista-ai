@@ -122,10 +122,10 @@ def main():
     # Generate charts if requested
     if generate_charts:
         print("  Generating charts...")
-        charts = generate_all_charts(result, team_a, team_b)
+        charts = generate_all_charts(result, save=True, show=False)
         
         # Generate HTML report
-        html_path = generate_html_report(result, team_a, team_b, charts)
+        html_path = generate_html_report(result, charts)
         
         print("\n  Charts generated!")
         print(f"     Folder: predictions_output/")
@@ -138,6 +138,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
