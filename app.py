@@ -1,626 +1,479 @@
-﻿# app.py - Streamlit web interface using shared prediction engine
-"""
-Streamlit web app for Mundialista-AI.
-Uses the same prediction engine as CLI for consistent results.
-"""
-
-import streamlit as st
+﻿import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
+from prediction_engine import predict, load_rankings
 
-from prediction_engine import predict, get_score_matrix, CONFIG, get_all_teams, STAR_PLAYERS
-
-# ============== PAGE CONFIG ==============
 st.set_page_config(
-    page_title="Mundialista-AI",
+    page_title="Mundialista AI",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# ============== CUSTOM CSS ==============
-st.markdown("""
+# Custom CSS
+st.markdown('''
 <style>
-    .big-number { font-size: 48px; font-weight: bold; text-align: center; }
-    .blue { color: #3498db; }
-    .gray { color: #95a5a6; }
-    .red { color: #e74c3c; }
-    .match-type { 
-        padding: 5px 15px; 
-        border-radius: 20px; 
-        font-weight: bold;
-        text-align: center;
-        margin: 10px 0;
-    }
-    .elite { background: #f39c12; color: white; }
-    .competitive { background: #3498db; color: white; }
-    .favorite { background: #9b59b6; color: white; }
-    .mismatch { background: #e74c3c; color: white; }
+:root {
+    --green: #0F5C4D;
+    --green-2: #0B6B57;
+    --gold: #C9A227;
+    --gold-soft: #E9D48A;
+    --ivory: #F8F7F2;
+    --white: #FFFFFF;
+    --text: #1E1E1E;
+    --muted: #6B7280;
+    --border: rgba(15, 92, 77, 0.12);
+    --shadow: 0 6px 22px rgba(0, 0, 0, 0.05);
+    --radius: 18px;
+}
+
+html, body, [class*="css"] {
+    font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+.main {
+    background-color: var(--ivory);
+}
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1200px;
+}
+
+h1, h2, h3 {
+    color: var(--green);
+    letter-spacing: -0.02em;
+}
+
+.hero {
+    background: linear-gradient(135deg, #0F5C4D 0%, #0B6B57 100%);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0.4rem;
+}
+
+.hero-tag {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: rgba(201, 162, 39, 0.18);
+    color: #F6E7B7;
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    color: var(--green);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-right: 8px;
+    margin-bottom: 6px;
+}
+
+.badge-green {
+    background: rgba(15, 92, 77, 0.10);
+    color: var(--green);
+    border: 1px solid rgba(15, 92, 77, 0.18);
+}
+
+.badge-gold {
+    background: rgba(201, 162, 39, 0.14);
+    color: #8A6B00;
+    border: 1px solid rgba(201, 162, 39, 0.25);
+}
+
+.badge-gray {
+    background: rgba(107, 114, 128, 0.10);
+    color: #4B5563;
+    border: 1px solid rgba(107, 114, 128, 0.18);
+}
+
+.metric-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.metric-box {
+    flex: 1;
+    min-width: 180px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FCFCFA 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.metric-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1.1;
+}
+
+.metric-sub {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.vs-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0 6px 0;
+}
+
+.team-name {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--green);
+}
+
+.team-rank {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.vs-center {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--gold);
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(201, 162, 39, 0.12);
+    border: 1px solid rgba(201, 162, 39, 0.25);
+}
+
+.prob-wrap {
+    margin-top: 8px;
+}
+
+.prob-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.prob-track {
+    width: 100%;
+    height: 12px;
+    background: #ECEBE5;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.prob-fill-green {
+    height: 100%;
+    background: linear-gradient(90deg, #0F5C4D, #16806A);
+    border-radius: 999px;
+}
+
+.prob-fill-gold {
+    height: 100%;
+    background: linear-gradient(90deg, #C9A227, #E1C15B);
+    border-radius: 999px;
+}
+
+.prob-fill-gray {
+    height: 100%;
+    background: linear-gradient(90deg, #6B7280, #8B93A1);
+    border-radius: 999px;
+}
+
+.score-pill {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 6px 8px 0 0;
+    border-radius: 12px;
+    background: #FAFAF7;
+    border: 1px solid var(--border);
+    font-weight: 700;
+    color: var(--green);
+}
+
+.insight {
+    border-left: 4px solid var(--gold);
+    background: #FFFDF6;
+    padding: 14px 16px;
+    border-radius: 12px;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+div[data-testid="stSelectbox"] > div {
+    border-radius: 12px;
+}
+
+.stButton > button {
+    width: 100%;
+    background: linear-gradient(135deg, #0F5C4D 0%, #0B6B57 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(15,92,77,0.18);
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #0B6B57 0%, #095645 100%);
+    color: white;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(15,92,77,0.08);
+    margin: 1.2rem 0;
+}
 </style>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
-# ============== HEADER ==============
-st.title("Mundialista-AI Predictions")
-st.caption(f"Powered by {CONFIG['N_SIMULATIONS']:,} Poisson simulations | Same engine as CLI")
 
-# ============== SIDEBAR ==============
-st.sidebar.header("Match Setup")
-
-# Load teams
 @st.cache_data
-def load_teams():
-    return get_all_teams()
+def get_team_list():
+    rankings = load_rankings()
+    if isinstance(rankings, pd.DataFrame):
+        if "country_full" in rankings.columns:
+            return sorted(rankings["country_full"].dropna().unique().tolist())
+    return []
 
-all_teams = load_teams()
 
-if not all_teams:
-    st.error("No teams found! Check that data/results.csv exists.")
-    st.stop()
+def badge_html(text, kind="green"):
+    klass = {
+        "green": "badge badge-green",
+        "gold": "badge badge-gold",
+        "gray": "badge badge-gray"
+    }.get(kind, "badge badge-green")
+    return '<span class="' + klass + '">' + text + '</span>'
 
-# Team selection
-col1, col2 = st.sidebar.columns(2)
-with col1:
-    default_a = all_teams.index("Argentina") if "Argentina" in all_teams else 0
-    team_a = st.selectbox("Team A", all_teams, index=default_a)
-with col2:
-    default_b = all_teams.index("Brazil") if "Brazil" in all_teams else 1
-    team_b = st.selectbox("Team B", all_teams, index=default_b)
 
-# Home team
-home_option = st.sidebar.radio(
-    "Home Team",
-    [team_a, team_b, "Neutral"],
-    index=2,
-    horizontal=True
-)
-home = None if home_option == "Neutral" else home_option
+def build_match_insight(result, team_a, team_b):
+    a = result["team_a_win"]
+    d = result["draw"]
+    b = result["team_b_win"]
+    la = result["team_a_lambda"]
+    lb = result["team_b_lambda"]
+    match_type = result.get("match_type", "Competitive")
 
-# Run prediction button
-run_prediction = st.sidebar.button("Predict Match", type="primary", use_container_width=True)
-
-# ============== MAIN CONTENT ==============
-if run_prediction or 'last_teams' not in st.session_state or st.session_state.last_teams != (team_a, team_b, home):
-    with st.spinner(f"Running {CONFIG['N_SIMULATIONS']:,} simulations..."):
-        result = predict(team_a, team_b, home=home)
-        st.session_state.result = result
-        st.session_state.last_teams = (team_a, team_b, home)
-
-if 'result' in st.session_state:
-    result = st.session_state.result
-    
-    # ============== SIDEBAR INFO ==============
-    st.sidebar.divider()
-    
-    # Rankings
-    st.sidebar.subheader("FIFA Rankings")
-    r_col1, r_col2 = st.sidebar.columns(2)
-    with r_col1:
-        st.metric(result['team_a'], f"#{result['team_a_rank']}", f"{result['team_a_points']} pts")
-    with r_col2:
-        st.metric(result['team_b'], f"#{result['team_b_rank']}", f"{result['team_b_points']} pts")
-    
-    # Match Type
-    match_type_colors = {
-        'Elite Clash': 'elite',
-        'Competitive Match': 'competitive', 
-        'Clear Favorite': 'favorite',
-        'Total Mismatch': 'mismatch',
-    }
-    mt_class = match_type_colors.get(result['match_type'], 'competitive')
-    st.sidebar.markdown(f"<div class='match-type {mt_class}'>{result['match_type']}</div>", 
-                       unsafe_allow_html=True)
-    st.sidebar.caption(f"Rank gap: {result['rank_gap']} positions")
-    
-    # Star Players
-    st.sidebar.divider()
-    st.sidebar.subheader("Star Players")
-    
-    stars_a = result['team_a_stars']
-    stars_b = result['team_b_stars']
-    boost_a = (result['team_a_star_boost'] - 1) * 100
-    boost_b = (result['team_b_star_boost'] - 1) * 100
-    
-    st.sidebar.write(f"**{result['team_a']}** (+{boost_a:.0f}% boost)")
-    if stars_a:
-        for star in stars_a[:3]:
-            st.sidebar.write(f"  - {star}")
+    if abs(a - b) <= 6:
+        edge_text = team_a + " and " + team_b + " project as closely matched with only a narrow probability margin."
+    elif a > b:
+        edge_text = team_a + " enter as the more likely winner, though the edge is not overwhelming."
     else:
-        st.sidebar.write("  - No tracked stars")
-    
-    st.sidebar.write(f"**{result['team_b']}** (+{boost_b:.0f}% boost)")
-    if stars_b:
-        for star in stars_b[:3]:
-            st.sidebar.write(f"  - {star}")
+        edge_text = team_b + " look slightly stronger in the current model, but this remains competitive."
+
+    if d >= 27:
+        draw_text = "Draw probability is elevated, pointing to a compact match."
+    elif d <= 20:
+        draw_text = "Draw probability is modest, suggesting a decisive result is more likely."
     else:
-        st.sidebar.write("  - No tracked stars")
-    
-    # ============== MAIN RESULTS ==============
-    st.header(f"{result['team_a']} vs {result['team_b']}")
-    
-    if result['home']:
-        st.caption(f"Home: {result['home']}")
+        draw_text = "A draw remains a meaningful live outcome."
+
+    if la + lb >= 2.9:
+        goals_text = "Expected goals indicate a potentially open game."
+    elif la + lb <= 2.3:
+        goals_text = "Expected goals suggest a tighter, lower-scoring contest."
     else:
-        st.caption("Neutral Venue")
-    
-    # Big probability numbers
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"<div class='big-number blue'>{result['team_a_win']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align:center'>{result['team_a']} Win</p>", 
-                   unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"<div class='big-number gray'>{result['draw']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center'>Draw</p>", 
-                   unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"<div class='big-number red'>{result['team_b_win']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align:center'>{result['team_b']} Win</p>", 
-                   unsafe_allow_html=True)
-    
-    # ============== PROBABILITY BAR ==============
-    st.divider()
-    
-    fig_bar = go.Figure(go.Bar(
-        x=[result['team_a_win'], result['draw'], result['team_b_win']],
-        y=[result['team_a'], 'Draw', result['team_b']],
-        orientation='h',
-        marker_color=['#3498db', '#95a5a6', '#e74c3c'],
-        text=[f"{result['team_a_win']}%", f"{result['draw']}%", f"{result['team_b_win']}%"],
-        textposition='inside',
-        textfont=dict(size=16, color='white'),
-    ))
-    fig_bar.update_layout(
-        title="Win Probabilities",
-        xaxis_title="Probability (%)",
-        xaxis=dict(range=[0, 100]),
-        height=250,
-        showlegend=False,
-        margin=dict(l=100, r=20, t=50, b=50),
-    )
-    st.plotly_chart(fig_bar, use_container_width=True)
-    
-    # ============== TABS FOR CHARTS ==============
-    tab1, tab2, tab3, tab4 = st.tabs(["Score Matrix", "Top Scores", "Goal Distribution", "Technical"])
-    
-    # TAB 1: Score Matrix
-    with tab1:
-        st.subheader("Score Probability Matrix")
-        
-        matrix = get_score_matrix(result['team_a_lambda'], result['team_b_lambda'], max_goals=5)
-        matrix_pct = matrix * 100
-        
-        fig_matrix = px.imshow(
-            matrix_pct,
-            labels=dict(x=f"{result['team_b']} Goals", y=f"{result['team_a']} Goals", color="Probability %"),
-            x=[str(i) for i in range(6)],
-            y=[str(i) for i in range(6)],
-            color_continuous_scale="Blues",
-            aspect="equal",
-            text_auto='.1f',
-        )
-        fig_matrix.update_layout(height=500)
-        fig_matrix.update_traces(texttemplate='%{z:.1f}%', textfont=dict(size=12))
-        st.plotly_chart(fig_matrix, use_container_width=True)
-    
-    # TAB 2: Top Scores
-    with tab2:
-        st.subheader("Most Likely Scorelines")
-        
-        top_scores = result['top_scores'][:8]
-        n_sims = result['n_simulations']
-        
-        scores = [s[0] for s in top_scores]
-        percentages = [100 * s[1] / n_sims for s in top_scores]
-        
-        colors = []
-        for score in scores:
-            parts = score.split('-')
-            a, b = int(parts[0]), int(parts[1])
-            if a > b:
-                colors.append('#3498db')
-            elif b > a:
-                colors.append('#e74c3c')
-            else:
-                colors.append('#95a5a6')
-        
-        fig_scores = go.Figure(go.Bar(
-            x=scores,
-            y=percentages,
-            marker_color=colors,
-            text=[f'{p:.1f}%' for p in percentages],
-            textposition='outside',
-        ))
-        fig_scores.update_layout(
-            xaxis_title="Scoreline",
-            yaxis_title="Probability (%)",
-            height=400,
-            showlegend=False,
-        )
-        st.plotly_chart(fig_scores, use_container_width=True)
-        
-        col1, col2, col3 = st.columns(3)
-        col1.markdown(f":blue_circle: {result['team_a']} Win")
-        col2.markdown(":white_circle: Draw")
-        col3.markdown(f":red_circle: {result['team_b']} Win")
-    
-    # TAB 3: Goal Distribution
-    with tab3:
-        st.subheader("Goal Distribution")
-        
-        goals_a = result['goals_a']
-        goals_b = result['goals_b']
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            fig_hist_a = px.histogram(
-                x=goals_a, 
-                nbins=10,
-                title=f"{result['team_a']} Goals",
-                labels={'x': 'Goals', 'y': 'Frequency'},
-                color_discrete_sequence=['#3498db'],
-            )
-            fig_hist_a.add_vline(x=result['team_a_lambda'], line_dash="dash", 
-                                line_color="red", annotation_text=f"Expected: {result['team_a_lambda']:.2f}")
-            fig_hist_a.update_Write-Host "Continuing setup..." -ForegroundColor Cyan
+        goals_text = "Expected goals point to a moderate scoring environment."
 
-# ============================================================
-# FILE 4: app.py (Streamlit) - COMPLETE VERSION
-# ============================================================
+    return match_type + ". " + edge_text + " " + draw_text + " " + goals_text
 
-Write-Host "[5/6] Creating app.py (complete)..." -ForegroundColor Yellow
 
-$appStreamlit = @'
-# app.py - Streamlit web interface using shared prediction engine
-"""
-Streamlit web app for Mundialista-AI.
-Uses the same prediction engine as CLI for consistent results.
-"""
-
-import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-
-from prediction_engine import predict, get_score_matrix, CONFIG, get_all_teams, STAR_PLAYERS
-
-# ============== PAGE CONFIG ==============
-st.set_page_config(
-    page_title="Mundialista-AI",
-    page_icon="",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# ============== CUSTOM CSS ==============
-st.markdown("""
-<style>
-    .big-number { font-size: 48px; font-weight: bold; text-align: center; }
-    .blue { color: #3498db; }
-    .gray { color: #95a5a6; }
-    .red { color: #e74c3c; }
-    .match-type { 
-        padding: 5px 15px; 
-        border-radius: 20px; 
-        font-weight: bold;
-        text-align: center;
-        margin: 10px 0;
-    }
-    .elite { background: #f39c12; color: white; }
-    .competitive { background: #3498db; color: white; }
-    .favorite { background: #9b59b6; color: white; }
-    .mismatch { background: #e74c3c; color: white; }
-</style>
-""", unsafe_allow_html=True)
-
-# ============== HEADER ==============
-st.title("Mundialista-AI Predictions")
-st.caption(f"Powered by {CONFIG['N_SIMULATIONS']:,} Poisson simulations | Same engine as CLI")
-
-# ============== SIDEBAR ==============
-st.sidebar.header("Match Setup")
-
-# Load teams
 @st.cache_data
-def load_teams():
-    return get_all_teams()
+def cached_predict(team_a, team_b):
+    return predict(team_a, team_b)
 
-all_teams = load_teams()
 
-if not all_teams:
-    st.error("No teams found! Check that data/results.csv exists.")
-    st.stop()
+teams = get_team_list()
 
-# Team selection
-col1, col2 = st.sidebar.columns(2)
+# Hero
+st.markdown('''
+<div class="hero">
+    <div class="hero-title">Mundialista AI</div>
+    <div class="hero-subtitle">International Match Intelligence</div>
+    <div class="hero-subtitle">Probabilistic football forecasting powered by rankings, form, and Poisson simulation.</div>
+    <div class="hero-tag">Refined match predictions - Global national teams - Visual-first analytics</div>
+</div>
+''', unsafe_allow_html=True)
+
+# Match setup card
+st.markdown('<div class="card"><div class="card-title">Match Setup</div>', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 1, 0.6])
+
 with col1:
-    default_a = all_teams.index("Argentina") if "Argentina" in all_teams else 0
-    team_a = st.selectbox("Team A", all_teams, index=default_a)
+    team_a = st.selectbox("Home / Team A", teams, index=teams.index("Argentina") if "Argentina" in teams else 0)
+
 with col2:
-    default_b = all_teams.index("Brazil") if "Brazil" in all_teams else 1
-    team_b = st.selectbox("Team B", all_teams, index=default_b)
+    default_b = teams.index("Brazil") if "Brazil" in teams else (1 if len(teams) > 1 else 0)
+    team_b = st.selectbox("Away / Team B", teams, index=default_b)
 
-# Home team
-home_option = st.sidebar.radio(
-    "Home Team",
-    [team_a, team_b, "Neutral"],
-    index=2,
-    horizontal=True
-)
-home = None if home_option == "Neutral" else home_option
+with col3:
+    neutral = st.checkbox("Neutral venue", value=True)
+    run_prediction = st.button("Generate Prediction")
 
-# Run prediction button
-run_prediction = st.sidebar.button("Predict Match", type="primary", use_container_width=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
-# ============== RUN PREDICTION ==============
-if run_prediction or 'last_teams' not in st.session_state or st.session_state.get('last_teams') != (team_a, team_b, home):
-    with st.spinner(f"Running {CONFIG['N_SIMULATIONS']:,} simulations..."):
-        result = predict(team_a, team_b, home=home)
-        st.session_state.result = result
-        st.session_state.last_teams = (team_a, team_b, home)
-
-# ============== DISPLAY RESULTS ==============
-if 'result' in st.session_state:
-    result = st.session_state.result
-    
-    # ============== SIDEBAR INFO ==============
-    st.sidebar.divider()
-    
-    # Rankings
-    st.sidebar.subheader("FIFA Rankings")
-    r_col1, r_col2 = st.sidebar.columns(2)
-    with r_col1:
-        st.metric(result['team_a'], f"#{result['team_a_rank']}", f"{result['team_a_points']} pts")
-    with r_col2:
-        st.metric(result['team_b'], f"#{result['team_b_rank']}", f"{result['team_b_points']} pts")
-    
-    # Match Type Badge
-    match_type_colors = {
-        'Elite Clash': 'elite',
-        'Competitive Match': 'competitive', 
-        'Clear Favorite': 'favorite',
-        'Total Mismatch': 'mismatch',
-    }
-    mt_class = match_type_colors.get(result['match_type'], 'competitive')
-    st.sidebar.markdown(f"<div class='match-type {mt_class}'>{result['match_type']}</div>", 
-                       unsafe_allow_html=True)
-    st.sidebar.caption(f"Rank gap: {result['rank_gap']} positions")
-    
-    # Star Players
-    st.sidebar.divider()
-    st.sidebar.subheader("Star Players")
-    
-    stars_a = result['team_a_stars']
-    stars_b = result['team_b_stars']
-    boost_a = (result['team_a_star_boost'] - 1) * 100
-    boost_b = (result['team_b_star_boost'] - 1) * 100
-    
-    st.sidebar.write(f"**{result['team_a']}** (+{boost_a:.0f}% boost)")
-    if stars_a:
-        for star in stars_a[:3]:
-            st.sidebar.write(f"  - {star}")
+# Prediction
+if run_prediction:
+    if team_a == team_b:
+        st.warning("Please choose two different teams.")
     else:
-        st.sidebar.write("  - No tracked stars")
-    
-    st.sidebar.write(f"**{result['team_b']}** (+{boost_b:.0f}% boost)")
-    if stars_b:
-        for star in stars_b[:3]:
-            st.sidebar.write(f"  - {star}")
-    else:
-        st.sidebar.write("  - No tracked stars")
-    
-    # ============== MAIN RESULTS ==============
-    st.header(f"{result['team_a']} vs {result['team_b']}")
-    
-    if result['home']:
-        st.caption(f"Home: {result['home']}")
-    else:
-        st.caption("Neutral Venue")
-    
-    # Big probability numbers
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"<div class='big-number blue'>{result['team_a_win']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align:center'>{result['team_a']} Win</p>", 
-                   unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"<div class='big-number gray'>{result['draw']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center'>Draw</p>", 
-                   unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"<div class='big-number red'>{result['team_b_win']}%</div>", 
-                   unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align:center'>{result['team_b']} Win</p>", 
-                   unsafe_allow_html=True)
-    
-    # ============== PROBABILITY BAR CHART ==============
-    st.divider()
-    
-    fig_bar = go.Figure(go.Bar(
-        x=[result['team_a_win'], result['draw'], result['team_b_win']],
-        y=[result['team_a'], 'Draw', result['team_b']],
-        orientation='h',
-        marker_color=['#3498db', '#95a5a6', '#e74c3c'],
-        text=[f"{result['team_a_win']}%", f"{result['draw']}%", f"{result['team_b_win']}%"],
-        textposition='inside',
-        textfont=dict(size=16, color='white'),
-    ))
-    fig_bar.update_layout(
-        title="Win Probabilities",
-        xaxis_title="Probability (%)",
-        xaxis=dict(range=[0, 100]),
-        height=250,
-        showlegend=False,
-        margin=dict(l=100, r=20, t=50, b=50),
-    )
-    st.plotly_chart(fig_bar, use_container_width=True)
-    
-    # ============== TABS FOR DETAILED CHARTS ==============
-    tab1, tab2, tab3, tab4 = st.tabs(["Score Matrix", "Top Scores", "Goal Distribution", "Technical"])
-    
-    # ---------- TAB 1: SCORE MATRIX ----------
-    with tab1:
-        st.subheader("Score Probability Matrix")
-        st.caption("Each cell shows the probability of that exact scoreline")
-        
-        matrix = get_score_matrix(result['team_a_lambda'], result['team_b_lambda'], max_goals=5)
-        matrix_pct = matrix * 100
-        
-        fig_matrix = px.imshow(
-            matrix_pct,
-            labels=dict(x=f"{result['team_b']} Goals", y=f"{result['team_a']} Goals", color="Probability %"),
-            x=[str(i) for i in range(6)],
-            y=[str(i) for i in range(6)],
-            color_continuous_scale="Blues",
-            aspect="equal",
-            text_auto='.1f',
-        )
-        fig_matrix.update_layout(height=500)
-        fig_matrix.update_traces(texttemplate='%{z:.1f}%', textfont=dict(size=12))
-        st.plotly_chart(fig_matrix, use_container_width=True)
-    
-    # ---------- TAB 2: TOP SCORES ----------
-    with tab2:
-        st.subheader("Most Likely Scorelines")
-        
-        top_scores = result['top_scores'][:8]
-        n_sims = result['n_simulations']
-        
-        scores = [s[0] for s in top_scores]
-        percentages = [100 * s[1] / n_sims for s in top_scores]
-        
-        # Color based on winner
-        colors = []
-        for score in scores:
-            parts = score.split('-')
-            a, b = int(parts[0]), int(parts[1])
-            if a > b:
-                colors.append('#3498db')  # Team A wins
-            elif b > a:
-                colors.append('#e74c3c')  # Team B wins
-            else:
-                colors.append('#95a5a6')  # Draw
-        
-        fig_scores = go.Figure(go.Bar(
-            x=scores,
-            y=percentages,
-            marker_color=colors,
-            text=[f'{p:.1f}%' for p in percentages],
-            textposition='outside',
-        ))
-        fig_scores.update_layout(
-            xaxis_title="Scoreline",
-            yaxis_title="Probability (%)",
-            height=400,
-            showlegend=False,
-        )
-        st.plotly_chart(fig_scores, use_container_width=True)
-        
-        # Legend
-        col1, col2, col3 = st.columns(3)
-        col1.markdown(f"🔵 {result['team_a']} Win")
-        col2.markdown("⚪ Draw")
-        col3.markdown(f"🔴 {result['team_b']} Win")
-    
-    # ---------- TAB 3: GOAL DISTRIBUTION ----------
-    with tab3:
-        st.subheader("Goal Distribution from Simulations")
-        
-        goals_a = result['goals_a']
-        goals_b = result['goals_b']
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            fig_hist_a = px.histogram(
-                x=goals_a, 
-                nbins=10,
-                title=f"{result['team_a']} Goals",
-                labels={'x': 'Goals', 'y': 'Frequency'},
-                color_discrete_sequence=['#3498db'],
-            )
-            fig_hist_a.add_vline(
-                x=result['team_a_lambda'], 
-                line_dash="dash", 
-                line_color="red", 
-                annotation_text=f"Expected: {result['team_a_lambda']:.2f}"
-            )
-            fig_hist_a.update_layout(height=350)
-            st.plotly_chart(fig_hist_a, use_container_width=True)
-        
-        with col2:
-            fig_hist_b = px.histogram(
-                x=goals_b, 
-                nbins=10,
-                title=f"{result['team_b']} Goals",
-                labels={'x': 'Goals', 'y': 'Frequency'},
-                color_discrete_sequence=['#e74c3c'],
-            )
-            fig_hist_b.add_vline(
-                x=result['team_b_lambda'], 
-                line_dash="dash", 
-                line_color="blue", 
-                annotation_text=f"Expected: {result['team_b_lambda']:.2f}"
-            )
-            fig_hist_b.update_layout(height=350)
-            st.plotly_chart(fig_hist_b, use_container_width=True)
-        
-        # Summary stats
-        st.caption(f"Based on {n_sims:,} simulated matches")
-    
-    # ---------- TAB 4: TECHNICAL DETAILS ----------
-    with tab4:
-        st.subheader("Technical Details")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**Expected Goals (λ)**")
-            st.write(f"- {result['team_a']}: {result['team_a_lambda']:.3f}")
-            st.write(f"- {result['team_b']}: {result['team_b_lambda']:.3f}")
-            
-            st.markdown("**Star Player Boosts**")
-            st.write(f"- {result['team_a']}: {result['team_a_star_boost']:.1%}")
-            st.write(f"- {result['team_b']}: {result['team_b_star_boost']:.1%}")
-            
-            st.markdown("**Rankings**")
-            st.write(f"- {result['team_a']}: #{result['team_a_rank']} ({result['team_a_points']} pts)")
-            st.write(f"- {result['team_b']}: #{result['team_b_rank']} ({result['team_b_points']} pts)")
-        
-        with col2:
-            st.markdown("**Engine Configuration**")
-            st.write(f"- Simulations: {CONFIG['N_SIMULATIONS']:,}")
-            st.write(f"- Shrinkage k: {CONFIG['SHRINK_K']}")
-            st.write(f"- Home advantage: {CONFIG['HOME_ADVANTAGE']:.0%}")
-            st.write(f"- Ratio cap: {CONFIG['MAX_RATIO']:.0%}")
-            st.write(f"- Global baseline: {CONFIG['GLOBAL_GF']}")
-            st.write(f"- Form matches: {CONFIG['LAST_N_MATCHES']}")
-        
-        # Raw simulation data
-        with st.expander("View Raw Simulation Data (first 100)"):
-            sim_df = pd.DataFrame({
-                f'{result["team_a"]} Goals': result['goals_a'][:100],
-                f'{result["team_b"]} Goals': result['goals_b'][:100],
-            })
-            st.dataframe(sim_df, height=300, use_container_width=True)
-            st.caption(f"Showing first 100 of {n_sims:,} simulations")
+        try:
+            result = cached_predict(team_a, team_b)
 
-# ============== FOOTER ==============
-st.divider()
-st.caption(f"Mundialista-AI v4 | {CONFIG['N_SIMULATIONS']:,} Poisson simulations | Same engine as CLI")
-st.caption("Built with Streamlit + Plotly | Data: FIFA Rankings + 4,200+ international matches")
+            rank_a = result.get("team_a_rank", "N/A")
+            rank_b = result.get("team_b_rank", "N/A")
+            la = result.get("team_a_lambda", 0.0)
+            lb = result.get("team_b_lambda", 0.0)
+            match_type = result.get("match_type", "Competitive")
+            top_scores = result.get("top_scores", [])[:5]
 
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+
+            vs_html = '<div class="vs-line">'
+            vs_html += '<div><div class="team-name">' + team_a + '</div>'
+            vs_html += '<div class="team-rank">FIFA Rank: ' + str(rank_a) + '</div></div>'
+            vs_html += '<div class="vs-center">VS</div>'
+            vs_html += '<div style="text-align:right;">'
+            vs_html += '<div class="team-name">' + team_b + '</div>'
+            vs_html += '<div class="team-rank">FIFA Rank: ' + str(rank_b) + '</div></div></div>'
+            st.markdown(vs_html, unsafe_allow_html=True)
+
+            venue_label = "Neutral Venue" if neutral else "Home Advantage Active"
+            badge_row = badge_html(match_type, "gold") + badge_html(venue_label, "green")
+            st.markdown(badge_row, unsafe_allow_html=True)
+
+            metrics_html = '<div class="metric-row">'
+            metrics_html += '<div class="metric-box"><div class="metric-label">' + team_a + ' Win</div>'
+            metrics_html += '<div class="metric-value">' + f"{result['team_a_win']:.1f}" + '%</div>'
+            metrics_html += '<div class="metric-sub">Model win probability</div></div>'
+            metrics_html += '<div class="metric-box"><div class="metric-label">Draw</div>'
+            metrics_html += '<div class="metric-value" style="color:#8A6B00;">' + f"{result['draw']:.1f}" + '%</div>'
+            metrics_html += '<div class="metric-sub">Shared outcome probability</div></div>'
+            metrics_html += '<div class="metric-box"><div class="metric-label">' + team_b + ' Win</div>'
+            metrics_html += '<div class="metric-value">' + f"{result['team_b_win']:.1f}" + '%</div>'
+            metrics_html += '<div class="metric-sub">Model win probability</div></div>'
+            metrics_html += '</div>'
+            st.markdown(metrics_html, unsafe_allow_html=True)
+
+            st.markdown("<hr>", unsafe_allow_html=True)
+
+            st.markdown('<div class="card-title">Win / Draw / Loss Profile</div>', unsafe_allow_html=True)
+
+            prob_html = '<div class="prob-wrap">'
+            prob_html += '<div class="prob-label-row"><span>' + team_a + ' win</span><span>' + f"{result['team_a_win']:.1f}" + '%</span></div>'
+            prob_html += '<div class="prob-track"><div class="prob-fill-green" style="width:' + f"{result['team_a_win']}" + '%;"></div></div>'
+            prob_html += '<div class="prob-label-row"><span>Draw</span><span>' + f"{result['draw']:.1f}" + '%</span></div>'
+            prob_html += '<div class="prob-track"><div class="prob-fill-gold" style="width:' + f"{result['draw']}" + '%;"></div></div>'
+            prob_html += '<div class="prob-label-row"><span>' + team_b + ' win</span><span>' + f"{result['team_b_win']:.1f}" + '%</span></div>'
+            prob_html += '<div class="prob-track"><div class="prob-fill-gray" style="width:' + f"{result['team_b_win']}" + '%;"></div></div>'
+            prob_html += '</div>'
+            st.markdown(prob_html, unsafe_allow_html=True)
+
+            st.markdown("<hr>", unsafe_allow_html=True)
+
+            sub1, sub2 = st.columns([1, 1])
+
+            with sub1:
+                st.markdown('<div class="card-title">Expected Goals</div>', unsafe_allow_html=True)
+                xg_html = '<div class="metric-row">'
+                xg_html += '<div class="metric-box"><div class="metric-label">' + team_a + '</div>'
+                xg_html += '<div class="metric-value">' + f"{la:.2f}" + '</div>'
+                xg_html += '<div class="metric-sub">Expected goals</div></div>'
+                xg_html += '<div class="metric-box"><div class="metric-label">' + team_b + '</div>'
+                xg_html += '<div class="metric-value">' + f"{lb:.2f}" + '</div>'
+                xg_html += '<div class="metric-sub">Expected goals</div></div>'
+                xg_html += '</div>'
+                st.markdown(xg_html, unsafe_allow_html=True)
+
+            with sub2:
+                st.markdown('<div class="card-title">Most Likely Scorelines</div>', unsafe_allow_html=True)
+                if top_scores:
+                    score_html = ""
+                    for score in top_scores:
+                        if isinstance(score, (list, tuple)) and len(score) >= 2:
+                            score_html += '<span class="score-pill">' + str(score[0]) + ' - ' + str(score[1]) + '</span>'
+                        else:
+                            score_html += '<span class="score-pill">' + str(score) + '</span>'
+                    st.markdown(score_html, unsafe_allow_html=True)
+                else:
+                    st.markdown('<div class="muted">No scoreline breakdown available.</div>', unsafe_allow_html=True)
+
+            st.markdown("<hr>", unsafe_allow_html=True)
+
+            insight_text = build_match_insight(result, team_a, team_b)
+            st.markdown('<div class="card-title">Model Insight</div>', unsafe_allow_html=True)
+            st.markdown('<div class="insight">' + insight_text + '</div>', unsafe_allow_html=True)
+
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            with st.expander("Raw prediction output"):
+                st.json(result)
+
+        except Exception as e:
+            st.error("Prediction failed: " + str(e))
+
+else:
+    st.markdown('''
+    <div class="card">
+        <div class="card-title">How to use</div>
+        <div class="muted">
+            Select two national teams, choose whether the match is on neutral ground, and click
+            <strong>Generate Prediction</strong> to view win probabilities, expected goals, likely scorelines,
+            and a model-generated match insight.
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
