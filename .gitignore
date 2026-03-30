@@ -1,7 +1,12 @@
-venv/
-__pycache__/
+﻿__pycache__/
 *.pyc
+.env
+venv/
+*.egg-info/
+dist/
+build/
+charts/*.png
+charts/*.html
+.streamlit/secrets.toml
+
 nanobot/
-*.png
-ch0_tasks/
-ch1_foundations/
