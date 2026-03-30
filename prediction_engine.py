@@ -1,8 +1,9 @@
-﻿import numpy as np
+import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 import math
-from datetime import datetime
+import unicodedata
+from datetime import datetime, timedelta
 
 CONFIG = {
     "GLOBAL_GF": 1.36,
@@ -12,11 +13,11 @@ CONFIG = {
     "DECAY_RATE": 0.003,
     "HOME_ADVANTAGE": 1.06,
     "AWAY_DISADVANTAGE": 0.94,
-    "RANK_WEIGHT_TOP": 0.40,
-    "RANK_WEIGHT_OTHER": 0.25,
+    "RANK_WEIGHT_TOP": 0.30,
+    "RANK_WEIGHT_OTHER": 0.20,
     "TOP_TEAM_THRESHOLD": 30,
-    "MAX_RATIO": 1.35,
-    "DIXON_COLES_RHO": -0.04,
+    "MAX_RATIO": 1.40,
+    "DIXON_COLES_RHO": -0.08,
     "MAX_GOALS": 8,
     "N_SIMULATIONS": 10200,
     "TOURNAMENT_WEIGHTS": {
@@ -31,6 +32,10 @@ CONFIG = {
         "Friendly": 0.5,
     },
     "DEFAULT_TOURNAMENT_WEIGHT": 0.65,
+    "H2H_MATCHES": 8,
+    "H2H_WEIGHT": 0.05,
+    "STAR_MIN_GOALS": 4,
+    "STAR_RECENT_DAYS": 900,
 }
 
 STAR_PLAYERS = {
@@ -150,6 +155,24 @@ def load_rankings():
         return pd.DataFrame()
 
 
+
+
+_goalscorers_cache = None
+
+
+def load_goalscorers():
+    global _goalscorers_cache
+    if _goalscorers_cache is not None:
+        return _goalscorers_cache
+    try:
+        df = pd.read_csv("data/goalscorers.csv")
+        if "date" in df.columns:
+            df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        _goalscorers_cache = df
+        return df
+    except FileNotFoundError:
+        return pd.DataFrame()
+
 def get_all_teams():
     df = load_results()
     if df.empty:
@@ -178,19 +201,110 @@ def get_team_points(team):
     return 1000
 
 
+
+
+def normalize_name(name):
+    if not isinstance(name, str):
+        return str(name)
+    nfkd = unicodedata.normalize("NFKD", name)
+    ascii_name = nfkd.encode("ascii", "ignore").decode("ascii")
+    return ascii_name.strip()
+
+
+
+def names_match(name1, name2):
+    n1 = normalize_name(name1).lower().strip()
+    n2 = normalize_name(name2).lower().strip()
+    if n1 == n2:
+        return True
+    for suffix in [' jr', ' junior', ' sr', ' senior', ' ii', ' iii']:
+        n1 = n1.replace(suffix, '').strip()
+        n2 = n2.replace(suffix, '').strip()
+    if n1 == n2:
+        return True
+    if len(n1) > 3 and len(n2) > 3:
+        if n1 in n2 or n2 in n1:
+            return True
+    return False
+
+
+def derive_star_players(team):
+    gs = load_goalscorers()
+    if gs.empty:
+        return {}
+    cutoff = datetime.now() - timedelta(days=CONFIG["STAR_RECENT_DAYS"])
+    recent = gs[gs["date"] >= cutoff].copy()
+    if recent.empty:
+        return {}
+    team_goals = recent[recent["team"] == team].copy()
+    if "own_goal" in team_goals.columns:
+        team_goals = team_goals[team_goals["own_goal"] != True]
+    if team_goals.empty:
+        return {}
+    if "scorer" not in team_goals.columns:
+        return {}
+    player_goals = team_goals.groupby("scorer").agg(
+        total_goals=("scorer", "count"),
+        matches=("date", "nunique")
+    ).reset_index()
+    player_goals = player_goals[player_goals["total_goals"] >= CONFIG["STAR_MIN_GOALS"]]
+    if player_goals.empty:
+        return {}
+    player_goals["gpm"] = player_goals["total_goals"] / player_goals["matches"]
+    player_goals = player_goals[player_goals["gpm"] >= 0.20]
+    if player_goals.empty:
+        return {}
+    team_matches = recent[(recent["home_team"] == team) | (recent["away_team"] == team)]
+    team_match_count = team_matches["date"].nunique()
+    if team_match_count < 1:
+        team_match_count = 1
+    team_total_goals = len(team_goals)
+    team_avg_gpm = team_total_goals / team_match_count if team_match_count > 0 else 1.0
+    result = {}
+    for _, row in player_goals.iterrows():
+        name = row["scorer"]
+        gpm = row["gpm"]
+        if team_avg_gpm > 0:
+            relative = gpm / team_avg_gpm
+        else:
+            relative = 1.0
+        boost = 1.0 + min(0.18, gpm * 0.08 + (relative - 1.0) * 0.04)
+        boost = max(1.02, min(boost, 1.20))
+        norm = normalize_name(name)
+        result[norm] = {"attack": round(boost, 3), "status": "active", "source": "data"}
+    return result
+
+
 def get_team_star_impact(team):
-    if team not in STAR_PLAYERS:
+    manual = STAR_PLAYERS.get(team, {})
+    derived = derive_star_players(team)
+    merged = {}
+    for name, data in manual.items():
+        if data.get("status") == "active":
+            norm = normalize_name(name)
+            merged[norm] = data.copy()
+    for name, data in derived.items():
+        matched_key = None
+        for existing_name in merged:
+            if names_match(name, existing_name):
+                matched_key = existing_name
+                break
+        if matched_key:
+            old_boost = merged[matched_key].get("attack", 1.0)
+            new_boost = data.get("attack", 1.0)
+            merged[matched_key]["attack"] = round(max(old_boost, new_boost), 3)
+        else:
+            merged[name] = data
+    if not merged:
         return {"attack": 1.0, "players": []}
-    players = STAR_PLAYERS[team]
-    active = {k: v for k, v in players.items() if v.get("status") == "active"}
-    if not active:
-        return {"attack": 1.0, "players": []}
+    sorted_players = sorted(merged.values(), key=lambda x: x.get("attack", 1.0), reverse=True)
     total_boost = 1.0
-    for name, data in active.items():
+    for i, data in enumerate(sorted_players):
         individual = data.get("attack", 1.0) - 1.0
-        total_boost += individual * 0.7
-    total_boost = min(total_boost, 1.20)
-    return {"attack": total_boost, "players": list(active.keys())}
+        diminish = 0.55 / (1.0 + 0.3 * i)
+        total_boost += individual * diminish
+    total_boost = min(total_boost, 1.25)
+    return {"attack": round(total_boost, 3), "players": list(merged.keys())}
 
 
 def get_ranking_factor(rank):
@@ -322,6 +436,60 @@ def get_score_matrix(lambda_a, lambda_b, max_goals=None):
     return matrix
 
 
+
+def get_head_to_head(team_a, team_b):
+    df = load_results()
+    if df.empty:
+        return {"factor_a": 1.0, "factor_b": 1.0, "matches": 0, "wins_a": 0, "wins_b": 0, "draws": 0}
+    h2h_n = CONFIG["H2H_MATCHES"]
+    mask_ab = (df["home_team"] == team_a) & (df["away_team"] == team_b)
+    mask_ba = (df["home_team"] == team_b) & (df["away_team"] == team_a)
+    matches = df[mask_ab | mask_ba].copy()
+    if matches.empty:
+        return {"factor_a": 1.0, "factor_b": 1.0, "matches": 0, "wins_a": 0, "wins_b": 0, "draws": 0}
+    if "date" in matches.columns:
+        matches = matches.sort_values("date")
+    matches = matches.tail(h2h_n)
+    wins_a = 0
+    wins_b = 0
+    draws = 0
+    goals_a = 0
+    goals_b = 0
+    for _, r in matches.iterrows():
+        if r["home_team"] == team_a:
+            ga = r.get("home_score", 0)
+            gb = r.get("away_score", 0)
+        else:
+            ga = r.get("away_score", 0)
+            gb = r.get("home_score", 0)
+        goals_a += ga
+        goals_b += gb
+        if ga > gb:
+            wins_a += 1
+        elif gb > ga:
+            wins_b += 1
+        else:
+            draws += 1
+    n = len(matches)
+    if n == 0:
+        return {"factor_a": 1.0, "factor_b": 1.0, "matches": 0, "wins_a": 0, "wins_b": 0, "draws": 0}
+    win_rate_a = wins_a / n
+    win_rate_b = wins_b / n
+    h2h_w = CONFIG["H2H_WEIGHT"]
+    factor_a = 1.0 + h2h_w * (win_rate_a - win_rate_b)
+    factor_b = 1.0 + h2h_w * (win_rate_b - win_rate_a)
+    return {
+        "factor_a": round(factor_a, 4),
+        "factor_b": round(factor_b, 4),
+        "matches": n,
+        "wins_a": wins_a,
+        "wins_b": wins_b,
+        "draws": draws,
+        "goals_a": goals_a,
+        "goals_b": goals_b,
+    }
+
+
 def predict(team_a, team_b, home=None):
     stats_a = get_team_stats(team_a)
     stats_b = get_team_stats(team_b)
@@ -356,6 +524,12 @@ def predict(team_a, team_b, home=None):
     relative_star_b = star_b / avg_star if avg_star > 0 else 1.0
     lambda_a = lambda_a * relative_star_a
     lambda_b = lambda_b * relative_star_b
+
+    # Head-to-head adjustment
+    h2h = get_head_to_head(team_a, team_b)
+    lambda_a = lambda_a * h2h["factor_a"]
+    lambda_b = lambda_b * h2h["factor_b"]
+
     is_home_a = home == team_a
     is_home_b = home == team_b
     if is_home_a:
@@ -426,6 +600,10 @@ def predict(team_a, team_b, home=None):
         "match_type": match_type,
         "rank_gap": rank_gap,
         "home": home,
+        "h2h_matches": h2h["matches"],
+        "h2h_wins_a": h2h.get("wins_a", 0),
+        "h2h_wins_b": h2h.get("wins_b", 0),
+        "h2h_draws": h2h.get("draws", 0),
         "top_scores": top_scores,
         "goals_a": goals_a_sim,
         "goals_b": goals_b_sim,
