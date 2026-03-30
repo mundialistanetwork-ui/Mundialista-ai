@@ -137,6 +137,16 @@ def load_results():
         df = pd.read_csv("data/results.csv")
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        try:
+            recent = pd.read_csv("data/recent_results.csv")
+            if not recent.empty:
+                if "date" in recent.columns:
+                    recent["date"] = pd.to_datetime(recent["date"], errors="coerce")
+                df = pd.concat([df, recent], ignore_index=True)
+                df = df.drop_duplicates(subset=["date", "home_team", "away_team"], keep="last")
+                df = df.sort_values("date").reset_index(drop=True)
+        except FileNotFoundError:
+            pass
         _results_cache = df
         return df
     except FileNotFoundError:
@@ -168,10 +178,28 @@ def load_goalscorers():
         df = pd.read_csv("data/goalscorers.csv")
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        try:
+            recent = pd.read_csv("data/recent_goalscorers.csv")
+            if not recent.empty:
+                if "date" in recent.columns:
+                    recent["date"] = pd.to_datetime(recent["date"], errors="coerce")
+                df = pd.concat([df, recent], ignore_index=True)
+                df = df.drop_duplicates(subset=["date", "team", "scorer", "minute"], keep="last")
+                df = df.sort_values("date").reset_index(drop=True)
+        except FileNotFoundError:
+            pass
         _goalscorers_cache = df
         return df
     except FileNotFoundError:
         return pd.DataFrame()
+
+
+
+def clear_cache():
+    global _results_cache, _rankings_cache, _goalscorers_cache
+    _results_cache = None
+    _rankings_cache = None
+    _goalscorers_cache = None
 
 def get_all_teams():
     df = load_results()
