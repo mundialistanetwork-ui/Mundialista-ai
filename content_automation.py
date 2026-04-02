@@ -14,6 +14,21 @@ from player_impact import get_team_star_impact
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 RESULTS_CSV = os.path.join(DATA_DIR, "results.csv")
 
+import numpy as np
+import pandas as pd
+from collections import Counter
+from datetime import datetime
+import os, sys
+from data_loader import get_team_ranking
+from player_impact import get_team_star_impact
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+RESULTS_CSV = os.path.join(DATA_DIR, "results.csv")
+
+# --- TUNABLE PARAMETERS ---
+FORM_DECAY_RATE = 0.85  # Soft exponential decay (Game 12 carries ~15% weight of Game 1)
+SHRINK_K = 9.5         # Bayesian shrinkage strength (tuned from 10)
+
 def load_real_data(years_lookback=4):
     if not os.path.exists(RESULTS_CSV):
         print("ERROR: results.csv not found!"); sys.exit(1)
@@ -23,34 +38,75 @@ def load_real_data(years_lookback=4):
     return df[df["date"] >= cutoff].copy()
 
 def get_team_stats(results, team, last_n=12):
+    """
+    Calculate team stats with exponential decay weighting.
+    Most recent game has weight 1.0. Oldest game has weight FORM_DECAY_RATE^(n-1).
+    """
     home = results[results["home_team"] == team].tail(last_n)
     away = results[results["away_team"] == team].tail(last_n)
-    gf = list(home["home_score"].values) + list(away["away_score"].values)
-    ga = list(home["away_score"].values) + list(away["home_score"].values)
-    if len(gf) == 0:
+
+    # We need to merge home/away and sort by date to apply correct decay
+    # Home matches: GF=home_score, GA=away_score
+    # Away matches: GF=away_score, GA=home_score
+
+    matches = []
+    # Process Home matches
+    for i in range(len(home)):
+        matches.append((home["date"].iloc[i], home["home_score"].iloc[i], home["away_score"].iloc[i]))
+    # Process Away matches
+    for i in range(len(away)):
+        matches.append((away["date"].iloc[i], away["away_score"].iloc[i], away["home_score"].iloc[i]))
+
+    if len(matches) == 0:
         return None
-    gf = np.array(gf[-last_n:])
-    ga = np.array(ga[-last_n:])
-    return {"avg_gf": float(np.mean(gf)), "avg_ga": float(np.mean(ga)),
-            "std_gf": float(max(np.std(gf), 0.3)), "std_ga": float(max(np.std(ga), 0.3)),
-            "n_matches": len(gf), "goals_for": gf, "goals_against": ga}
+
+    # Sort by date (Oldest first -> Newest last)
+    try:
+        matches.sort(key=lambda x: x[0])
+    except:
+        pass # Fallback if date issues
+
+    # Take the last_n matches (most recent)
+    if len(matches) > last_n:
+        matches = matches[-last_n:]
+
+    # Extract GF and GA arrays (sorted oldest -> newest)
+    gf = np.array([m[1] for m in matches])
+    ga = np.array([m[2] for m in matches])
+    n_matches = len(gf)
+
+    # --- Apply Decay Weights ---
+    # Weights: Oldest game (index 0) -> decay^(n-1)
+    #          Newest game (index n-1) -> 1.0
+    weights = np.array([FORM_DECAY_RATE ** (n_matches - 1 - i) for i in range(n_matches)])
+
+    # Weighted Averages
+    avg_gf = np.sum(gf * weights) / np.sum(weights)
+    avg_ga = np.sum(ga * weights) / np.sum(weights)
+
+    # Standard Deviation (approx)
+    std_gf = np.std(gf)
+    std_ga = np.std(ga)
+
+    return {
+        "avg_gf": float(avg_gf),
+        "avg_ga": float(avg_ga),
+        "std_gf": float(max(std_gf, 0.3)),
+        "std_ga": float(max(std_ga, 0.3)),
+        "n_matches": n_matches,
+        "goals_for": gf,
+        "goals_against": ga
+    }
 
 print("Loading match data...")
 RESULTS_DF = load_real_data()
 ALL_TEAMS = sorted(set(RESULTS_DF["home_team"].unique()) | set(RESULTS_DF["away_team"].unique()))
 print(f"Loaded {len(RESULTS_DF):,} matches, {len(ALL_TEAMS)} teams")
 
-_all_gf = []
-_all_ga = []
-for _t in ALL_TEAMS:
-    _s = get_team_stats(RESULTS_DF, _t)
-    if _s and _s["n_matches"] >= 3:
-        _all_gf.append(_s["avg_gf"])
-        _all_ga.append(_s["avg_ga"])
-# Use actual match averages (GF must equal GA globally)
+# Calculate Global Baseline
 _true_gf = float(RESULTS_DF["home_score"].mean() + RESULTS_DF["away_score"].mean()) / 2
 GLOBAL_GF = _true_gf
-GLOBAL_GA = _true_gf  # By definition, global GF == global GA
+GLOBAL_GA = _true_gf
 print(f"Global baseline: {GLOBAL_GF:.2f} GF / {GLOBAL_GA:.2f} GA (symmetric)")
 
 # Opponent-strength ratings
@@ -60,35 +116,33 @@ TEAM_RATINGS = compute_team_ratings(RESULTS_DF)
 print(f"Ratings computed for {len(TEAM_RATINGS)} teams")
 
 
-# Opponent-strength ratings
-from strength_adjust import compute_team_ratings, get_adjusted_stats
-print("Computing opponent-strength ratings...")
-TEAM_RATINGS = compute_team_ratings(RESULTS_DF)
-print(f"Ratings computed for {len(TEAM_RATINGS)} teams")
-
-
+# --- WORLD CUP 2026 GROUPS (Updated April 1st, 2026) ---
 WC2026_GROUPS = {
-    "A": ["United States", "Morocco", "Scotland", "Kenya"],
-    "B": ["Portugal", "Ecuador", "Saudi Arabia", "Indonesia"],
-    "C": ["Mexico", "Japan", "Venezuela", "Uzbekistan"],
-    "D": ["France", "Colombia", "Costa Rica", "Bahrain"],
-    "E": ["Brazil", "Serbia", "Iran", "Egypt"],
-    "F": ["Germany", "Uruguay", "South Korea", "DR Congo"],
-    "G": ["Argentina", "Australia", "Ghana", "Trinidad and Tobago"],
-    "H": ["England", "Senegal", "Denmark", "Panama"],
-    "I": ["Spain", "Nigeria", "Peru", "New Zealand"],
-    "J": ["Netherlands", "Canada", "Cameroon", "Jamaica"],
-    "K": ["Italy", "Switzerland", "Tunisia", "Honduras"],
-    "L": ["Croatia", "Chile", "Algeria", "Bolivia"],
+    "A": ["Mexico", "South Korea", "South Africa", "Czechia"],
+    "B": ["Canada", "Switzerland", "Qatar", "Bosnia-Herzegovina"],
+    "C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+    "D": ["USA", "Paraguay", "Australia", "Türkiye"],
+    "E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+    "F": ["Netherlands", "Japan", "Tunisia", "Sweden"],
+    "G": ["Belgium", "Iran", "Egypt", "New Zealand"],
+    "H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+    "I": ["France", "Senegal", "Norway", "Inter-confederation playoff 2 (Iraq or Bolivia)"],
+    "J": ["Argentina", "Austria", "Algeria", "Jordan"],
+    "K": ["Portugal", "Colombia", "Uzbekistan", "Inter-confederation playoff 1 (DR Congo or Jamaica)"],
+    "L": ["England", "Croatia", "Panama", "Ghana"],
 }
 
 def quick_simulate(home_team, away_team, n_sims=10200):
+    # --- 1. DATA PREPARATION ---
     home_stats = get_team_stats(RESULTS_DF, home_team)
     away_stats = get_team_stats(RESULTS_DF, away_team)
+
+    # Defaults for unknown teams
     if home_stats is None:
         home_stats = {"avg_gf": GLOBAL_GF, "avg_ga": GLOBAL_GA, "n_matches": 1}
     if away_stats is None:
         away_stats = {"avg_gf": GLOBAL_GF, "avg_ga": GLOBAL_GA, "n_matches": 1}
+
     # Opponent-strength adjustment
     h_adj = get_adjusted_stats(RESULTS_DF, home_team, TEAM_RATINGS)
     a_adj = get_adjusted_stats(RESULTS_DF, away_team, TEAM_RATINGS)
@@ -98,63 +152,66 @@ def quick_simulate(home_team, away_team, n_sims=10200):
     if a_adj is not None:
         away_stats["avg_gf"] = a_adj["blended_gf"]
         away_stats["avg_ga"] = a_adj["blended_ga"]
-    # Shrinkage toward global mean
-    shrink_k = 10  # Balanced shrinkage for 12-match form window
+
+    # Bayesian Shrinkage toward global mean
     h_n = home_stats["n_matches"]
     a_n = away_stats["n_matches"]
-    h_gf = (h_n * home_stats["avg_gf"] + shrink_k * GLOBAL_GF) / (h_n + shrink_k)
-    h_ga = (h_n * home_stats["avg_ga"] + shrink_k * GLOBAL_GA) / (h_n + shrink_k)
-    a_gf = (a_n * away_stats["avg_gf"] + shrink_k * GLOBAL_GF) / (a_n + shrink_k)
-    a_ga = (a_n * away_stats["avg_ga"] + shrink_k * GLOBAL_GA) / (a_n + shrink_k)
-    # --- FIFA Ranking adjustment ---
+    h_gf = (h_n * home_stats["avg_gf"] + SHRINK_K * GLOBAL_GF) / (h_n + SHRINK_K)
+    h_ga = (h_n * home_stats["avg_ga"] + SHRINK_K * GLOBAL_GA) / (h_n + SHRINK_K)
+    a_gf = (a_n * away_stats["avg_gf"] + SHRINK_K * GLOBAL_GF) / (a_n + SHRINK_K)
+    a_ga = (a_n * away_stats["avg_ga"] + SHRINK_K * GLOBAL_GA) / (a_n + SHRINK_K)
+
+    # --- 2. FIFA RANKING LOGIC ---
     h_rank_info = get_team_ranking(home_team)
     a_rank_info = get_team_ranking(away_team)
     h_rank = h_rank_info.get('rank', 100) if isinstance(h_rank_info, dict) else 100
     a_rank = a_rank_info.get('rank', 100) if isinstance(a_rank_info, dict) else 100
     import math
-    # Rank-implied lambda: log curve so top-10 gaps are small, 50+ gaps are big
-    rank_diff = a_rank - h_rank  # positive = home ranked higher
+
+    rank_diff = a_rank - h_rank
     sign = 1 if rank_diff >= 0 else -1
     log_diff = sign * math.log1p(abs(rank_diff)) * 0.10
     rank_factor = max(0.50, min(2.0, math.exp(log_diff)))
     rank_home_lambda = GLOBAL_GF * rank_factor
     rank_away_lambda = GLOBAL_GF / rank_factor
-    # Form-based expected goals
+
     home_lambda_raw = h_gf * (a_ga / GLOBAL_GA)
     away_lambda_raw = a_gf * (h_ga / GLOBAL_GA)
-    # Dynamic blend based on rank gap AND team tier
+
     rank_gap = abs(h_rank - a_rank)
     both_top = h_rank <= 30 and a_rank <= 30
-    one_top = h_rank <= 20 or a_rank <= 20
-    # Top teams: 55% ranking weight to reduce form noise
+
+    # Dynamic blend
     if both_top:
         rank_weight = min(0.65, 0.55 + rank_gap * 0.002)
     else:
         rank_weight = min(0.65, 0.35 + rank_gap * 0.004)
     form_weight = 1.0 - rank_weight
-    # Regress form toward global mean (stronger for elite)
+
     regress = 0.50 if both_top else 0.30
     home_lambda_form = (1 - regress) * home_lambda_raw + regress * GLOBAL_GF
     away_lambda_form = (1 - regress) * away_lambda_raw + regress * GLOBAL_GF
-    # Blend form + ranking
+
     home_blend = form_weight * home_lambda_form + rank_weight * rank_home_lambda
     away_blend = form_weight * away_lambda_form + rank_weight * rank_away_lambda
-    # Close-match convergence: push close teams toward equal
+
+    # Convergence for close matches
     if rank_gap < 50:
         converge_strength = 0.40 if both_top else 0.25
         avg_lambda = (home_blend + away_blend) / 2
         converge = converge_strength * (1 - rank_gap / 50)
         home_blend = home_blend * (1 - converge) + avg_lambda * converge
         away_blend = away_blend * (1 - converge) + avg_lambda * converge
-    # Draw boost: push lambdas toward ~1.15 for close matches
-    # (Poisson with both lambdas near 1.1-1.2 maximizes draw probability)
+
+    # Draw boost
     if rank_gap < 35:
         draw_target = 1.15
         draw_pull = 0.20 if both_top else 0.12
         draw_pull *= (1 - rank_gap / 35)
         home_blend = home_blend * (1 - draw_pull) + draw_target * draw_pull
         away_blend = away_blend * (1 - draw_pull) + draw_target * draw_pull
-    # Apply RELATIVE star player impact (cancels out when both have stars)
+
+    # --- 3. STAR PLAYER LOGIC ---
     home_star = get_team_star_impact(home_team)
     away_star = get_team_star_impact(away_team)
     avg_star = (home_star + away_star) / 2
@@ -162,13 +219,15 @@ def quick_simulate(home_team, away_team, n_sims=10200):
     away_star_rel = away_star / avg_star if avg_star > 0 else 1.0
     home_blend *= home_star_rel
     away_blend *= away_star_rel
-    # Apply home advantage (moderate - 4% boost)
+
+    # Home Advantage
     home_blend *= 1.04
     away_blend *= 0.96
-    # Cap lambda RATIO for top teams (prevent runaway predictions)
+
+    # Cap lambda RATIO for top teams
     if both_top:
         ratio = home_blend / away_blend if away_blend > 0 else 1.0
-        max_ratio = 1.15  # home can be at most 15% higher than away
+        max_ratio = 1.15
         if ratio > max_ratio:
             avg_lam = (home_blend + away_blend) / 2
             home_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
@@ -177,37 +236,90 @@ def quick_simulate(home_team, away_team, n_sims=10200):
             avg_lam = (home_blend + away_blend) / 2
             home_blend = avg_lam * (1 / (1 + max_ratio)) * 2
             away_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
+
     home_lambda = max(0.3, home_blend)
     away_lambda = max(0.3, away_blend)
+
+    # --- 4. TIME-VARYING SIMULATION ENGINE ---
+    # Intensity multipliers per minute (approximate football dynamics)
+    minute_weights = []
+    for m in range(1, 91):
+        if m <= 15:
+            minute_weights.append(0.7) # Settling in
+        elif m <= 44:
+            minute_weights.append(0.9) # Normal play
+        elif m == 45:
+            minute_weights.append(1.5) # End of 1st half surge
+        elif m <= 75:
+            minute_weights.append(1.0) # Normal play
+        else:
+            minute_weights.append(1.4) # End of game surge / tired legs
+
     rng = np.random.default_rng(42)
-    home_goals = rng.poisson(home_lambda, n_sims)
-    away_goals = rng.poisson(away_lambda, n_sims)
-    home_wins = int(np.sum(home_goals > away_goals))
-    draws = int(np.sum(home_goals == away_goals))
-    away_wins = int(np.sum(home_goals < away_goals))
-    scorelines = list(zip(home_goals.tolist(), away_goals.tolist()))
+
+    home_goals_total = np.zeros(n_sims, dtype=int)
+    away_goals_total = np.zeros(n_sims, dtype=int)
+    home_goals_ht = np.zeros(n_sims, dtype=int)
+    away_goals_ht = np.zeros(n_sims, dtype=int)
+
+    # Distribute lambda across 90 minutes
+    base_rate_home = home_lambda / 90.0
+    base_rate_away = away_lambda / 90.0
+
+    for minute_idx, weight in enumerate(minute_weights):
+        # Simulate goals for this minute across all sims
+        home_goals_minute = rng.poisson(base_rate_home * weight, n_sims)
+        away_goals_minute = rng.poisson(base_rate_away * weight, n_sims)
+
+        home_goals_total += home_goals_minute
+        away_goals_total += away_goals_minute
+
+        # Track half-time goals
+        if minute_idx < 45:
+            home_goals_ht += home_goals_minute
+            away_goals_ht += away_goals_minute
+
+    # --- 5. AGGREGATE RESULTS ---
+    home_wins = int(np.sum(home_goals_total > away_goals_total))
+    draws = int(np.sum(home_goals_total == away_goals_total))
+    away_wins = int(np.sum(home_goals_total < away_goals_total))
+
+    scorelines = list(zip(home_goals_total.tolist(), away_goals_total.tolist()))
     score_counts = Counter(scorelines)
     top5 = score_counts.most_common(5)
+
+    # Half-time scores
+    ht_scorelines = list(zip(home_goals_ht.tolist(), away_goals_ht.tolist()))
+    ht_score_counts = Counter(ht_scorelines)
+    ht_top5 = ht_score_counts.most_common(5)
+
     if home_lambda >= away_lambda:
         favourite, underdog = home_team, away_team
         upset_prob = away_wins / n_sims * 100
     else:
         favourite, underdog = away_team, home_team
         upset_prob = home_wins / n_sims * 100
-    return {"home_win_pct": home_wins / n_sims * 100,
-            "draw_pct": draws / n_sims * 100,
-            "away_win_pct": away_wins / n_sims * 100,
-            "home_exp": float(np.mean(home_goals)),
-            "away_exp": float(np.mean(away_goals)),
-            "home_lambda": home_lambda,
-            "away_lambda": away_lambda,
-            "top5_scorelines": top5,
-            "upset_prob": upset_prob,
-            "favourite": favourite,
-            "underdog": underdog,
-            "n": n_sims,
-            "home_n_matches": home_stats["n_matches"],
-            "away_n_matches": away_stats["n_matches"]}
+
+    return {
+        "home_win_pct": home_wins / n_sims * 100,
+        "draw_pct": draws / n_sims * 100,
+        "away_win_pct": away_wins / n_sims * 100,
+        "home_exp": float(np.mean(home_goals_total)),
+        "away_exp": float(np.mean(away_goals_total)),
+        "home_lambda": home_lambda,
+        "away_lambda": away_lambda,
+        "top5_scorelines": top5,
+        "top5_ht_scorelines": ht_top5, # NEW: Half-Time predictions
+        "upset_prob": upset_prob,
+        "favourite": favourite,
+        "underdog": underdog,
+        "n": n_sims,
+        "home_n_matches": home_stats["n_matches"],
+        "away_n_matches": away_stats["n_matches"]
+    }
+
+# --- Content Generation Functions ---
+
 def generate_match_preview(home_team, away_team, a):
     hw, dr, aw = a["home_win_pct"], a["draw_pct"], a["away_win_pct"]
     hx, ax = a["home_exp"], a["away_exp"]
