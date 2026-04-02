@@ -133,3 +133,15 @@ def predict(team_a, team_b, neutral=True):
     }
 
     return formatted_result
+# ---------------------------------------------------------
+# PATCH: Added missing get_score_matrix for chart_generator
+# ---------------------------------------------------------
+def get_score_matrix(home_team, away_team):
+    result = predict(home_team, away_team)
+    return {
+        'home_win_prob': result.get('home_win_prob', 0.33),
+        'draw_prob': result.get('draw_prob', 0.33),
+        'away_win_prob': result.get('away_win_prob', 0.33),
+        'home_score': result.get('predicted_home_goals', 1),
+        'away_score': result.get('predicted_away_goals', 1)
+    }
