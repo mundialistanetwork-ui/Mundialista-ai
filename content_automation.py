@@ -126,9 +126,9 @@ WC2026_GROUPS = {
     "F": ["Netherlands", "Japan", "Tunisia", "Sweden"],
     "G": ["Belgium", "Iran", "Egypt", "New Zealand"],
     "H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
-    "I": ["France", "Senegal", "Norway", "Inter-confederation playoff 2 (Iraq or Bolivia)"],
+    "I": ["France", "Senegal", "Norway", "Iraq"],
     "J": ["Argentina", "Austria", "Algeria", "Jordan"],
-    "K": ["Portugal", "Colombia", "Uzbekistan", "Inter-confederation playoff 1 (DR Congo or Jamaica)"],
+    "K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
     "L": ["England", "Croatia", "Panama", "Ghana"],
 }
 
