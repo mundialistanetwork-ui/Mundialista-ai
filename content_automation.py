@@ -1,122 +1,83 @@
 """
-Mundialista Network - Content Automation Tools v2
-Uses REAL match data from 258+ teams.
-Includes WC 2026 group stage predictions!
+Mundialista AI — Content Automation v3
+Generates social media content, match previews, and WC 2026 group predictions.
+
+KEY CHANGE: Uses prediction_engine.py as the SINGLE source of truth.
+No more duplicate models giving different numbers.
 """
+
+import os
+import sys
+import json
+import math
+from datetime import datetime
+from collections import Counter
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from collections import Counter
-from datetime import datetime
-import os, sys
-from data_loader import get_team_ranking
-from player_impact import get_team_star_impact
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-RESULTS_CSV = os.path.join(DATA_DIR, "results.csv")
-
-import numpy as np
-import pandas as pd
-from collections import Counter
-from datetime import datetime
-import os, sys
-from data_loader import get_team_ranking
-from player_impact import get_team_star_impact
-
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-RESULTS_CSV = os.path.join(DATA_DIR, "results.csv")
-
-# --- TUNABLE PARAMETERS ---
-FORM_DECAY_RATE = 0.85  # Soft exponential decay (Game 12 carries ~15% weight of Game 1)
-SHRINK_K = 9.5         # Bayesian shrinkage strength (tuned from 10)
-
-def load_real_data(years_lookback=4):
-    if not os.path.exists(RESULTS_CSV):
-        print("ERROR: results.csv not found!"); sys.exit(1)
-    df = pd.read_csv(RESULTS_CSV)
-    df["date"] = pd.to_datetime(df["date"])
-    cutoff = df["date"].max() - pd.DateOffset(years=years_lookback)
-    return df[df["date"] >= cutoff].copy()
-
-def get_team_stats(results, team, last_n=12):
-    """
-    Calculate team stats with exponential decay weighting.
-    Most recent game has weight 1.0. Oldest game has weight FORM_DECAY_RATE^(n-1).
-    """
-    home = results[results["home_team"] == team].tail(last_n)
-    away = results[results["away_team"] == team].tail(last_n)
-
-    # We need to merge home/away and sort by date to apply correct decay
-    # Home matches: GF=home_score, GA=away_score
-    # Away matches: GF=away_score, GA=home_score
-
-    matches = []
-    # Process Home matches
-    for i in range(len(home)):
-        matches.append((home["date"].iloc[i], home["home_score"].iloc[i], home["away_score"].iloc[i]))
-    # Process Away matches
-    for i in range(len(away)):
-        matches.append((away["date"].iloc[i], away["away_score"].iloc[i], away["home_score"].iloc[i]))
-
-    if len(matches) == 0:
-        return None
-
-    # Sort by date (Oldest first -> Newest last)
-    try:
-        matches.sort(key=lambda x: x[0])
-    except:
-        pass # Fallback if date issues
-
-    # Take the last_n matches (most recent)
-    if len(matches) > last_n:
-        matches = matches[-last_n:]
-
-    # Extract GF and GA arrays (sorted oldest -> newest)
-    gf = np.array([m[1] for m in matches])
-    ga = np.array([m[2] for m in matches])
-    n_matches = len(gf)
-
-    # --- Apply Decay Weights ---
-    # Weights: Oldest game (index 0) -> decay^(n-1)
-    #          Newest game (index n-1) -> 1.0
-    weights = np.array([FORM_DECAY_RATE ** (n_matches - 1 - i) for i in range(n_matches)])
-
-    # Weighted Averages
-    avg_gf = np.sum(gf * weights) / np.sum(weights)
-    avg_ga = np.sum(ga * weights) / np.sum(weights)
-
-    # Standard Deviation (approx)
-    std_gf = np.std(gf)
-    std_ga = np.std(ga)
-
-    return {
-        "avg_gf": float(avg_gf),
-        "avg_ga": float(avg_ga),
-        "std_gf": float(max(std_gf, 0.3)),
-        "std_ga": float(max(std_ga, 0.3)),
-        "n_matches": n_matches,
-        "goals_for": gf,
-        "goals_against": ga
-    }
-
-print("Loading match data...")
-RESULTS_DF = load_real_data()
-ALL_TEAMS = sorted(set(RESULTS_DF["home_team"].unique()) | set(RESULTS_DF["away_team"].unique()))
-print(f"Loaded {len(RESULTS_DF):,} matches, {len(ALL_TEAMS)} teams")
-
-# Calculate Global Baseline
-_true_gf = float(RESULTS_DF["home_score"].mean() + RESULTS_DF["away_score"].mean()) / 2
-GLOBAL_GF = _true_gf
-GLOBAL_GA = _true_gf
-print(f"Global baseline: {GLOBAL_GF:.2f} GF / {GLOBAL_GA:.2f} GA (symmetric)")
-
-# Opponent-strength ratings
-from strength_adjust import compute_team_ratings, get_adjusted_stats
-print("Computing opponent-strength ratings...")
-TEAM_RATINGS = compute_team_ratings(RESULTS_DF)
-print(f"Ratings computed for {len(TEAM_RATINGS)} teams")
+# ── Use the ONE prediction engine ──
+from prediction_engine import (
+    predict,
+    get_all_teams,
+    get_team_ranking,
+    get_team_points,
+    get_team_star_impact,
+    _data,
+)
 
 
-# --- WORLD CUP 2026 GROUPS (Updated April 1st, 2026) ---
+# ──────────────────────────────────────────────
+#  CONFIGURATION
+# ──────────────────────────────────────────────
+
+N_SIMS = 10_000
+OUTPUT_DIR = Path("content_output")
+
+
+# ──────────────────────────────────────────────
+#  TEAM NAME MAPPING (data ↔ official names)
+# ──────────────────────────────────────────────
+
+# Maps WC 2026 official names → names in results.csv
+TEAM_NAME_MAP = {
+    "Czechia":              "Czech Republic",
+    "Türkiye":              "Turkey",
+    "Ivory Coast":          "Côte d'Ivoire",
+    "Bosnia-Herzegovina":   "Bosnia and Herzegovina",
+    "South Korea":          "Korea Republic",
+    "DR Congo":             "Congo DR",
+    "Cape Verde":           "Cabo Verde",
+    "USA":                  "United States",
+    "Curaçao":              "Curaçao",  # Check if this exists in your data
+}
+
+# Reverse map for display
+DISPLAY_NAME_MAP = {v: k for k, v in TEAM_NAME_MAP.items()}
+
+
+def resolve_team_name(name: str) -> str:
+    """Convert display/official name to dataset name."""
+    return TEAM_NAME_MAP.get(name, name)
+
+
+def display_name(name: str) -> str:
+    """Convert dataset name to display name."""
+    return DISPLAY_NAME_MAP.get(name, name)
+
+
+def validate_team(name: str) -> bool:
+    """Check if team exists in the dataset."""
+    resolved = resolve_team_name(name)
+    all_teams = get_all_teams()
+    return resolved in all_teams
+
+
+# ──────────────────────────────────────────────
+#  WORLD CUP 2026 GROUPS (Updated April 2025)
+# ──────────────────────────────────────────────
+
 WC2026_GROUPS = {
     "A": ["Mexico", "South Korea", "South Africa", "Czechia"],
     "B": ["Canada", "Switzerland", "Qatar", "Bosnia-Herzegovina"],
@@ -132,465 +93,633 @@ WC2026_GROUPS = {
     "L": ["England", "Croatia", "Panama", "Ghana"],
 }
 
-def quick_simulate(home_team, away_team, n_sims=10200):
-    # --- 1. DATA PREPARATION ---
-    home_stats = get_team_stats(RESULTS_DF, home_team)
-    away_stats = get_team_stats(RESULTS_DF, away_team)
 
-    # Defaults for unknown teams
-    if home_stats is None:
-        home_stats = {"avg_gf": GLOBAL_GF, "avg_ga": GLOBAL_GA, "n_matches": 1}
-    if away_stats is None:
-        away_stats = {"avg_gf": GLOBAL_GF, "avg_ga": GLOBAL_GA, "n_matches": 1}
+# ──────────────────────────────────────────────
+#  CORE: MATCH ANALYSIS (wraps prediction_engine)
+# ──────────────────────────────────────────────
 
-    # Opponent-strength adjustment
-    h_adj = get_adjusted_stats(RESULTS_DF, home_team, TEAM_RATINGS)
-    a_adj = get_adjusted_stats(RESULTS_DF, away_team, TEAM_RATINGS)
-    if h_adj is not None:
-        home_stats["avg_gf"] = h_adj["blended_gf"]
-        home_stats["avg_ga"] = h_adj["blended_ga"]
-    if a_adj is not None:
-        away_stats["avg_gf"] = a_adj["blended_gf"]
-        away_stats["avg_ga"] = a_adj["blended_ga"]
+def analyze_match(home_team: str, away_team: str, neutral: bool = True) -> dict:
+    """
+    Run a full match analysis using the main prediction engine.
+    Returns enriched result dict with content-friendly fields.
+    """
+    # Resolve names
+    home_resolved = resolve_team_name(home_team)
+    away_resolved = resolve_team_name(away_team)
 
-    # Bayesian Shrinkage toward global mean
-    h_n = home_stats["n_matches"]
-    a_n = away_stats["n_matches"]
-    h_gf = (h_n * home_stats["avg_gf"] + SHRINK_K * GLOBAL_GF) / (h_n + SHRINK_K)
-    h_ga = (h_n * home_stats["avg_ga"] + SHRINK_K * GLOBAL_GA) / (h_n + SHRINK_K)
-    a_gf = (a_n * away_stats["avg_gf"] + SHRINK_K * GLOBAL_GF) / (a_n + SHRINK_K)
-    a_ga = (a_n * away_stats["avg_ga"] + SHRINK_K * GLOBAL_GA) / (a_n + SHRINK_K)
+    # Use the ONE engine
+    home_arg = None if neutral else home_resolved
+    result = predict(home_resolved, away_resolved, home=home_arg)
 
-    # --- 2. FIFA RANKING LOGIC ---
-    h_rank_info = get_team_ranking(home_team)
-    a_rank_info = get_team_ranking(away_team)
-    h_rank = h_rank_info.get('rank', 100) if isinstance(h_rank_info, dict) else 100
-    a_rank = a_rank_info.get('rank', 100) if isinstance(a_rank_info, dict) else 100
-    import math
-
-    rank_diff = a_rank - h_rank
-    sign = 1 if rank_diff >= 0 else -1
-    log_diff = sign * math.log1p(abs(rank_diff)) * 0.10
-    rank_factor = max(0.50, min(2.0, math.exp(log_diff)))
-    rank_home_lambda = GLOBAL_GF * rank_factor
-    rank_away_lambda = GLOBAL_GF / rank_factor
-
-    home_lambda_raw = h_gf * (a_ga / GLOBAL_GA)
-    away_lambda_raw = a_gf * (h_ga / GLOBAL_GA)
-
-    rank_gap = abs(h_rank - a_rank)
-    both_top = h_rank <= 30 and a_rank <= 30
-
-    # Dynamic blend
-    if both_top:
-        rank_weight = min(0.65, 0.55 + rank_gap * 0.002)
+    # Determine favourite/underdog
+    if result["team_a_win"] >= result["team_b_win"]:
+        favourite = home_team
+        underdog = away_team
+        upset_prob = result["team_b_win"]
     else:
-        rank_weight = min(0.65, 0.35 + rank_gap * 0.004)
-    form_weight = 1.0 - rank_weight
+        favourite = away_team
+        underdog = home_team
+        upset_prob = result["team_a_win"]
 
-    regress = 0.50 if both_top else 0.30
-    home_lambda_form = (1 - regress) * home_lambda_raw + regress * GLOBAL_GF
-    away_lambda_form = (1 - regress) * away_lambda_raw + regress * GLOBAL_GF
+    # Simulation stats from the goals arrays
+    goals_a = result.get("goals_a", np.array([]))
+    goals_b = result.get("goals_b", np.array([]))
 
-    home_blend = form_weight * home_lambda_form + rank_weight * rank_home_lambda
-    away_blend = form_weight * away_lambda_form + rank_weight * rank_away_lambda
-
-    # Convergence for close matches
-    if rank_gap < 50:
-        converge_strength = 0.40 if both_top else 0.25
-        avg_lambda = (home_blend + away_blend) / 2
-        converge = converge_strength * (1 - rank_gap / 50)
-        home_blend = home_blend * (1 - converge) + avg_lambda * converge
-        away_blend = away_blend * (1 - converge) + avg_lambda * converge
-
-    # Draw boost
-    if rank_gap < 35:
-        draw_target = 1.15
-        draw_pull = 0.20 if both_top else 0.12
-        draw_pull *= (1 - rank_gap / 35)
-        home_blend = home_blend * (1 - draw_pull) + draw_target * draw_pull
-        away_blend = away_blend * (1 - draw_pull) + draw_target * draw_pull
-
-    # --- 3. STAR PLAYER LOGIC ---
-    home_star = get_team_star_impact(home_team)
-    away_star = get_team_star_impact(away_team)
-    avg_star = (home_star + away_star) / 2
-    home_star_rel = home_star / avg_star if avg_star > 0 else 1.0
-    away_star_rel = away_star / avg_star if avg_star > 0 else 1.0
-    home_blend *= home_star_rel
-    away_blend *= away_star_rel
-
-    # Home Advantage
-    home_blend *= 1.04
-    away_blend *= 0.96
-
-    # Cap lambda RATIO for top teams
-    if both_top:
-        ratio = home_blend / away_blend if away_blend > 0 else 1.0
-        max_ratio = 1.15
-        if ratio > max_ratio:
-            avg_lam = (home_blend + away_blend) / 2
-            home_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
-            away_blend = avg_lam * (1 / (1 + max_ratio)) * 2
-        elif ratio < 1 / max_ratio:
-            avg_lam = (home_blend + away_blend) / 2
-            home_blend = avg_lam * (1 / (1 + max_ratio)) * 2
-            away_blend = avg_lam * (max_ratio / (1 + max_ratio)) * 2
-
-    home_lambda = max(0.3, home_blend)
-    away_lambda = max(0.3, away_blend)
-
-    # --- 4. TIME-VARYING SIMULATION ENGINE ---
-    # Intensity multipliers per minute (approximate football dynamics)
-    minute_weights = []
-    for m in range(1, 91):
-        if m <= 15:
-            minute_weights.append(0.7) # Settling in
-        elif m <= 44:
-            minute_weights.append(0.9) # Normal play
-        elif m == 45:
-            minute_weights.append(1.5) # End of 1st half surge
-        elif m <= 75:
-            minute_weights.append(1.0) # Normal play
-        else:
-            minute_weights.append(1.4) # End of game surge / tired legs
-
-    rng = np.random.default_rng(42)
-
-    home_goals_total = np.zeros(n_sims, dtype=int)
-    away_goals_total = np.zeros(n_sims, dtype=int)
-    home_goals_ht = np.zeros(n_sims, dtype=int)
-    away_goals_ht = np.zeros(n_sims, dtype=int)
-
-    # Distribute lambda across 90 minutes
-    base_rate_home = home_lambda / 90.0
-    base_rate_away = away_lambda / 90.0
-
-    for minute_idx, weight in enumerate(minute_weights):
-        # Simulate goals for this minute across all sims
-        home_goals_minute = rng.poisson(base_rate_home * weight, n_sims)
-        away_goals_minute = rng.poisson(base_rate_away * weight, n_sims)
-
-        home_goals_total += home_goals_minute
-        away_goals_total += away_goals_minute
-
-        # Track half-time goals
-        if minute_idx < 45:
-            home_goals_ht += home_goals_minute
-            away_goals_ht += away_goals_minute
-
-    # --- 5. AGGREGATE RESULTS ---
-    home_wins = int(np.sum(home_goals_total > away_goals_total))
-    draws = int(np.sum(home_goals_total == away_goals_total))
-    away_wins = int(np.sum(home_goals_total < away_goals_total))
-
-    scorelines = list(zip(home_goals_total.tolist(), away_goals_total.tolist()))
-    score_counts = Counter(scorelines)
-    top5 = score_counts.most_common(5)
-
-    # Half-time scores
-    ht_scorelines = list(zip(home_goals_ht.tolist(), away_goals_ht.tolist()))
-    ht_score_counts = Counter(ht_scorelines)
-    ht_top5 = ht_score_counts.most_common(5)
-
-    if home_lambda >= away_lambda:
-        favourite, underdog = home_team, away_team
-        upset_prob = away_wins / n_sims * 100
-    else:
-        favourite, underdog = away_team, home_team
-        upset_prob = home_wins / n_sims * 100
+    # Top scorelines from engine
+    top_scores = result.get("top_scores", [])
 
     return {
-        "home_win_pct": home_wins / n_sims * 100,
-        "draw_pct": draws / n_sims * 100,
-        "away_win_pct": away_wins / n_sims * 100,
-        "home_exp": float(np.mean(home_goals_total)),
-        "away_exp": float(np.mean(away_goals_total)),
-        "home_lambda": home_lambda,
-        "away_lambda": away_lambda,
-        "top5_scorelines": top5,
-        "top5_ht_scorelines": ht_top5, # NEW: Half-Time predictions
-        "upset_prob": upset_prob,
+        # Core probabilities (from the ONE engine)
+        "home_win_pct": result["team_a_win"],
+        "draw_pct": result["draw"],
+        "away_win_pct": result["team_b_win"],
+
+        # Expected goals
+        "home_exp": result["team_a_lambda"],
+        "away_exp": result["team_b_lambda"],
+        "home_lambda": result["team_a_lambda"],
+        "away_lambda": result["team_b_lambda"],
+
+        # Rankings
+        "home_rank": result["team_a_rank"],
+        "away_rank": result["team_b_rank"],
+
+        # Stars
+        "home_stars": result.get("team_a_stars", []),
+        "away_stars": result.get("team_b_stars", []),
+
+        # Match classification
+        "match_type": result.get("match_type", "Competitive"),
+
+        # Top scorelines
+        "top5_scorelines": top_scores[:5],
+
+        # Upset analysis
         "favourite": favourite,
         "underdog": underdog,
-        "n": n_sims,
-        "home_n_matches": home_stats["n_matches"],
-        "away_n_matches": away_stats["n_matches"]
+        "upset_prob": upset_prob,
+
+        # Metadata
+        "n": result.get("n_simulations", N_SIMS),
+        "engine_version": "v7",
+
+        # Display names
+        "home_display": home_team,
+        "away_display": away_team,
+
+        # Raw result (for advanced use)
+        "_raw": result,
     }
 
-# --- Content Generation Functions ---
 
-def generate_match_preview(home_team, away_team, a):
+# ──────────────────────────────────────────────
+#  CONTENT GENERATORS
+# ──────────────────────────────────────────────
+
+def generate_match_preview(home: str, away: str, a: dict) -> str:
+    """English match preview for social media."""
     hw, dr, aw = a["home_win_pct"], a["draw_pct"], a["away_win_pct"]
     hx, ax = a["home_exp"], a["away_exp"]
-    ts = a["top5_scorelines"][0]
     n = a["n"]
-    hn, an = a["home_n_matches"], a["away_n_matches"]
-    up = a["upset_prob"]
+    hr, ar = a["home_rank"], a["away_rank"]
+
+    # Most likely score
+    if a["top5_scorelines"]:
+        ts = a["top5_scorelines"][0]
+        score_str = f"{ts[0]}" if isinstance(ts[0], str) else f"{ts[0][0]}-{ts[0][1]}"
+        score_pct = ts[1] if isinstance(ts[1], (int, float)) else 0
+        if score_pct < 1:
+            score_pct *= 100  # Convert from decimal to %
+        score_line = f"MOST LIKELY SCORE: {home} {score_str} ({score_pct:.1f}%)"
+    else:
+        score_line = ""
+
     lines = [
-        f"MATCH PREDICTION | {home_team} vs {away_team}",
-        f"Powered by Mundialista Network AI | {n:,} Simulations",
-        f"Based on {hn} + {an} real matches",
+        f"⚽ MATCH PREDICTION | {home} vs {away}",
+        f"🤖 Powered by Mundialista AI | {n:,} Simulations",
+        f"📊 FIFA Rankings: #{hr} vs #{ar}",
         "",
         "WIN PROBABILITIES:",
-        f"  {home_team}: {hw:.1f}%",
-        f"  Draw: {dr:.1f}%",
-        f"  {away_team}: {aw:.1f}%",
+        f"  🏠 {home}: {hw:.1f}%",
+        f"  🤝 Draw: {dr:.1f}%",
+        f"  ✈️  {away}: {aw:.1f}%",
         "",
         "EXPECTED GOALS:",
-        f"  {home_team}: {hx:.2f} xG",
-        f"  {away_team}: {ax:.2f} xG",
+        f"  {home}: {hx:.2f} xG",
+        f"  {away}: {ax:.2f} xG",
         "",
-        f"MOST LIKELY SCORE: {home_team} {ts[0][0]} - {ts[0][1]} {away_team} ({ts[1]/n*100:.1f}%)",
-        f"UPSET PROBABILITY: {up:.1f}%",
+        score_line,
         "",
-        "#WorldCup2026 #WC2026 #MundialistaNetwork #NuestraIA",
+        f"🔮 Upset probability: {a['upset_prob']:.1f}% ({a['underdog']})",
+        "",
+        "#WorldCup2026 #WC2026 #MundialistaAI",
     ]
     return "\n".join(lines)
 
-def generate_spanish_preview(home_team, away_team, a):
+
+def generate_spanish_preview(home: str, away: str, a: dict) -> str:
+    """Spanish match preview for social media."""
     hw, dr, aw = a["home_win_pct"], a["draw_pct"], a["away_win_pct"]
     hx, ax = a["home_exp"], a["away_exp"]
-    ts = a["top5_scorelines"][0]
     n = a["n"]
-    hn, an = a["home_n_matches"], a["away_n_matches"]
-    up = a["upset_prob"]
+    hr, ar = a["home_rank"], a["away_rank"]
+
+    if a["top5_scorelines"]:
+        ts = a["top5_scorelines"][0]
+        score_str = f"{ts[0]}" if isinstance(ts[0], str) else f"{ts[0][0]}-{ts[0][1]}"
+        score_pct = ts[1] if isinstance(ts[1], (int, float)) else 0
+        if score_pct < 1:
+            score_pct *= 100
+        score_line = f"MARCADOR MÁS PROBABLE: {home} {score_str} ({score_pct:.1f}%)"
+    else:
+        score_line = ""
+
     lines = [
-        f"PREDICCION | {home_team} vs {away_team}",
-        f"Mundialista Network AI | {n:,} Simulaciones",
-        f"Basado en {hn} + {an} partidos reales",
+        f"⚽ PREDICCIÓN | {home} vs {away}",
+        f"🤖 Mundialista AI | {n:,} Simulaciones",
+        f"📊 Rankings FIFA: #{hr} vs #{ar}",
         "",
         "PROBABILIDADES:",
-        f"  {home_team}: {hw:.1f}%",
-        f"  Empate: {dr:.1f}%",
-        f"  {away_team}: {aw:.1f}%",
+        f"  🏠 {home}: {hw:.1f}%",
+        f"  🤝 Empate: {dr:.1f}%",
+        f"  ✈️  {away}: {aw:.1f}%",
         "",
         "GOLES ESPERADOS:",
-        f"  {home_team}: {hx:.2f} xG",
-        f"  {away_team}: {ax:.2f} xG",
+        f"  {home}: {hx:.2f} xG",
+        f"  {away}: {ax:.2f} xG",
         "",
-        f"MARCADOR MAS PROBABLE: {home_team} {ts[0][0]} - {ts[0][1]} {away_team} ({ts[1]/n*100:.1f}%)",
-        f"PROBABILIDAD DE SORPRESA: {up:.1f}%",
+        score_line,
         "",
-        "#Mundial2026 #WC2026 #MundialistaNetwork #NuestraIA",
+        f"🔮 Probabilidad de sorpresa: {a['upset_prob']:.1f}% ({a['underdog']})",
+        "",
+        "#Mundial2026 #WC2026 #MundialistaAI #NuestraIA",
     ]
     return "\n".join(lines)
 
-def generate_twitter_thread(home_team, away_team, a):
+
+def generate_twitter_thread(home: str, away: str, a: dict) -> list[str]:
+    """Generate a Twitter/X thread (list of tweets)."""
     hw, dr, aw = a["home_win_pct"], a["draw_pct"], a["away_win_pct"]
     hx, ax = a["home_exp"], a["away_exp"]
-    up = a["upset_prob"]
-    fav, dog = a["favourite"], a["underdog"]
     n = a["n"]
-    hn, an = a["home_n_matches"], a["away_n_matches"]
-    thread = []
-    thread.append(f"THREAD: {home_team} vs {away_team} -- AI PREDICTION | Analyzed {hn}+{an} matches, {n:,} sims | #WorldCup2026")
+    fav, dog = a["favourite"], a["underdog"]
+    up = a["upset_prob"]
+
+    # Determine predicted winner
     if hw > aw and hw > dr:
-        winner = home_team
+        winner = home
     elif aw > hw and aw > dr:
-        winner = away_team
+        winner = away
     else:
-        winner = "DRAW"
-    thread.append(f"Our AI favors: {winner} | {home_team}: {hw:.1f}% | Draw: {dr:.1f}% | {away_team}: {aw:.1f}%")
-    scores = ""
-    for (h, a_sc), cnt in a["top5_scorelines"][:3]:
-        scores += f" {home_team} {h}-{a_sc} {away_team}: {cnt/n*100:.1f}%"
-    thread.append(f"Top scores:{scores} | xG: {home_team} {hx:.2f} - {ax:.2f} {away_team}")
-    alert = "HIGH" if up > 30 else "MODERATE" if up > 20 else "LOW"
-    thread.append(f"Upset watch: {alert} | {dog} has {up:.1f}% chance vs {fav}")
-    thread.append(f"Try our AI: https://mundialista-ai-8sya4tqzo7fyi65rqgwonw.streamlit.app | #WC2026")
+        winner = "DRAW 🤝"
+
+    thread = []
+
+    # Tweet 1: Hook
+    thread.append(
+        f"🧵 THREAD: {home} vs {away} — AI PREDICTION\n\n"
+        f"📊 {n:,} simulations | Dixon-Coles Poisson model\n\n"
+        f"Our AI says: {winner}\n\n"
+        f"#WorldCup2026 #WC2026"
+    )
+
+    # Tweet 2: Probabilities
+    thread.append(
+        f"📈 Win Probabilities:\n\n"
+        f"🏠 {home}: {hw:.1f}%\n"
+        f"🤝 Draw: {dr:.1f}%\n"
+        f"✈️ {away}: {aw:.1f}%\n\n"
+        f"Expected Goals: {hx:.2f} vs {ax:.2f}"
+    )
+
+    # Tweet 3: Top scores
+    scores_text = ""
+    for sc in a["top5_scorelines"][:3]:
+        if isinstance(sc, (list, tuple)) and len(sc) >= 2:
+            score_str = str(sc[0])
+            pct = sc[1]
+            if isinstance(pct, (int, float)):
+                if pct < 1:
+                    pct *= 100
+                scores_text += f"\n  {score_str}: {pct:.1f}%"
+    if scores_text:
+        thread.append(f"🎯 Most likely scorelines:{scores_text}")
+
+    # Tweet 4: Upset watch
+    alert = "🔴 HIGH" if up > 30 else "🟡 MODERATE" if up > 20 else "🟢 LOW"
+    thread.append(
+        f"⚠️ Upset Watch: {alert}\n\n"
+        f"{dog} has a {up:.1f}% chance against {fav}\n\n"
+        f"Try our AI: mundialista-ai.streamlit.app\n"
+        f"#WC2026 #MundialistaAI"
+    )
+
     return thread
 
-def generate_underdog_alert(home_team, away_team, a):
+
+def generate_underdog_alert(home: str, away: str, a: dict) -> str | None:
+    """Generate an underdog alert if upset probability is notable."""
     up = a["upset_prob"]
     dog, fav = a["underdog"], a["favourite"]
-    if up < 25:
+
+    if up < 20:
         return None
-    level = "MAXIMUM" if up > 40 else "HIGH" if up > 30 else "MODERATE"
-    return f"{level} ALERT: {dog} has {up:.1f}% chance of upsetting {fav}! #WorldCup2026 #WC2026"
 
-def predict_wc2026_group(group_letter):
+    if up > 40:
+        emoji, level = "🚨🔴", "MAXIMUM"
+    elif up > 30:
+        emoji, level = "⚠️🟡", "HIGH"
+    else:
+        emoji, level = "👀🟢", "MODERATE"
+
+    return (
+        f"{emoji} UPSET ALERT: {level}\n\n"
+        f"{dog} has a {up:.1f}% chance of beating {fav}!\n\n"
+        f"#WorldCup2026 #WC2026 #MundialistaAI"
+    )
+
+
+# ──────────────────────────────────────────────
+#  WORLD CUP 2026 GROUP PREDICTIONS
+# ──────────────────────────────────────────────
+
+def predict_wc2026_group(group_letter: str, verbose: bool = True) -> dict:
+    """
+    Simulate all matches in a WC 2026 group.
+    Returns standings with expected points, GD, GF.
+    """
+    group_letter = group_letter.upper()
     if group_letter not in WC2026_GROUPS:
-        print(f"Group {group_letter} not found!")
-        return
-    teams = WC2026_GROUPS[group_letter]
-    sep = "=" * 60
-    print(sep)
-    print(f"WORLD CUP 2026 -- GROUP {group_letter}")
-    print(sep)
-    print(f"Teams: {', '.join(teams)}")
-    print()
-    points = {t: 0.0 for t in teams}
-    gd = {t: 0.0 for t in teams}
-    gf_tot = {t: 0.0 for t in teams}
-    num = 0
-    for i in range(len(teams)):
-        for j in range(i + 1, len(teams)):
-            num += 1
-            h, aw = teams[i], teams[j]
-            r = quick_simulate(h, aw)
-            print(f"Match {num}: {h} vs {aw}")
-            print(f"  {h} {r['home_win_pct']:.1f}% | Draw {r['draw_pct']:.1f}% | {aw} {r['away_win_pct']:.1f}%")
-            print(f"  xG: {h} {r['home_exp']:.2f} - {r['away_exp']:.2f} {aw}")
-            print()
-            points[h] += r["home_win_pct"] / 100 * 3 + r["draw_pct"] / 100 * 1
-            points[aw] += r["away_win_pct"] / 100 * 3 + r["draw_pct"] / 100 * 1
-            gd[h] += r["home_exp"] - r["away_exp"]
-            gd[aw] += r["away_exp"] - r["home_exp"]
-            gf_tot[h] += r["home_exp"]
-            gf_tot[aw] += r["away_exp"]
-    standings = sorted(teams, key=lambda t: (points[t], gd[t], gf_tot[t]), reverse=True)
-    print("-" * 60)
-    print(f"PREDICTED GROUP {group_letter} STANDINGS:")
-    print("-" * 60)
-    header = f"  {'Team':<25s} {'Pts':>6s} {'GD':>7s} {'GF':>6s}"
-    print(header)
-    print("  " + "-" * 45)
-    for rank, t in enumerate(standings, 1):
-        tag = "Q" if rank <= 2 else "?" if rank == 3 else "X"
-        print(f"  [{tag}] {t:<23s} {points[t]:>5.1f}  {gd[t]:>+6.2f}  {gf_tot[t]:>5.2f}")
-    print()
-    print("  Q = Qualifies  ? = Possible 3rd place  X = Eliminated")
-    return standings
+        print(f"❌ Group {group_letter} not found! Valid: {sorted(WC2026_GROUPS.keys())}")
+        return {}
 
-def predict_all_wc2026_groups():
-    print()
-    print("WORLD CUP 2026 -- FULL GROUP STAGE PREDICTIONS")
-    print(f"Powered by Mundialista Network AI")
-    print(f"Based on {len(RESULTS_DF):,} real matches from {len(ALL_TEAMS)} teams")
-    print()
-    all_standings = {}
+    display_teams = WC2026_GROUPS[group_letter]
+    data_teams = [resolve_team_name(t) for t in display_teams]
+
+    # Validate all teams exist
+    all_known = get_all_teams()
+    for dt, rt in zip(display_teams, data_teams):
+        if rt not in all_known:
+            print(f"  ⚠️  {dt} (→ {rt}) not found in dataset. Using defaults.")
+
+    sep = "=" * 62
+
+    if verbose:
+        print(sep)
+        print(f"  ⚽ WORLD CUP 2026 — GROUP {group_letter}")
+        print(sep)
+        print(f"  Teams: {', '.join(display_teams)}")
+        print()
+
+    # Initialize standings
+    points = {t: 0.0 for t in display_teams}
+    gd = {t: 0.0 for t in display_teams}
+    gf_tot = {t: 0.0 for t in display_teams}
+    match_results = []
+
+    match_num = 0
+    for i in range(len(display_teams)):
+        for j in range(i + 1, len(display_teams)):
+            match_num += 1
+            h_display = display_teams[i]
+            a_display = display_teams[j]
+
+            # Analyze using the ONE engine (neutral venue for group stage)
+            a = analyze_match(h_display, a_display, neutral=True)
+
+            if verbose:
+                print(f"  Match {match_num}: {h_display} vs {a_display}")
+                print(f"    {h_display} {a['home_win_pct']:.1f}%"
+                      f" | Draw {a['draw_pct']:.1f}%"
+                      f" | {a_display} {a['away_win_pct']:.1f}%")
+                print(f"    xG: {a['home_exp']:.2f} vs {a['away_exp']:.2f}")
+                if a["top5_scorelines"]:
+                    ts = a["top5_scorelines"][0]
+                    print(f"    Most likely: {ts[0]}")
+                print()
+
+            # Expected points calculation
+            hw_frac = a["home_win_pct"] / 100
+            dr_frac = a["draw_pct"] / 100
+            aw_frac = a["away_win_pct"] / 100
+
+            points[h_display] += hw_frac * 3 + dr_frac * 1
+            points[a_display] += aw_frac * 3 + dr_frac * 1
+
+            gd[h_display] += a["home_exp"] - a["away_exp"]
+            gd[a_display] += a["away_exp"] - a["home_exp"]
+
+            gf_tot[h_display] += a["home_exp"]
+            gf_tot[a_display] += a["away_exp"]
+
+            match_results.append({
+                "home": h_display,
+                "away": a_display,
+                "home_win": a["home_win_pct"],
+                "draw": a["draw_pct"],
+                "away_win": a["away_win_pct"],
+                "home_xg": a["home_exp"],
+                "away_xg": a["away_exp"],
+            })
+
+    # Sort standings
+    standings = sorted(
+        display_teams,
+        key=lambda t: (points[t], gd[t], gf_tot[t]),
+        reverse=True,
+    )
+
+    if verbose:
+        print(f"  {'─' * 56}")
+        print(f"  📊 PREDICTED GROUP {group_letter} STANDINGS:")
+        print(f"  {'─' * 56}")
+        print(f"  {'':>4} {'Team':<22s} {'Pts':>6s} {'GD':>7s} {'GF':>6s}")
+        print(f"  {'':>4} {'─'*22} {'─'*6} {'─'*7} {'─'*6}")
+
+        for rank, t in enumerate(standings, 1):
+            if rank <= 2:
+                tag = "✅"
+            elif rank == 3:
+                tag = "🔄"
+            else:
+                tag = "❌"
+            print(f"  {tag} {rank}. {t:<22s}"
+                  f" {points[t]:>5.1f}"
+                  f"  {gd[t]:>+6.2f}"
+                  f"  {gf_tot[t]:>5.2f}")
+
+        print()
+        print(f"  ✅ = Qualifies  🔄 = Possible 3rd  ❌ = Eliminated")
+
+    return {
+        "group": group_letter,
+        "standings": standings,
+        "points": points,
+        "gd": gd,
+        "gf": gf_tot,
+        "matches": match_results,
+    }
+
+
+def predict_all_wc2026_groups(verbose: bool = True) -> dict:
+    """Predict all 12 World Cup 2026 groups."""
+    sep = "=" * 62
+
+    if verbose:
+        print(f"\n{sep}")
+        print(f"  ⚽ WORLD CUP 2026 — FULL GROUP STAGE PREDICTIONS")
+        print(f"  🤖 Powered by Mundialista AI (Dixon-Coles Poisson)")
+        print(f"  📊 Based on {len(get_all_teams())} teams in database")
+        print(f"{sep}\n")
+
+    all_results = {}
+
     for group in sorted(WC2026_GROUPS.keys()):
-        standings = predict_wc2026_group(group)
-        all_standings[group] = standings
-    print()
-    print("=" * 60)
-    print("PREDICTED QUALIFIERS FROM GROUP STAGE:")
-    print("=" * 60)
-    for group in sorted(all_standings.keys()):
-        s = all_standings[group]
-        print(f"  Group {group}: {s[0]}, {s[1]} | 3rd: {s[2]}")
-    return all_standings
+        result = predict_wc2026_group(group, verbose=verbose)
+        all_results[group] = result
+        if verbose:
+            print()
+
+    # Summary
+    if verbose:
+        print(f"\n{sep}")
+        print(f"  🏆 PREDICTED QUALIFIERS FROM GROUP STAGE:")
+        print(f"{sep}")
+        for group in sorted(all_results.keys()):
+            s = all_results[group]["standings"]
+            print(f"  Group {group}: ✅ {s[0]:<18s} ✅ {s[1]:<18s} 🔄 {s[2]}")
+
+    return all_results
+
+
+def save_group_predictions(results: dict, path: str = None):
+    """Save group predictions to JSON for later use."""
+    if path is None:
+        OUTPUT_DIR.mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = OUTPUT_DIR / f"wc2026_groups_{timestamp}.json"
+
+    # Clean for JSON serialization
+    clean = {}
+    for group, data in results.items():
+        clean[group] = {
+            "group": data["group"],
+            "standings": data["standings"],
+            "points": {k: round(v, 2) for k, v in data["points"].items()},
+            "gd": {k: round(v, 3) for k, v in data["gd"].items()},
+            "gf": {k: round(v, 3) for k, v in data["gf"].items()},
+            "matches": data["matches"],
+        }
+
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(clean, f, indent=2, ensure_ascii=False)
+
+    print(f"\n💾 Saved to {path}")
+
+
+# ──────────────────────────────────────────────
+#  TEAM BROWSER
+# ──────────────────────────────────────────────
 
 def show_teams():
-    print(f"\nAVAILABLE TEAMS ({len(ALL_TEAMS)} total):")
-    print("=" * 70)
-    for i, team in enumerate(ALL_TEAMS, 1):
-        stats = get_team_stats(RESULTS_DF, team)
-        if stats:
-            n = stats["n_matches"]
-            gf = stats["avg_gf"]
-            ga = stats["avg_ga"]
-            diff = gf - ga
-            print(f"  {i:3d}. {team:<35s} {n:>2d}m  GF:{gf:.1f} GA:{ga:.1f} ({diff:+.1f})")
-        else:
-            print(f"  {i:3d}. {team:<35s}  (no data)")
-    print("=" * 70)
+    """Display all available teams with basic stats."""
+    all_teams = get_all_teams()
+    print(f"\n  📋 AVAILABLE TEAMS ({len(all_teams)} total)")
+    print(f"  {'='*60}")
 
-def select_team(prompt):
+    for i, team in enumerate(all_teams, 1):
+        rank = get_team_ranking(team)
+        rank_str = f"#{rank:<4d}" if rank < 200 else "  —  "
+        print(f"  {i:>4d}. {rank_str} {team}")
+
+        # Print 20 per page
+        if i % 40 == 0 and i < len(all_teams):
+            cont = input(f"\n  Showing {i}/{len(all_teams)}. Press Enter for more (q to stop): ")
+            if cont.lower() == 'q':
+                break
+
+    print(f"  {'='*60}")
+
+
+def select_team(prompt: str) -> str:
+    """Interactive team selector with fuzzy matching."""
+    all_teams = get_all_teams()
+
     while True:
         choice = input(prompt).strip()
+
+        if not choice:
+            continue
+
+        # Try as number
         try:
             idx = int(choice) - 1
-            if 0 <= idx < len(ALL_TEAMS):
-                return ALL_TEAMS[idx]
+            if 0 <= idx < len(all_teams):
+                selected = all_teams[idx]
+                print(f"  → {selected}")
+                return selected
             else:
-                print(f"  Enter a number between 1 and {len(ALL_TEAMS)}")
+                print(f"  ❌ Enter a number between 1 and {len(all_teams)}")
                 continue
         except ValueError:
             pass
-        matches = [t for t in ALL_TEAMS if choice.lower() in t.lower()]
+
+        # Try exact match first
+        if choice in all_teams:
+            return choice
+
+        # Try name resolution (WC group names)
+        resolved = resolve_team_name(choice)
+        if resolved in all_teams:
+            print(f"  → {resolved}")
+            return resolved
+
+        # Fuzzy match
+        matches = [t for t in all_teams if choice.lower() in t.lower()]
+
         if len(matches) == 1:
+            print(f"  → {matches[0]}")
             return matches[0]
         elif len(matches) > 1:
-            print("  Multiple matches:")
-            for m in matches:
+            print(f"  Multiple matches:")
+            for m in matches[:10]:
                 print(f"    - {m}")
-            print("  Be more specific.")
+            if len(matches) > 10:
+                print(f"    ... and {len(matches)-10} more")
+            print(f"  Be more specific.")
         else:
-            print(f"  Team '{choice}' not found. Try again.")
+            print(f"  ❌ '{choice}' not found. Try again.")
+
+
+# ──────────────────────────────────────────────
+#  INTERACTIVE MENU
+# ──────────────────────────────────────────────
 
 def interactive_menu():
-    sep = "=" * 60
+    sep = "=" * 62
+
     print(f"\n{sep}")
-    print(f"  MUNDIALISTA NETWORK -- CONTENT GENERATOR v2")
-    print(f"  {len(ALL_TEAMS)} Teams | {len(RESULTS_DF):,} Real Matches")
-    print(sep)
+    print(f"  ⚽ MUNDIALISTA AI — Content Generator v3")
+    print(f"  📊 {len(get_all_teams())} Teams | Dixon-Coles Poisson Engine")
+    print(f"{sep}")
+
     while True:
-        print("\nMENU:")
-        print("  1. Generate Match Preview (English)")
-        print("  2. Generate Match Preview (Spanish)")
-        print("  3. Generate Twitter/X Thread")
-        print("  4. Check Underdog Alert")
-        print("  5. Show All Teams")
-        print("  6. Predict WC 2026 Group")
-        print("  7. Predict ALL WC 2026 Groups")
-        print("  8. Quick Head-to-Head")
-        print("  9. Exit")
-        choice = input("\nSelect option (1-9): ").strip()
+        print(f"\n  {'─'*50}")
+        print(f"  📝 CONTENT MENU:")
+        print(f"  {'─'*50}")
+        print(f"  1. 🇬🇧 Match Preview (English)")
+        print(f"  2. 🇪🇸 Match Preview (Español)")
+        print(f"  3. 🐦 Twitter/X Thread")
+        print(f"  4. 🚨 Underdog Alert Check")
+        print(f"  5. ⚡ Quick Head-to-Head")
+        print(f"  {'─'*50}")
+        print(f"  🏆 WORLD CUP 2026:")
+        print(f"  {'─'*50}")
+        print(f"  6. 📊 Predict One Group (A-L)")
+        print(f"  7. 🌍 Predict ALL Groups")
+        print(f"  {'─'*50}")
+        print(f"  8. 📋 Show All Teams")
+        print(f"  9. 🚪 Exit")
+        print(f"  {'─'*50}")
+
+        choice = input("\n  Select (1-9): ").strip()
+
         if choice == "9":
-            print("\nHasta la vista! Follow @MundialistaNet")
+            print(f"\n  ¡Hasta la vista! Follow @MundialistaAI ⚽")
             break
-        if choice == "5":
+
+        elif choice == "8":
             show_teams()
-            continue
-        if choice == "6":
-            grp = input("Enter group letter (A-L): ").strip().upper()
-            predict_wc2026_group(grp)
-            continue
-        if choice == "7":
-            predict_all_wc2026_groups()
-            continue
-        if choice == "8":
-            home = select_team("\nHome team: ")
-            away = select_team("Away team: ")
-            print(f"\nSimulating {home} vs {away}...")
-            a = quick_simulate(home, away)
-            print(f"\n  {home} {a['home_win_pct']:.1f}% | Draw {a['draw_pct']:.1f}% | {away} {a['away_win_pct']:.1f}%")
-            print(f"  xG: {home} {a['home_exp']:.2f} - {a['away_exp']:.2f} {away}")
-            top = a["top5_scorelines"][0]
-            print(f"  Most likely: {home} {top[0][0]}-{top[0][1]} {away} ({top[1]/a['n']*100:.1f}%)")
-            continue
-        if choice in ["1", "2", "3", "4"]:
-            home = select_team("\nHome team (name or number): ")
-            away = select_team("Away team (name or number): ")
-            print(f"\nRunning 10,200 simulations: {home} vs {away}...")
-            analytics = quick_simulate(home, away)
+
+        elif choice == "6":
+            grp = input("  Enter group letter (A-L): ").strip().upper()
+            result = predict_wc2026_group(grp)
+            if result:
+                save_q = input("\n  Save results to JSON? (y/n): ").strip().lower()
+                if save_q == "y":
+                    save_group_predictions({grp: result})
+
+        elif choice == "7":
+            results = predict_all_wc2026_groups()
+            save_q = input("\n  Save all results to JSON? (y/n): ").strip().lower()
+            if save_q == "y":
+                save_group_predictions(results)
+
+        elif choice == "5":
+            home = select_team("\n  🏠 Home team: ")
+            away = select_team("  ✈️  Away team: ")
+            neutral_q = input("  Neutral venue? (y/n, default y): ").strip().lower()
+            is_neutral = neutral_q != "n"
+
+            print(f"\n  🧠 Analyzing {home} vs {away}...")
+            a = analyze_match(home, away, neutral=is_neutral)
+
+            print(f"\n  {sep}")
+            print(f"  {home} vs {away}")
+            print(f"  {'─'*50}")
+            print(f"  🏠 {home}: {a['home_win_pct']:.1f}%"
+                  f"  |  🤝 Draw: {a['draw_pct']:.1f}%"
+                  f"  |  ✈️  {away}: {a['away_win_pct']:.1f}%")
+            print(f"  ⚽ xG: {home} {a['home_exp']:.2f}"
+                  f" vs {a['away_exp']:.2f} {away}")
+            if a["top5_scorelines"]:
+                ts = a["top5_scorelines"][0]
+                print(f"  🎯 Most likely: {ts[0]} ({ts[1]:.1f}%)")
+            print(f"  {sep}")
+
+        elif choice in ["1", "2", "3", "4"]:
+            home = select_team("\n  🏠 Home team (name or number): ")
+            away = select_team("  ✈️  Away team: ")
+
+            print(f"\n  🧠 Running prediction: {home} vs {away}...")
+            a = analyze_match(home, away)
+
             if choice == "1":
-                print("\n" + sep)
-                print("ENGLISH PREVIEW:")
+                print(f"\n{sep}")
+                print("  🇬🇧 ENGLISH PREVIEW:")
                 print(sep)
-                print(generate_match_preview(home, away, analytics))
+                content = generate_match_preview(home, away, a)
+                print(content)
+
             elif choice == "2":
-                print("\n" + sep)
-                print("SPANISH PREVIEW:")
+                print(f"\n{sep}")
+                print("  🇪🇸 PREVIEW EN ESPAÑOL:")
                 print(sep)
-                print(generate_spanish_preview(home, away, analytics))
+                content = generate_spanish_preview(home, away, a)
+                print(content)
+
             elif choice == "3":
-                print("\n" + sep)
-                print("TWITTER THREAD:")
+                print(f"\n{sep}")
+                print("  🐦 TWITTER/X THREAD:")
                 print(sep)
-                thread = generate_twitter_thread(home, away, analytics)
+                thread = generate_twitter_thread(home, away, a)
                 for i, tweet in enumerate(thread, 1):
-                    print(f"\n{'-' * 40}")
-                    print(f"Tweet {i}/{len(thread)}:")
-                    print(f"{'-' * 40}")
-                    print(tweet)
+                    print(f"\n  {'─'*45}")
+                    print(f"  Tweet {i}/{len(thread)} ({len(tweet)} chars):")
+                    print(f"  {'─'*45}")
+                    print(f"  {tweet}")
+
             elif choice == "4":
-                alert = generate_underdog_alert(home, away, analytics)
-                print("\n" + sep)
+                alert = generate_underdog_alert(home, away, a)
+                print(f"\n{sep}")
                 if alert:
-                    print("UNDERDOG ALERT:")
+                    print("  🚨 UNDERDOG ALERT:")
                     print(sep)
-                    print(alert)
+                    print(f"  {alert}")
                 else:
-                    fav = analytics["favourite"]
-                    up = analytics["upset_prob"]
-                    print(f"No upset alert -- {fav} is a clear favorite ({up:.1f}% upset chance)")
-                    print(sep)
-            print("\nContent generated! Copy the text above for your post.")
+                    print(f"  ✅ No upset alert — {a['favourite']} is a clear"
+                          f" favorite ({a['upset_prob']:.1f}% upset chance)")
+                print(sep)
+
+            print(f"\n  📋 Content ready! Copy the text above for your post.")
+
         else:
-            print("Invalid option. Enter 1-9.")
+            print("  ❌ Invalid option. Enter 1-9.")
+
+
+# ──────────────────────────────────────────────
+#  ENTRY POINT
+# ──────────────────────────────────────────────
 
 if __name__ == "__main__":
     interactive_menu()
