@@ -1,155 +1,201 @@
-"""
-Mundialista AI - FIFA Rankings Auto-Updater
-Fetches latest rankings from FIFA API or fallback sources.
-Run: python update_rankings.py
-"""
+﻿import kagglehub
 import pandas as pd
-import os
-import json
+import numpy as np
+from pathlib import Path
 from datetime import datetime
+import sys
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-RANKINGS_CSV = os.path.join(DATA_DIR, "rankings.csv")
+DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR.mkdir(exist_ok=True)
 
-def fetch_rankings_from_api():
-    """Try to fetch from FIFA API"""
+
+def download_kaggle_rankings():
     try:
-        import urllib.request
-        url = "https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank/ranking.json"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        response = urllib.request.urlopen(req, timeout=15)
-        data = json.loads(response.read())
-        print(f"Fetched {len(data)} entries from FIFA API")
-        return data
-    except Exception as e:
-        print(f"FIFA API failed: {e}")
+        import kagglehub
+    except ImportError:
+        print("  kagglehub not installed")
         return None
 
-def fetch_rankings_from_scrape():
-    """Fallback: try unofficial API"""
+    print("  Downloading davidcariboo/player-scores...")
     try:
-        import urllib.request
-        url = "https://raw.githubusercontent.com/martj42/international_results/master/rankings.csv"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        response = urllib.request.urlopen(req, timeout=15)
-        content = response.read().decode("utf-8")
-        
-        # Save raw and parse
-        lines = content.strip().split("\n")
-        if len(lines) > 10:
-            # Write to temp file and read with pandas
-            temp_path = os.path.join(DATA_DIR, "rankings_raw.csv")
-            with open(temp_path, "w", encoding="utf-8") as f:
-                f.write(content)
-            
-            df = pd.read_csv(temp_path)
-            print(f"Fetched {len(df)} ranking entries from GitHub source")
-            
-            # Get latest date only
-            if "rank_date" in df.columns:
-                latest_date = df["rank_date"].max()
-                df = df[df["rank_date"] == latest_date]
-                print(f"Latest ranking date: {latest_date}, {len(df)} teams")
-            
-            os.remove(temp_path)
-            return df
-        return None
+        dataset_path = Path(kagglehub.dataset_download("davidcariboo/player-scores"))
     except Exception as e:
-        print(f"GitHub scrape failed: {e}")
+        print(f"  Kaggle download failed: {e}")
         return None
 
-def update_rankings():
-    """Main update function"""
-    print(f"Updating FIFA rankings...")
-    print(f"Current file: {RANKINGS_CSV}")
-    
-    if os.path.exists(RANKINGS_CSV):
-        current = pd.read_csv(RANKINGS_CSV)
-        print(f"Current rankings: {len(current)} teams")
-        if "rank_date" in current.columns:
-            print(f"Current date: {current['rank_date'].iloc[0]}")
-    
-    # Try sources in order
-    new_data = fetch_rankings_from_scrape()
-    
-    if new_data is not None and isinstance(new_data, pd.DataFrame) and len(new_data) > 50:
-        # Standardize columns
-        col_map = {}
-        for col in new_data.columns:
-            cl = col.lower().strip()
-            if "rank" == cl or cl == "ranking":
-                col_map[col] = "rank"
-            elif "country" in cl or "team" in cl or "country_full" in cl:
-                col_map[col] = "country_full"
-            elif "point" in cl or "total" in cl:
-                col_map[col] = "total_points"
-            elif "abrv" in cl or "abr" in cl or "code" in cl:
-                col_map[col] = "country_abrv"
-            elif "confed" in cl:
-                col_map[col] = "confederation"
-            elif "date" in cl:
-                col_map[col] = "rank_date"
-        
-        new_data = new_data.rename(columns=col_map)
-        
-        # Ensure required columns
-        for req in ["rank", "country_full", "total_points"]:
-            if req not in new_data.columns:
-                print(f"Missing column: {req}")
-                print(f"Available: {list(new_data.columns)}")
-                return False
-        
-        for opt in ["country_abrv", "confederation", "rank_date"]:
-            if opt not in new_data.columns:
-                new_data[opt] = ""
-        
-        new_data = new_data.sort_values("rank").reset_index(drop=True)
-        
-        # Backup old file
-        if os.path.exists(RANKINGS_CSV):
-            backup = RANKINGS_CSV.replace(".csv", "_backup.csv")
-            current.to_csv(backup, index=False)
-            print(f"Backup saved: {backup}")
-        
-        new_data.to_csv(RANKINGS_CSV, index=False)
-        print(f"\nUpdated! {len(new_data)} teams saved to {RANKINGS_CSV}")
-        print(f"Top 10:")
-        print(new_data.head(10)[["rank", "country_full", "total_points"]].to_string(index=False))
-        return True
+    nt_files = list(dataset_path.rglob("national_teams.csv"))
+    if not nt_files:
+        print("  national_teams.csv not found!")
+        return None
+
+    df = pd.read_csv(nt_files[0])
+    df = df.dropna(subset=["fifa_ranking"])
+    df["fifa_ranking"] = df["fifa_ranking"].astype(int)
+
+    NAME_FIXES = {
+        "Korea, South": "South Korea",
+        "Korea Republic": "South Korea",
+        "Korea, North": "North Korea",
+        "Cote d Ivoire": "Ivory Coast",
+        "Cabo Verde": "Cape Verde",
+        "Czechia": "Czech Republic",
+        "Turkiye": "Turkey",
+        "Bosnia-Herzegovina": "Bosnia and Herzegovina",
+        "USA": "United States",
+        "IR Iran": "Iran",
+        "China": "China PR",
+        "Congo DR": "DR Congo",
+    }
+    df["country_name"] = df["country_name"].replace(NAME_FIXES)
+
+    result = pd.DataFrame({
+        "rank": df["fifa_ranking"].values,
+        "country_full": df["country_name"].values,
+        "confederation": df["confederation"].values,
+        "market_value": df["total_market_value"].values,
+        "squad_size": df["squad_size"].values,
+        "average_age": df["average_age"].values,
+        "source": "kaggle_fifa",
+    })
+    result = result.sort_values("rank").reset_index(drop=True)
+    result = result.drop_duplicates(subset=["country_full"], keep="first")
+
+    print("  " + str(len(result)) + " teams with official FIFA rankings")
+    return result
+
+
+def classify_tournament(name):
+    t = str(name).lower()
+    if "world cup" in t and "qualif" not in t: return 60
+    if "world cup" in t: return 40
+    if any(x in t for x in ["copa am", "euro ", "european championship",
+        "uefa euro", "african cup", "africa cup", "asian cup",
+        "gold cup", "concacaf nations"]): return 50
+    if "nations league" in t: return 35
+    if "qualif" in t: return 40
+    return 20
+
+
+def build_elo_rankings():
+    rpath = DATA_DIR / "results.csv"
+    if not rpath.exists():
+        print("  results.csv not found!")
+        return pd.DataFrame()
+
+    df = pd.read_csv(rpath)
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values("date").reset_index(drop=True)
+    print("  Processing " + str(len(df)) + " matches...")
+
+    teams = set(df["home_team"].unique()) | set(df["away_team"].unique())
+    elo = {t: 1500.0 for t in teams}
+
+    for _, row in df.iterrows():
+        h, a = row["home_team"], row["away_team"]
+        hs, aws = row["home_score"], row["away_score"]
+        if pd.isna(hs) or pd.isna(aws):
+            continue
+        hs, aws = int(hs), int(aws)
+
+        k = classify_tournament(row.get("tournament", "Friendly"))
+        neutral = bool(row.get("neutral", False))
+        h_elo = elo[h] + (0 if neutral else 100)
+        a_elo = elo[a]
+
+        exp_h = 1.0 / (1.0 + 10 ** ((a_elo - h_elo) / 400.0))
+
+        if hs > aws:   act = 1.0
+        elif hs < aws: act = 0.0
+        else:          act = 0.5
+
+        gd = abs(hs - aws)
+        if gd <= 1: w = 1.0
+        elif gd == 2: w = 1.5
+        elif gd == 3: w = 1.75
+        else: w = 1.75 + (gd - 3) * 0.5
+
+        elo[h] += k * w * (act - exp_h)
+        elo[a] += k * w * ((1.0 - act) - (1.0 - exp_h))
+
+    rows = [{"country_full": t, "elo": round(r, 1)} for t, r in elo.items()]
+    result = pd.DataFrame(rows).sort_values("elo", ascending=False).reset_index(drop=True)
+    result["rank"] = result.index + 1
+    result["source"] = "elo_calculated"
+    print("  ELO computed for " + str(len(result)) + " teams")
+    return result
+
+
+def update_rankings(force_elo=False):
+    print("")
+    print("=" * 60)
+    print("MUNDIALISTA AI  Rankings Update")
+    print("=" * 60)
+
+    kaggle = None
+    if not force_elo:
+        print("")
+        print("Layer 1: Kaggle FIFA Rankings")
+        kaggle = download_kaggle_rankings()
+
+    print("")
+    print("Layer 2: ELO from match history")
+    elo = build_elo_rankings()
+
+    if kaggle is not None and not kaggle.empty:
+        kaggle_teams = set(kaggle["country_full"])
+        elo_only = elo[~elo["country_full"].isin(kaggle_teams)].copy()
+        max_rank = kaggle["rank"].max()
+        elo_only = elo_only.sort_values("elo", ascending=False).reset_index(drop=True)
+        elo_only["rank"] = range(max_rank + 1, max_rank + 1 + len(elo_only))
+
+        elo_lookup = dict(zip(elo["country_full"], elo["elo"]))
+        kaggle["elo"] = kaggle["country_full"].map(elo_lookup)
+
+        merged = pd.concat([kaggle, elo_only], ignore_index=True)
+        merged = merged.sort_values("rank").reset_index(drop=True)
+        print("")
+        print("Merged: " + str(len(kaggle)) + " FIFA + " + str(len(elo_only)) + " ELO-only = " + str(len(merged)) + " total")
+    elif not elo.empty:
+        merged = elo
+        print("")
+        print("Using ELO only: " + str(len(merged)) + " teams")
     else:
-        print("\nCould not fetch new rankings. Keeping current file.")
-        return False
+        print("FATAL: No rankings generated!")
+        return pd.DataFrame()
 
-def verify_rankings():
-    """Quick check that rankings are working"""
-    if not os.path.exists(RANKINGS_CSV):
-        print("No rankings file!")
-        return False
-    
-    df = pd.read_csv(RANKINGS_CSV)
-    print(f"\nVerification:")
-    print(f"  Teams: {len(df)}")
-    print(f"  Rank range: {df['rank'].min()} - {df['rank'].max()}")
-    
-    # Check key teams
-    key_teams = ["Argentina", "Brazil", "France", "Germany", "Mexico", "Bolivia", "Suriname"]
-    for team in key_teams:
-        row = df[df["country_full"] == team]
-        if len(row) > 0:
-            print(f"  {team}: rank={row.iloc[0]['rank']}, pts={row.iloc[0]['total_points']:.0f}")
+    merged["updated"] = datetime.now().isoformat()
+
+    out = DATA_DIR / "rankings.csv"
+    merged.to_csv(out, index=False)
+    print("")
+    print("Saved: " + str(out))
+
+    print("")
+    print("Top 20:")
+    for _, r in merged.head(20).iterrows():
+        print("  #" + str(r["rank"]) + " " + str(r["country_full"]))
+
+    print("")
+    print("WC 2026 Teams:")
+    for t in ["Argentina","Brazil","France","England","Spain","Germany",
+              "United States","Mexico","Canada","Japan","South Korea",
+              "Morocco","Senegal","Croatia","Uruguay","Colombia"]:
+        row = merged[merged["country_full"] == t]
+        if not row.empty:
+            print("  " + t + " -> rank " + str(int(row.iloc[0]["rank"])))
         else:
-            print(f"  {team}: NOT FOUND")
-    
-    return True
+            print("  " + t + " -> NOT FOUND")
+
+    return merged
+
 
 if __name__ == "__main__":
-    import sys
-    if "--verify" in sys.argv:
-        verify_rankings()
+    force = "--elo" in sys.argv
+    r = update_rankings(force_elo=force)
+    if not r.empty:
+        print("")
+        print("=" * 60)
+        print("Rankings ready! No more rank 100!")
+        print("=" * 60)
     else:
-        success = update_rankings()
-        verify_rankings()
-        if success:
-            print("\nDone! Rankings updated successfully.")
-        else:
-            print("\nUsing existing rankings.")
+        sys.exit(1)
