@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 
-from prediction_engine import get_score_matrix
+from prediction_engine import build_score_matrix
 
 # -----------------------------
 # Theme
@@ -223,7 +223,8 @@ def generate_probability_chart(result, team_a, team_b):
 # Chart 3: Score matrix heatmap
 # -----------------------------
 def generate_score_matrix_chart(result, team_a, team_b, max_goals=5):
-    matrix = get_score_matrix(result.get("team_a_lambda", 0), result.get("team_b_lambda", 0), max_goals=max_goals)
+    matrix = build_score_matrix(result.get("team_a_lambda", 0), result.get("team_b_lambda", 0))
+    matrix = matrix[:max_goals+1, :max_goals+1]
     fig, ax = plt.subplots(figsize=(8.5, 6.2))
     soft_card(ax)
 
