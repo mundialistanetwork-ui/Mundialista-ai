@@ -11,6 +11,16 @@ import json
 import numpy as np
 import pandas as pd
 import streamlit as st
+# TEMPORARY DEBUG - REMOVE LATER
+import os
+st.sidebar.write('CWD:', os.getcwd())
+st.sidebar.write('rankings exists:', os.path.exists('data/rankings.csv'))
+if os.path.exists('data/rankings.csv'):
+    _dbg = pd.read_csv('data/rankings.csv')
+    st.sidebar.write('rows:', len(_dbg), 'first:', _dbg.iloc[0]['country_full'], 'rank:', _dbg.iloc[0]['rank'])
+else:
+    st.sidebar.write('data/ contents:', os.listdir('data') if os.path.exists('data') else 'NO DATA DIR')
+
 
 from prediction_engine import predict, get_all_teams, get_team_ranking
 from chart_generator import generate_all_charts
