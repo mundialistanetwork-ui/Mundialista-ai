@@ -6,15 +6,11 @@ Fixed: home advantage, CSS, H2H, score display, numpy serialization
 import matplotlib
 matplotlib.use("Agg")
 
+import os
 import json
 import numpy as np
 import pandas as pd
 import streamlit as st
-# TEMPORARY DEBUG - REMOVE LATER
-import os, pathlib
-st.sidebar.write('CWD:', os.getcwd())
-st.sidebar.write('rankings exists:', os.path.exists('data/rankings.csv'))
-st.sidebar.write('data dir:', os.listdir('data') if os.path.exists('data') else 'NO DATA DIR')
 
 from prediction_engine import predict, get_all_teams, get_team_ranking
 from chart_generator import generate_all_charts
@@ -371,12 +367,14 @@ def compute_h2h(team_a: str, team_b: str, max_matches: int = 20) -> dict:
             winner = ht
         elif aws > hs:
             winner = row.get("away_team", "")
+        else:
             winner = None
 
         if winner == team_a:
             wins_a += 1
         elif winner == team_b:
             wins_b += 1
+        else:
             draws += 1
 
         # Last 5 for display
@@ -408,6 +406,7 @@ def safe_json(result: dict) -> dict:
             clean[k] = int(v)
         elif isinstance(v, (np.floating,)):
             clean[k] = float(v)
+        else:
             clean[k] = v
     return clean
 
@@ -513,10 +512,13 @@ def build_match_insight(result: dict, team_a: str, team_b: str) -> str:
         margin = a - b
         if margin > 25:
             lines.append(f"💪 {team_a} are heavy favorites ({a:.0f}% vs {b:.0f}%).")
+        else:
             lines.append(f"📈 {team_a} have the edge, but {team_b} can't be counted out.")
+    else:
         margin = b - a
         if margin > 25:
             lines.append(f"💪 {team_b} are heavy favorites ({b:.0f}% vs {a:.0f}%).")
+        else:
             lines.append(f"📈 {team_b} have the edge, but {team_a} are dangerous.")
 
     # Draw assessment
@@ -531,6 +533,7 @@ def build_match_insight(result: dict, team_a: str, team_b: str) -> str:
         lines.append(f"🔥 Goal fest alert! Combined xG of {total_xg:.1f} — expect fireworks.")
     elif total_xg <= 2.2:
         lines.append(f"🔒 Tight, tactical battle expected (combined xG: {total_xg:.1f}).")
+    else:
         lines.append(f"⚽ Expect 2-3 goals in a balanced contest (combined xG: {total_xg:.1f}).")
 
     return "<br>".join(lines)
@@ -573,6 +576,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 if run_prediction:
     if team_a == team_b:
         st.warning("⚠️ Please choose two different teams.")
+    else:
         try:
             with st.spinner("🧠 Analyzing match data and running simulations..."):
                 # FIX: Actually pass home advantage!
@@ -739,10 +743,12 @@ if "result" in st.session_state:
                         label = f"{scoreline} ({pct*100:.1f}%)"
                     elif isinstance(pct, float):
                         label = f"{scoreline} ({pct:.1f}%)"
+                    else:
                         label = f"{scoreline}"
                     css_class = "score-pill-top" if i == 0 else "score-pill"
                     pills += f'<span class="{css_class}">{label}</span>'
             st.markdown(pills, unsafe_allow_html=True)
+        else:
             st.markdown('<div class="muted">No scoreline data available.</div>', unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -776,6 +782,7 @@ if "result" in st.session_state:
             path = charts.get(key, "")
             if path and os.path.exists(path):
                 st.image(path, use_container_width=True)  # FIX: correct parameter
+            else:
                 st.info(f"📭 {key.title()} chart not available.")
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -811,6 +818,7 @@ if "result" in st.session_state:
         st.json(safe_json(result))  # FIX: won't crash on numpy
 
 
+else:
     # ── Welcome Screen ──
     st.markdown("""
     <div class="retro-card">
@@ -895,6 +903,7 @@ with st.sidebar:
                 get_team_list.clear()
 
                 st.success(f"✅ {ad_home} {int(ad_hscore)}-{int(ad_ascore)} {ad_away} saved!")
+            else:
                 st.warning("⚠️ Enter both team names!")
 
     # ── View Recent Results ──
@@ -903,6 +912,7 @@ with st.sidebar:
             rdf_view = pd.read_csv("data/recent_results.csv")
             if rdf_view.empty:
                 st.info("No recent results yet.")
+            else:
                 for _, rv in rdf_view.iterrows():
                     st.markdown(
                         f'<span style="color:#00f0ff;">{rv["date"]}</span> '
@@ -959,6 +969,7 @@ with st.sidebar:
                         st.markdown('🟥 <b style="color:#ff3333;">HIGH red card risk! Heated match!</b>', unsafe_allow_html=True)
                     elif red_prob > 0.15:
                         st.markdown('🟨 <b style="color:#ffd700;">Moderate red card risk.</b>', unsafe_allow_html=True)
+                    else:
                         st.markdown('🟩 <b style="color:#00ff88;">Low red card risk.</b>', unsafe_allow_html=True)
                     st.markdown("</div>", unsafe_allow_html=True)
                 except Exception as e:
