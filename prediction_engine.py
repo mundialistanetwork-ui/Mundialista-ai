@@ -109,6 +109,13 @@ class DataStore:
             print(f"[WARN] {path} not found. Using empty DataFrame.")
             return pd.DataFrame()
         df = pd.read_csv(path)
+        # Merge recent manually-added results from match_manager
+        recent_path = DATA_DIR / "recent_results.csv"
+        if recent_path.exists():
+            recent = pd.read_csv(recent_path)
+            if not recent.empty:
+                df = pd.concat([df, recent], ignore_index=True)
+                print(f"[INFO] Merged {len(recent)} recent results")
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
             df = df.sort_values("date").reset_index(drop=True)
