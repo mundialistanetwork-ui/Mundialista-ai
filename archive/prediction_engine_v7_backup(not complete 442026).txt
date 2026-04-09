@@ -12,9 +12,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  CONFIGURATION
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 CONFIG = {
     # Core model parameters
@@ -59,9 +59,9 @@ CONFIG = {
 
 DATA_DIR = Path("data")
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  CACHED DATA LOADING
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 class DataStore:
     """Lazy-loading cache for all data files."""
@@ -109,13 +109,6 @@ class DataStore:
             print(f"[WARN] {path} not found. Using empty DataFrame.")
             return pd.DataFrame()
         df = pd.read_csv(path)
-        # Merge recent manually-added results from match_manager
-        recent_path = DATA_DIR / "recent_results.csv"
-        if recent_path.exists():
-            recent = pd.read_csv(recent_path)
-            if not recent.empty:
-                df = pd.concat([df, recent], ignore_index=True)
-                print(f"[INFO] Merged {len(recent)} recent results")
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
             df = df.sort_values("date").reset_index(drop=True)
@@ -162,9 +155,9 @@ class DataStore:
 _data = DataStore()
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  BUILT-IN STAR PLAYERS (fallback)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 _BUILTIN_STARS = {
     "Argentina": {
@@ -256,9 +249,9 @@ _BUILTIN_STARS = {
 }
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  HELPER FUNCTIONS
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def get_all_teams() -> list[str]:
     df = _data.results
@@ -281,16 +274,16 @@ def get_team_points(team: str) -> int:
     if rankings.empty:
         return 1000
     row = rankings[rankings["country_full"] == team]
-    return int(row.iloc[0]["elo"]) if len(row) > 0 else 1000
+    return int(row.iloc[0]["total_points"]) if len(row) > 0 else 1000
 
 
 def ranking_factor(rank: int) -> float:
-    """Log-scaled ranking advantage. Rank 1 â‰ˆ 1.53, Rank 50 â‰ˆ 1.14, Rank 200 â‰ˆ 1.0"""
+    """Log-scaled ranking advantage. Rank 1 ≈ 1.53, Rank 50 ≈ 1.14, Rank 200 ≈ 1.0"""
     return 1.0 + 0.10 * math.log(201.0 / max(rank, 1))
 
 
 def shrink_to_global(value: float, n_matches: int, global_mean: float) -> float:
-    """Bayesian shrinkage â€” small samples pull toward global average."""
+    """Bayesian shrinkage — small samples pull toward global average."""
     k = CONFIG["SHRINK_K"]
     return (n_matches * value + k * global_mean) / (n_matches + k)
 
@@ -306,7 +299,7 @@ def tournament_weight(name) -> float:
 
 
 def time_weight(match_date) -> float:
-    """Exponential decay â€” recent matches matter more."""
+    """Exponential decay — recent matches matter more."""
     if not isinstance(match_date, (pd.Timestamp, datetime)):
         return 0.5
     days_ago = max(0, (datetime.now() - pd.Timestamp(match_date).to_pydatetime()).days)
@@ -318,9 +311,9 @@ def opponent_strength(opp_rank: int) -> float:
     return ranking_factor(opp_rank) / ranking_factor(50)
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  STAR PLAYER IMPACT (attack + defense)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def get_team_star_impact(team: str) -> dict:
     """
@@ -356,9 +349,9 @@ def get_team_star_impact(team: str) -> dict:
     }
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  TEAM FORM STATISTICS (bug-fixed)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def get_team_stats(team: str) -> dict:
     """
@@ -381,7 +374,7 @@ def get_team_stats(team: str) -> dict:
     if df.empty:
         return default
 
-    # â”€â”€ Combine home and away into unified match records â”€â”€
+    # ── Combine home and away into unified match records ──
     home = df[df["home_team"] == team].copy()
     away = df[df["away_team"] == team].copy()
 
@@ -410,7 +403,7 @@ def get_team_stats(team: str) -> dict:
             "is_home": False,
         })
 
-    # â”€â”€ Sort by date, take LAST N matches total â”€â”€
+    # ── Sort by date, take LAST N matches total ──
     match_df = pd.DataFrame(records)
     if "date" in match_df.columns:
         match_df = match_df.sort_values("date", ascending=False)
@@ -419,7 +412,7 @@ def get_team_stats(team: str) -> dict:
     if match_df.empty:
         return default
 
-    # â”€â”€ Compute weighted averages â”€â”€
+    # ── Compute weighted averages ──
     weights = []
     for _, m in match_df.iterrows():
         opp_rank = get_team_ranking(m["opponent"])
@@ -463,9 +456,9 @@ def get_team_stats(team: str) -> dict:
     }
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  DIXON-COLES SCORE MATRIX
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def dixon_coles_adjust(prob: float, i: int, j: int,
                        lam_a: float, lam_b: float, rho: float) -> float:
@@ -499,9 +492,9 @@ def build_score_matrix(lam_a: float, lam_b: float) -> np.ndarray:
     return matrix
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  MONTE CARLO SIMULATION (DC-consistent)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def simulate_matches(matrix: np.ndarray, n_sims: int) -> dict:
     """
@@ -525,9 +518,9 @@ def simulate_matches(matrix: np.ndarray, n_sims: int) -> dict:
     }
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  LAMBDA CALCULATION (separated for clarity)
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def compute_lambdas(team_a: str, team_b: str,
                     stats_a: dict, stats_b: dict,
@@ -542,15 +535,15 @@ def compute_lambdas(team_a: str, team_b: str,
     rf_a = ranking_factor(rank_a)
     rf_b = ranking_factor(rank_b)
 
-    # â”€â”€ Form-based lambdas â”€â”€
+    # ── Form-based lambdas ──
     lam_form_a = stats_a["attack"] * stats_b["defense"] * global_gf
     lam_form_b = stats_b["attack"] * stats_a["defense"] * global_gf
 
-    # â”€â”€ Ranking-based lambdas â”€â”€
+    # ── Ranking-based lambdas ──
     lam_rank_a = global_gf * rf_a / rf_b
     lam_rank_b = global_gf * rf_b / rf_a
 
-    # â”€â”€ Blend â”€â”€
+    # ── Blend ──
     both_top = (rank_a <= CONFIG["TOP_TEAM_THRESHOLD"] and
                 rank_b <= CONFIG["TOP_TEAM_THRESHOLD"])
     rw = CONFIG["RANK_WEIGHT_TOP"] if both_top else CONFIG["RANK_WEIGHT_OTHER"]
@@ -559,7 +552,7 @@ def compute_lambdas(team_a: str, team_b: str,
     lam_a = rw * lam_rank_a + fw * lam_form_a
     lam_b = rw * lam_rank_b + fw * lam_form_b
 
-    # â”€â”€ Star player impact (relative, not absolute) â”€â”€
+    # ── Star player impact (relative, not absolute) ──
     avg_star_atk = (star_a["attack"] + star_b["attack"]) / 2
     avg_star_def = (star_a["defense"] + star_b["defense"]) / 2
 
@@ -572,7 +565,7 @@ def compute_lambdas(team_a: str, team_b: str,
         lam_a *= avg_star_def / star_b["defense"] if star_b["defense"] > 0 else 1.0
         lam_b *= avg_star_def / star_a["defense"] if star_a["defense"] > 0 else 1.0
 
-    # â”€â”€ Home advantage â”€â”€
+    # ── Home advantage ──
     if home == team_a:
         lam_a *= CONFIG["HOME_ATTACK_BOOST"]
         lam_b *= CONFIG["HOME_DEFENSE_BOOST"]
@@ -580,7 +573,7 @@ def compute_lambdas(team_a: str, team_b: str,
         lam_b *= CONFIG["HOME_ATTACK_BOOST"]
         lam_a *= CONFIG["HOME_DEFENSE_BOOST"]
 
-    # â”€â”€ Cap ratio for top team matchups â”€â”€
+    # ── Cap ratio for top team matchups ──
     if both_top:
         max_ratio = CONFIG["MAX_LAMBDA_RATIO_TOP"]
         ratio = lam_a / lam_b if lam_b > 0 else 1.0
@@ -589,36 +582,36 @@ def compute_lambdas(team_a: str, team_b: str,
         elif ratio < 1.0 / max_ratio:
             lam_b = lam_a * max_ratio
 
-    # â”€â”€ Floor â”€â”€
+    # ── Floor ──
     lam_a = max(lam_a, CONFIG["MIN_LAMBDA"])
     lam_b = max(lam_b, CONFIG["MIN_LAMBDA"])
 
     return round(lam_a, 4), round(lam_b, 4)
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  MATCH TYPE CLASSIFICATION
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def classify_match(rank_a: int, rank_b: int) -> str:
     gap = abs(rank_a - rank_b)
     both_top = rank_a <= CONFIG["TOP_TEAM_THRESHOLD"] and rank_b <= CONFIG["TOP_TEAM_THRESHOLD"]
 
     if both_top and gap < 20:
-        return "âš”ï¸ Elite Clash"
+        return "⚔️ Elite Clash"
     elif gap > 100:
-        return "ðŸ”» Total Mismatch"
+        return "🔻 Total Mismatch"
     elif gap > 50:
-        return "ðŸ“Š Clear Favorite"
+        return "📊 Clear Favorite"
     elif both_top:
-        return "ðŸ”¥ Top Team Showdown"
+        return "🔥 Top Team Showdown"
     else:
-        return "âš¡ Competitive Match"
+        return "⚡ Competitive Match"
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  MAIN PREDICTION FUNCTION
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 def predict(team_a: str, team_b: str, home: str = None) -> dict:
     """
@@ -633,7 +626,7 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
         Dictionary with probabilities, lambdas, top scores,
         simulation data, and metadata.
     """
-    # â”€â”€ Gather data â”€â”€
+    # ── Gather data ──
     stats_a = get_team_stats(team_a)
     stats_b = get_team_stats(team_b)
     rank_a = get_team_ranking(team_a)
@@ -643,22 +636,22 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
     star_a = get_team_star_impact(team_a)
     star_b = get_team_star_impact(team_b)
 
-    # â”€â”€ Compute expected goals â”€â”€
+    # ── Compute expected goals ──
     lam_a, lam_b = compute_lambdas(
         team_a, team_b, stats_a, stats_b,
         rank_a, rank_b, star_a, star_b, home
     )
 
-    # â”€â”€ Build score matrix (analytical) â”€â”€
+    # ── Build score matrix (analytical) ──
     matrix = build_score_matrix(lam_a, lam_b)
     max_g = CONFIG["MAX_GOALS"]
 
-    # â”€â”€ Extract probabilities â”€â”€
+    # ── Extract probabilities ──
     win_a = sum(matrix[i, j] for i in range(max_g+1) for j in range(max_g+1) if i > j)
     draw  = sum(matrix[i, j] for i in range(max_g+1) for j in range(max_g+1) if i == j)
     win_b = sum(matrix[i, j] for i in range(max_g+1) for j in range(max_g+1) if i < j)
 
-    # â”€â”€ Top predicted scorelines â”€â”€
+    # ── Top predicted scorelines ──
     score_probs = {}
     for i in range(max_g + 1):
         for j in range(max_g + 1):
@@ -667,11 +660,11 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
     top_scores = sorted(score_probs.items(), key=lambda x: -x[1])[:10]
     top_scores_display = [(s, round(p * 100, 2)) for s, p in top_scores]  # actual %
 
-    # â”€â”€ Monte Carlo (DC-consistent) â”€â”€
+    # ── Monte Carlo (DC-consistent) ──
     n_sims = CONFIG["N_SIMULATIONS"]
     sim = simulate_matches(matrix, n_sims)
 
-    # â”€â”€ Confidence check: analytical vs simulation â”€â”€
+    # ── Confidence check: analytical vs simulation ──
     sim_win_a_pct = round(100 * sim["wins_a"] / n_sims, 1)
     sim_draw_pct = round(100 * sim["draws"] / n_sims, 1)
     sim_win_b_pct = round(100 * sim["wins_b"] / n_sims, 1)
@@ -731,13 +724,13 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
     }
 
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 #  ENTRY POINT
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ──────────────────────────────────────────────
 
 if __name__ == "__main__":
     print("=" * 55)
-    print("  MUNDIALISTA AI â€” Prediction Engine v7")
+    print("  MUNDIALISTA AI — Prediction Engine v7")
     print("=" * 55)
 
     result = predict("Argentina", "Brazil")
@@ -745,9 +738,9 @@ if __name__ == "__main__":
     print(f"\n  {result['team_a']} vs {result['team_b']}")
     print(f"  Type: {result['match_type']}")
     print(f"  Ranks: #{result['team_a_rank']} vs #{result['team_b_rank']}")
-    print(f"\n  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”")
-    print(f"  â”‚  Win: {result['team_a_win']:5.1f}%  â”‚  Draw: {result['draw']:5.1f}%  â”‚  Win: {result['team_b_win']:5.1f}%  â”‚")
-    print(f"  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜")
+    print(f"\n  ┌─────────────────────────────────────┐")
+    print(f"  │  Win: {result['team_a_win']:5.1f}%  │  Draw: {result['draw']:5.1f}%  │  Win: {result['team_b_win']:5.1f}%  │")
+    print(f"  └─────────────────────────────────────┘")
     print(f"  Expected Goals: {result['team_a_lambda']:.2f} vs {result['team_b_lambda']:.2f}")
     print(f"  Attack/Defense: {result['team_a_attack']:.3f}/{result['team_a_defense']:.3f}"
           f"  vs  {result['team_b_attack']:.3f}/{result['team_b_defense']:.3f}")
@@ -755,5 +748,289 @@ if __name__ == "__main__":
     print(f"  Win: {result['sim_team_a_win']}% | Draw: {result['sim_draw']}% | Win: {result['sim_team_b_win']}%")
     print(f"\n  Top Predicted Scorelines:")
     for score, pct in result["top_scores"][:5]:
-        print(f"    {score:>5s}  â†’  {pct:.1f}%")
+        print(f"    {score:>5s}  →  {pct:.1f}%")
     print()
+
+---------------------------------------------------------------------------------------------------------------------
+=====================================================================================================================
+
+
+# 📋 MUNDIALISTA AI — Project Status Report
+
+**Date**: June 2025
+**Author**: CTO / Lead Architect
+**Project**: Mundialista AI — World Cup 2026 Match Prediction System
+**Location**: `C:\Users\bayen\mundialista-ai`
+
+---
+
+## 1. MY ROLE
+
+I serve as the **Chief Technology Officer and Lead Architect** for Mundialista AI. My responsibilities include:
+
+- Full code review and quality assurance across all Python modules
+- Architecture design — ensuring every component connects properly through a single, reliable prediction pipeline
+- Algorithm development — improving the statistical model that powers all predictions
+- Bug identification and resolution at every layer of the system
+- Product vision — turning a working prototype into a polished, deployable application ready for the World Cup 2026 audience
+- Technical roadmap — defining what gets built, in what order, and why
+
+I operate in a CEO-to-CTO dynamic with the project owner. They drive the product vision, audience, and content strategy. I drive the engineering, data science, and architecture decisions.
+
+---
+
+## 2. WHAT MUNDIALISTA AI IS
+
+Mundialista AI is an international football match prediction system built specifically for the FIFA World Cup 2026. It combines historical match data (49,215 matches from 1872 to March 2026), FIFA rankings, goalscorer records, and a Dixon-Coles Poisson statistical model to generate match predictions.
+
+The system answers one core question: **"If Team A plays Team B, what happens?"**
+
+It outputs:
+- Win/Draw/Win probabilities (e.g., Argentina 42.3% | Draw 27.1% | Brazil 30.6%)
+- Expected goals per team (lambda values from the Poisson model)
+- Most likely scorelines ranked by probability
+- Star player impact analysis
+- Head-to-head historical records
+- Match classification (Elite Clash, Competitive Match, Clear Favorite, Total Mismatch)
+- Monte Carlo simulation cross-validation
+- Visual charts (pie charts, bar charts, score matrix heatmaps, goal distributions)
+- Social media content (English previews, Spanish previews, Twitter/X threads, underdog alerts)
+- Full World Cup 2026 group stage predictions across all 12 groups
+
+The system has three interfaces:
+1. **Streamlit Web App** (`streamlit run app.py`) — visual, interactive browser-based tool
+2. **CLI Tool** (`python predict.py`) — quick terminal predictions
+3. **Content Generator** (`python content_automation.py`) — social media content and group stage simulations
+
+---
+
+## 3. THE DATA FOUNDATION
+
+All predictions are built on real data downloaded from Kaggle via `get_data.py`:
+
+| File | Records | Description |
+|------|---------|-------------|
+| `data/results.csv` | 49,215 matches | Every international football match from 1872 to March 2026. Includes date, teams, scores, tournament, venue. |
+| `data/goalscorers.csv` | 47,601 goals | Every goal scored, with scorer name, team, minute, penalty flag, own goal flag. |
+| `data/shootouts.csv` | — | Penalty shootout records. |
+| `data/rankings.csv` | — | Current FIFA rankings with points. |
+
+This data is the source of truth for everything. The prediction engine reads from it. The star player builder analyzes it. The content generator references it.
+
+---
+
+## 4. FILE-BY-FILE STATUS
+
+### Core Engine Files
+
+| File | Status | Description |
+|------|--------|-------------|
+| `prediction_engine.py` | **v6 RUNNING / v7 WRITTEN** | The brain of the system. Dixon-Coles Poisson model with ranking-form blending, star player impacts, home advantage, and Monte Carlo simulation. v7 rewrite has been designed with critical bug fixes but has not yet been deployed. |
+| `star_player_builder.py` | **WRITTEN, NOT YET DEPLOYED** | New file. Generates `data/star_players.json` from real goalscorer data instead of hardcoded player ratings. Analyzes 47,601 goals with time decay, tournament weighting, opponent strength, and penalty discounting. |
+
+### Interface Files
+
+| File | Status | Description |
+|------|--------|-------------|
+| `app.py` | **v1 RUNNING / v2 WRITTEN** | Streamlit web interface. Retro neon CSS theme. Displays predictions, charts, star players, H2H, and AI insights. v2 rewrite has been designed with 12 bug fixes but has not yet been deployed. |
+| `predict.py` | **WORKING** | CLI prediction tool. Not yet reviewed. |
+| `content_automation.py` | **v2 RUNNING / v3 WRITTEN** | Social media content generator and WC 2026 group stage simulator. v3 rewrite eliminates the duplicate prediction engine but has not yet been deployed. |
+
+### Data Pipeline Files
+
+| File | Status | Description |
+|------|--------|-------------|
+| `get_data.py` | **WORKING** | Downloads data from Kaggle. Copies results.csv, goalscorers.csv, and shootouts.csv to data/ directory. |
+| `data_loader.py` | **WORKING, NOT YET REVIEWED** | Data ingestion utilities. Used by content_automation v2 but will be deprecated in favor of prediction_engine v7's built-in DataStore. |
+| `update_rankings.py` | **NOT YET REVIEWED** | FIFA rankings sync tool. |
+
+### Supporting Files
+
+| File | Status | Description |
+|------|--------|-------------|
+| `chart_generator.py` | **WORKING, NOT YET REVIEWED** | Generates pie charts, bar charts, score matrix heatmaps, goal distribution histograms, and summary cards using matplotlib. |
+| `match_manager.py` | **WORKING, NOT YET REVIEWED** | Match scheduling, recent results tracking, card estimation. |
+| `player_impact.py` | **WORKING** | Star player impact calculations. Will be superseded by star_player_builder.py + prediction_engine v7. |
+| `strength_adjust.py` | **WORKING** | Opponent strength rating calculations. Used by content_automation v2. Will be absorbed into prediction_engine v7. |
+| `diagnostics.py` | **NOT YET REVIEWED** | Debug and health check utilities. |
+| `prediction_cheatcodes.py` | **NOT YET REVIEWED** | Override/tuning shortcuts for specific matchups. |
+
+---
+
+## 5. WHAT WE REVIEWED AND WHAT WE FOUND
+
+### prediction_engine.py — 3 Critical Bugs, 4 Design Problems
+
+**Bugs found:**
+1. Data sampling was broken — home and away matches were sampled separately (up to 40 matches instead of 20) with no date sorting, meaning `.tail()` returned unpredictable results
+2. Monte Carlo simulation used plain Poisson sampling while the analytical model used Dixon-Coles correction, causing the two systems to produce different probability distributions for the same match
+3. Top scorelines were displayed as fake simulation counts (multiplying probability by 10,200) rather than actual percentages
+
+**Design issues:**
+- Star players were hardcoded as 100+ lines of data inside the engine file, requiring code changes to update any player
+- Star impact only modeled attack — no defensive stars (Van Dijk, Courtois, Donnarumma completely ignored)
+- Global average goals per game were hardcoded at 1.36 instead of calculated from the actual dataset
+- The `predict()` function was a 90-line monolith handling 9 different responsibilities
+
+**v7 rewrite delivers:** DataStore class with lazy loading, combined home/away match sampling sorted by date, DC-consistent Monte Carlo simulation, extracted `compute_lambdas()` function, defensive star modeling, dynamic global average calculation, star players loaded from JSON with fallback, and type hints throughout.
+
+### app.py — 6 Critical Bugs, 6 Design Problems
+
+**Bugs found:**
+1. Home advantage was completely ignored — `predict()` was called without passing the `home` parameter despite the neutral venue checkbox existing in the UI
+2. Approximately 50 CSS class names in the stylesheet did not match the class names used in the HTML, meaning roughly 60% of styled elements rendered as unstyled white text
+3. `st.image(width='stretch')` is not a valid Streamlit parameter
+4. `st.json(result)` crashed when the result dictionary contained numpy arrays
+5. Head-to-head section always showed "No previous meetings" because `prediction_engine.py` never returned the H2H keys the template expected
+6. Score pills displayed raw counts instead of meaningful percentages
+
+**v2 rewrite delivers:** Home advantage correctly passed, all CSS classes unified with HTML, `use_container_width=True` for images, `safe_json()` converter for numpy, real H2H computed from results.csv with last 5 match display, proper score formatting, simulation cross-check display, and error tracebacks on failure.
+
+### content_automation.py — Fundamental Architecture Flaw
+
+**Critical issue:** This file contained an entirely separate prediction engine (`quick_simulate()`) that used different weights, different blending logic, different convergence formulas, and a minute-by-minute simulation approach. This meant the Streamlit app and the content generator produced different predictions for the same match. A user seeing a tweet and then visiting the app would see conflicting numbers.
+
+**Additional bugs:**
+- Entire import block was duplicated (lines 1-12 repeated at lines 13-24)
+- At least 4 World Cup 2026 team names did not match the dataset (Czechia, Türkiye, Bosnia-Herzegovina, and others), causing those teams to fall back to global defaults
+- Fixed random seed meant every simulation run produced identical results
+- Module-level computation ran on every import, slowing down any file that referenced it
+
+**v3 rewrite delivers:** Single prediction engine (calls `prediction_engine.predict()` for every analysis), team name mapping dictionary, no module-level side effects, JSON export for group predictions, and neutral venue option.
+
+---
+
+## 6. WHERE WE LEFT OFF
+
+We are at a **decision point**. Three major rewrites have been designed and documented:
+
+1. `prediction_engine.py` v7 — Ready to deploy
+2. `app.py` v2 — Ready to deploy
+3. `content_automation.py` v3 — Ready to deploy, pending two checks
+
+**Before deploying v3, we need:**
+
+- **Dependency check**: Confirm whether the current `prediction_engine.py` is v6 or v7, since v3 of content_automation imports `_data` from the engine (a v7-only feature)
+- **Team name resolution**: Run a fuzzy search against results.csv to find the exact dataset spellings for Cabo Verde, Congo DR, Côte d'Ivoire, and Korea Republic
+
+We also have `star_player_builder.py` written and ready to run, which would generate `data/star_players.json` from real goalscorer data — replacing all hardcoded player ratings.
+
+**Files not yet reviewed:**
+- `chart_generator.py` — the visual analytics layer
+- `match_manager.py` — match scheduling and tournament state
+- `predict.py` — CLI interface
+- `data_loader.py` — data utilities (may be deprecated by v7 engine)
+- `strength_adjust.py` — opponent strength ratings (may be absorbed by v7)
+- `player_impact.py` — star player logic (replaced by star_player_builder.py)
+- `update_rankings.py` — rankings sync
+- `diagnostics.py` — health checks
+- `prediction_cheatcodes.py` — manual overrides
+
+---
+
+## 7. RECOMMENDED NEXT STEPS (in priority order)
+
+```
+STEP   ACTION                                           WHY
+────   ──────────────────────────────────────────────── ────────────────────────────
+ 1     Run the team name fuzzy search                   Unblocks WC 2026 groups
+ 2     Deploy prediction_engine.py v7                   Fixes 3 critical bugs
+ 3     Run star_player_builder.py                       Data-driven star ratings
+ 4     Deploy app.py v2                                 Fixes 6 critical bugs
+ 5     Deploy content_automation.py v3                  Eliminates dual engine
+ 6     Review chart_generator.py                        Visual quality upgrade
+ 7     Review match_manager.py                          Tournament simulation
+ 8     Clean up deprecated files                        Remove player_impact.py,
+       (player_impact.py, strength_adjust.py,           strength_adjust.py, etc.
+        data_loader.py if fully replaced)
+ 9     Add requirements.txt and README.md               Deployment readiness
+10     Deploy to Streamlit Cloud                        Public launch
+```
+
+---
+
+## 8. THE BIG PICTURE
+
+Mundialista AI has a working prototype with real data, a functional web interface, and a genuine statistical model. The foundation is sound. What it needs now is **architectural consolidation** — one engine, one data pipeline, one source of truth — and then **polish** across the UI, charts, and content output.
+
+The World Cup 2026 starts in June 2026. We have the time to make this excellent. The question is not whether the system works — it does. The question is whether it works **correctly and consistently** across every interface a user might touch. Right now, it does not. The rewrites fix that.
+
+---
+
+*End of status report. Ready to resume development on your command.*
+
+
+bug fix 442026
+
+# Mundialista AI — Session Summary (June 2025)
+
+## What We Fixed
+
+### 1. Streamlit Cloud ImportError — RESOLVED ✅
+
+**Problem:** The app crashed on launch with:
+```
+ImportError: cannot import name 'get_score_matrix' from 'prediction_engine'
+```
+`chart_generator.py` was importing a function name (`get_score_matrix`) that never existed in the v7 engine. The v7 engine calls it `build_score_matrix`.
+
+**Fix:** Two lines changed in `chart_generator.py`:
+- Line 9: Import changed from `get_score_matrix` to `build_score_matrix`
+- Line ~193: Removed the `max_goals=max_goals` parameter that `build_score_matrix` doesn't accept, replaced with a matrix slice (`matrix[:max_goals+1, :max_goals+1]`)
+
+---
+
+### 2. prediction_engine.py v7 — DEPLOYED ✅
+
+**Confirmed live** via `from prediction_engine import _data` returning successfully. This resolves the 3 critical bugs from the status report:
+- ✅ Data sampling fixed (combined home/away, sorted by date, last N total)
+- ✅ Monte Carlo simulation now DC-consistent with analytical model
+- ✅ Top scorelines display actual percentages, not fake simulation counts
+
+---
+
+### 3. app.py v2 — DEPLOYED ✅
+
+Pushed to main and live on Streamlit Cloud.
+
+---
+
+### 4. content_automation.py v3 — DEPLOYED ✅
+
+Confirmed working locally. Spain vs Argentina test prediction completed successfully (35.1% / 26.6% / 38.3%).
+
+---
+
+### 5. Team Name Resolution — COMPLETE ✅
+
+Fuzzy search confirmed the correct dataset spellings:
+
+| WC 2026 Name | Dataset Name |
+|--------------|-------------|
+| Cabo Verde | **Cape Verde** |
+| Congo DR | **DR Congo** |
+| Côte d'Ivoire | **Ivory Coast** |
+| Korea Republic | **South Korea** |
+
+---
+
+## What's Still Pending
+
+| Item | Status |
+|------|--------|
+| `star_player_builder.py` | Written, not yet run |
+| Team name mappings in content_automation v3 | Need to verify the four names above are in `TEAM_NAME_MAP` |
+| `chart_generator.py` full review | Import fixed, but cosmetic issues remain (question marks instead of xG labels, scoreline bar labels truncating decimals) |
+| Remaining unreviewed files | `predict.py`, `match_manager.py`, `data_loader.py`, `update_rankings.py`, `diagnostics.py`, `prediction_cheatcodes.py`, `strength_adjust.py`, `player_impact.py` |
+| Live browser end-to-end test | App loads now but needs a full click-through to confirm charts, H2H, star players, and CSS all render correctly |
+
+---
+
+## Commits Pushed This Session
+
+```
+046df9d  →  prediction_engine.py v7 deployed
+d30bcba  →  app.py v2 deployed
+84753ce  →  content_automation.py v3 deployed
+(latest) →  chart_generator.py import fix
+```

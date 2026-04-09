@@ -1,0 +1,117 @@
+# Update with REAL World Cup 2026 groups
+function Update-RealWorldCup2026 {
+    Write-Host "🏆 UPDATING WITH REAL WORLD CUP 2026 GROUPS" -ForegroundColor Green
+    Write-Host "48 teams, 12 groups - April 2026 Update" -ForegroundColor Yellow
+    
+    # Create data folder
+    if (-not (Test-Path "data")) { 
+        New-Item -ItemType Directory -Path "data" | Out-Null 
+    }
+    
+    # REAL World Cup 2026 groups data
+    python -c @"
+import json
+# Real World Cup 2026 groups (Updated April 1st, 2026)
+groups = {
+    'A': ['Mexico', 'South Korea', 'South Africa', 'Czechia'],
+    'B': ['Canada', 'Switzerland', 'Qatar', 'Bosnia-Herzegovina'],
+    'C': ['Brazil', 'Morocco', 'Scotland', 'Haiti'],
+    'D': ['USA', 'Paraguay', 'Australia', 'Türkiye'],
+    'E': ['Germany', 'Ecuador', 'Ivory Coast', 'Curaçao'],
+    'F': ['Netherlands', 'Japan', 'Tunisia', 'Sweden'],
+    'G': ['Belgium', 'Iran', 'Egypt', 'New Zealand'],
+    'H': ['Spain', 'Uruguay', 'Saudi Arabia', 'Cape Verde'],
+    'I': ['France', 'Senegal', 'Norway', 'Iraq'],
+    'J': ['Argentina', 'Austria', 'Algeria', 'Jordan'],
+    'K': ['Portugal', 'Colombia', 'Uzbekistan', 'DR Congo'],
+    'L': ['England', 'Croatia', 'Panama', 'Ghana']
+}
+
+# ✅ MASSIVE PROGRESS — Here's What Just Happened
+
+You just completed **Steps 1, 2, and 3** in one session. Let me confirm what we now know:
+
+---
+
+## ✅ CONFIRMED: v7 Engine is DEPLOYED
+
+```
+python -c "from prediction_engine import _data; print('v7 engine confirmed')"
+v7 engine confirmed
+```
+
+The v7 prediction engine with DataStore, fixed sampling, and DC-consistent Monte Carlo is **live**.
+
+---
+
+## ✅ CONFIRMED: Team Names Resolved
+
+```
+Your Dataset Has:         WC 2026 Groups Say:       Fix Needed:
+──────────────────────── ──────────────────────── ────────────
+Cape Verde               Cabo Verde                ✅ NOW KNOWN
+DR Congo                 DR Congo                  ✅ ALREADY MATCHES
+Ivory Coast              Ivory Coast               ✅ ALREADY MATCHES  
+South Korea              South Korea               ✅ ALREADY MATCHES
+```
+
+**Only ONE name was actually wrong**: `Cabo Verde` → should be `Cape Verde`.
+
+The other three we worried about (`Côte d'Ivoire`, `Korea Republic`, `Congo DR`) were actually PowerShell quoting issues — your dataset uses `Ivory Coast`, `South Korea`, and `DR Congo` which **already match** the WC 2026 group names.
+
+---
+
+## ✅ CONFIRMED: All v7 Imports Work
+
+```
+from prediction_engine import predict, get_all_teams, get_team_ranking, 
+                              get_team_points, get_team_star_impact
+→ All imports OK
+```
+
+---
+
+## 📍 UPDATED CHECKPOINT
+
+```
+Step 1: Team name search              ✅ DONE
+Step 2: Deploy prediction_engine v7   ✅ DONE (confirmed working)
+Step 3: Run star_player_builder.py    ⬜ NEXT
+Step 4: Deploy app.py v2              ⬜ WAITING
+Step 5: Deploy content_automation v3  ⬜ WAITING (need 1 name fix)
+Step 6: Review chart_generator.py     ⬜ WAITING
+Step 7: Review match_manager.py       ⬜ WAITING
+```
+
+---
+
+## 🎯 NEXT: Step 3 — Star Player Builder
+
+The file needs to be saved to your project and run. **Save `star_player_builder.py`** (the complete code I provided earlier) to your project folder, then run:
+
+```powershell
+python star_player_builder.py
+```
+
+This will:
+- Analyze 47,601 goals from goalscorers.csv
+- Calculate data-driven attack ratings for every qualifying player
+- Merge defensive overrides for GKs and CBs
+- Save `data/star_players.json`
+- Print the top 30 stars and key team reports
+
+**Also** — before deploying content_automation v3, update this one line in the `TEAM_NAME_MAP`:
+
+```python
+# CHANGE THIS:
+"Cape Verde":           "Cabo Verde",
+
+# TO THIS:
+"Cabo Verde":           "Cape Verde",
+```
+
+The map was backwards — the WC groups say `Cape Verde` and your dataset also says `Cape Verde`, so we actually just need to remove that entry entirely. But `Cabo Verde` → `Cape Verde` handles anyone who types the alternate name.
+
+---
+
+**Run `python star_player_builder.py` and paste the output. Then we deploy app.py v2.** 🔥

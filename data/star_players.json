@@ -1,0 +1,4911 @@
+{
+  "Afghanistan": [
+    {
+      "name": "Afghanistan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.078,
+      "position": "DEF"
+    }
+  ],
+  "Albania": [
+    {
+      "name": "Kristjan Asllani",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.02
+    },
+    {
+      "name": "Nedim Bajrami",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 3.28
+    },
+    {
+      "name": "Albania Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "DEF"
+    }
+  ],
+  "Algeria": [
+    {
+      "name": "Mohamed Amoura",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.197,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 10.87
+    },
+    {
+      "name": "Baghdad Bounedjah",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.52
+    },
+    {
+      "name": "Rais Mbolhi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.112,
+      "position": "GK"
+    },
+    {
+      "name": "Aissa Mandi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.112,
+      "position": "CB"
+    }
+  ],
+  "Andorra": [
+    {
+      "name": "Albert Rosas",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 1.97
+    },
+    {
+      "name": "Andorra Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Angola": [
+    {
+      "name": "Gelson Dala",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.16
+    },
+    {
+      "name": "Mabululu",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.22
+    },
+    {
+      "name": "Angola Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.108,
+      "position": "DEF"
+    }
+  ],
+  "Anguilla": [
+    {
+      "name": "Anguilla Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.049,
+      "position": "DEF"
+    }
+  ],
+  "Antigua and Barbuda": [
+    {
+      "name": "Antigua and Barbuda Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.062,
+      "position": "DEF"
+    }
+  ],
+  "Argentina": [
+    {
+      "name": "Lionel Messi",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.273,
+      "defense_boost": 1.0,
+      "goals": 16,
+      "weighted_score": 14.62
+    },
+    {
+      "name": "Lautaro Martínez",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.131,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 8.26
+    },
+    {
+      "name": "Emiliano Martinez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.12,
+      "position": "GK"
+    },
+    {
+      "name": "Cristian Romero",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.12,
+      "position": "CB"
+    }
+  ],
+  "Armenia": [
+    {
+      "name": "Eduard Spertsyan",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.19
+    },
+    {
+      "name": "Lucas Zelarayán",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 3.55
+    },
+    {
+      "name": "Armenia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.064,
+      "position": "DEF"
+    }
+  ],
+  "Aruba": [
+    {
+      "name": "Aruba Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.081,
+      "position": "DEF"
+    }
+  ],
+  "Australia": [
+    {
+      "name": "Jackson Irvine",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.36
+    },
+    {
+      "name": "Kusini Yengi",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.11
+    },
+    {
+      "name": "Mathew Ryan",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.11,
+      "position": "GK"
+    },
+    {
+      "name": "Harry Souttar",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.11,
+      "position": "CB"
+    }
+  ],
+  "Austria": [
+    {
+      "name": "Marko Arnautović",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.287,
+      "defense_boost": 1.0,
+      "goals": 14,
+      "weighted_score": 15.54
+    },
+    {
+      "name": "Michael Gregoritsch",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.234,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 12.43
+    },
+    {
+      "name": "Patrick Pentz",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "GK"
+    },
+    {
+      "name": "David Alaba",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "CB"
+    }
+  ],
+  "Azerbaijan": [
+    {
+      "name": "Emin Mahmudov",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.65
+    },
+    {
+      "name": "Azerbaijan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.077,
+      "position": "DEF"
+    }
+  ],
+  "Bahamas": [
+    {
+      "name": "Bahamas Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.032,
+      "position": "DEF"
+    }
+  ],
+  "Bahrain": [
+    {
+      "name": "Bahrain Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Bangladesh": [
+    {
+      "name": "Bangladesh Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.087,
+      "position": "DEF"
+    }
+  ],
+  "Barbados": [
+    {
+      "name": "Barbados Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.06,
+      "position": "DEF"
+    }
+  ],
+  "Belarus": [
+    {
+      "name": "Belarus Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.088,
+      "position": "DEF"
+    }
+  ],
+  "Belgium": [
+    {
+      "name": "Romelu Lukaku",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.223,
+      "defense_boost": 1.0,
+      "goals": 18,
+      "weighted_score": 11.95
+    },
+    {
+      "name": "Kevin De Bruyne",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.207,
+      "defense_boost": 1.0,
+      "goals": 11,
+      "weighted_score": 11.29
+    },
+    {
+      "name": "Thibaut Courtois",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "GK"
+    },
+    {
+      "name": "Jan Vertonghen",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "CB"
+    }
+  ],
+  "Belize": [
+    {
+      "name": "Belize Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.08,
+      "position": "DEF"
+    }
+  ],
+  "Benin": [
+    {
+      "name": "Steve Mounié",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.081,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 6.59
+    },
+    {
+      "name": "Benin Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Bermuda": [
+    {
+      "name": "Djair Parfitt",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.38
+    },
+    {
+      "name": "Bermuda Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.06,
+      "position": "DEF"
+    }
+  ],
+  "Bhutan": [
+    {
+      "name": "Bhutan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.062,
+      "position": "DEF"
+    }
+  ],
+  "Bolivia": [
+    {
+      "name": "Miguel Terceros",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.126,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 8.12
+    },
+    {
+      "name": "Carlos Lampe",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.078,
+      "position": "GK"
+    },
+    {
+      "name": "Jose Sagredo",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.078,
+      "position": "CB"
+    }
+  ],
+  "Bonaire": [
+    {
+      "name": "Bonaire Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.076,
+      "position": "DEF"
+    }
+  ],
+  "Bosnia and Herzegovina": [
+    {
+      "name": "Edin Džeko",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.26,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 13.72
+    },
+    {
+      "name": "Ermedin Demirović",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.63
+    },
+    {
+      "name": "Bosnia and Herzegovina Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.081,
+      "position": "DEF"
+    }
+  ],
+  "Botswana": [
+    {
+      "name": "Botswana Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "DEF"
+    }
+  ],
+  "Brazil": [
+    {
+      "name": "Vinícius Júnior",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 4.91
+    },
+    {
+      "name": "Raphinha",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.48
+    },
+    {
+      "name": "Alisson",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.103,
+      "position": "GK"
+    },
+    {
+      "name": "Marquinhos",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.103,
+      "position": "CB"
+    }
+  ],
+  "British Virgin Islands": [
+    {
+      "name": "British Virgin Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Brunei": [
+    {
+      "name": "Brunei Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.041,
+      "position": "DEF"
+    }
+  ],
+  "Bulgaria": [
+    {
+      "name": "Kiril Despodov",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 3.69
+    },
+    {
+      "name": "Bulgaria Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Burkina Faso": [
+    {
+      "name": "Lassina Traoré",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.084,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.67
+    },
+    {
+      "name": "Dango Ouattara",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.38
+    },
+    {
+      "name": "Burkina Faso Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "DEF"
+    }
+  ],
+  "Burundi": [
+    {
+      "name": "Burundi Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.082,
+      "position": "DEF"
+    }
+  ],
+  "Cambodia": [
+    {
+      "name": "Cambodia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.08,
+      "position": "DEF"
+    }
+  ],
+  "Cameroon": [
+    {
+      "name": "Vincent Aboubakar",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.56
+    },
+    {
+      "name": "Bryan Mbeumo",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.01
+    },
+    {
+      "name": "Andre Onana",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "GK"
+    },
+    {
+      "name": "Nicolas Nkoulou",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "CB"
+    }
+  ],
+  "Canada": [
+    {
+      "name": "Jonathan David",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.23
+    },
+    {
+      "name": "Milan Borjan",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "GK"
+    },
+    {
+      "name": "Alphonso Davies",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "CB"
+    }
+  ],
+  "Cape Verde": [
+    {
+      "name": "Dailon Livramento",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.11
+    },
+    {
+      "name": "Cape Verde Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "DEF"
+    }
+  ],
+  "Cayman Islands": [
+    {
+      "name": "Cayman Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.072,
+      "position": "DEF"
+    }
+  ],
+  "Central African Republic": [
+    {
+      "name": "Central African Republic Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.077,
+      "position": "DEF"
+    }
+  ],
+  "Chad": [
+    {
+      "name": "Chad Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.08,
+      "position": "DEF"
+    }
+  ],
+  "Chile": [
+    {
+      "name": "Claudio Bravo",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "GK"
+    },
+    {
+      "name": "Gary Medel",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "CB"
+    }
+  ],
+  "China PR": [
+    {
+      "name": "Wu Lei",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 4.81
+    },
+    {
+      "name": "China PR Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "DEF"
+    }
+  ],
+  "Colombia": [
+    {
+      "name": "Luis Díaz",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.156,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 9.19
+    },
+    {
+      "name": "Luis Suárez",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.08,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.54
+    },
+    {
+      "name": "David Ospina",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.107,
+      "position": "GK"
+    },
+    {
+      "name": "Davinson Sanchez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.107,
+      "position": "CB"
+    }
+  ],
+  "Comoros": [
+    {
+      "name": "Myziane Maolida",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.44
+    },
+    {
+      "name": "Comoros Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "DEF"
+    }
+  ],
+  "Congo": [
+    {
+      "name": "Congo Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.068,
+      "position": "DEF"
+    }
+  ],
+  "Costa Rica": [
+    {
+      "name": "Alonso Martínez",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.124,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 8.03
+    },
+    {
+      "name": "Manfred Ugalde",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.38
+    },
+    {
+      "name": "Keylor Navas",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "GK"
+    },
+    {
+      "name": "Francisco Calvo",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "CB"
+    }
+  ],
+  "Croatia": [
+    {
+      "name": "Andrej Kramarić",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.294,
+      "defense_boost": 1.0,
+      "goals": 16,
+      "weighted_score": 15.97
+    },
+    {
+      "name": "Ivan Perišić",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.108,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 7.48
+    },
+    {
+      "name": "Dominik Livakovic",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "GK"
+    },
+    {
+      "name": "Josko Gvardiol",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "CB"
+    }
+  ],
+  "Cuba": [
+    {
+      "name": "Cuba Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.082,
+      "position": "DEF"
+    }
+  ],
+  "Curaçao": [
+    {
+      "name": "Gervane Kastaneer",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.095,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 7.04
+    },
+    {
+      "name": "Curaçao Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Cyprus": [
+    {
+      "name": "Ioannis Pittas",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.7
+    },
+    {
+      "name": "Andronikos Kakoullis",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.87
+    },
+    {
+      "name": "Cyprus Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.067,
+      "position": "DEF"
+    }
+  ],
+  "Czech Republic": [
+    {
+      "name": "Patrik Schick",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.128,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 8.17
+    },
+    {
+      "name": "Tomáš Souček",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.38
+    },
+    {
+      "name": "Czech Republic Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.096,
+      "position": "DEF"
+    }
+  ],
+  "DR Congo": [
+    {
+      "name": "Cédric Bakambu",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.8
+    },
+    {
+      "name": "Yoane Wissa",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 4.83
+    },
+    {
+      "name": "DR Congo Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.115,
+      "position": "DEF"
+    }
+  ],
+  "Denmark": [
+    {
+      "name": "Rasmus Højlund",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.234,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 12.42
+    },
+    {
+      "name": "Gustav Isaksen",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.109,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 7.51
+    },
+    {
+      "name": "Kasper Schmeichel",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "GK"
+    },
+    {
+      "name": "Andreas Christensen",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "CB"
+    }
+  ],
+  "Djibouti": [
+    {
+      "name": "Djibouti Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.059,
+      "position": "DEF"
+    }
+  ],
+  "Dominica": [
+    {
+      "name": "Dominica Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.077,
+      "position": "DEF"
+    }
+  ],
+  "Dominican Republic": [
+    {
+      "name": "Dorny Romero",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.59
+    },
+    {
+      "name": "Dominican Republic Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "DEF"
+    }
+  ],
+  "Ecuador": [
+    {
+      "name": "Enner Valencia",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.15,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 8.93
+    },
+    {
+      "name": "Hernan Galindez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.116,
+      "position": "GK"
+    },
+    {
+      "name": "Piero Hincapie",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.116,
+      "position": "CB"
+    }
+  ],
+  "Egypt": [
+    {
+      "name": "Mohamed Salah",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.25,
+      "defense_boost": 1.0,
+      "goals": 14,
+      "weighted_score": 13.1
+    },
+    {
+      "name": "Trézéguet",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.2
+    },
+    {
+      "name": "Mohamed El-Shenawy",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.11,
+      "position": "GK"
+    },
+    {
+      "name": "Mahmoud Hamdy",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.11,
+      "position": "CB"
+    }
+  ],
+  "El Salvador": [
+    {
+      "name": "Mario Gonzalez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "GK"
+    },
+    {
+      "name": "Eriq Zavaleta",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "CB"
+    }
+  ],
+  "England": [
+    {
+      "name": "Harry Kane",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.35,
+      "defense_boost": 1.0,
+      "goals": 26,
+      "weighted_score": 22.2
+    },
+    {
+      "name": "Bukayo Saka",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.119,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 7.85
+    },
+    {
+      "name": "Jordan Pickford",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.111,
+      "position": "GK"
+    },
+    {
+      "name": "John Stones",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.111,
+      "position": "CB"
+    }
+  ],
+  "Equatorial Guinea": [
+    {
+      "name": "Emilio Nsue",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 4.62
+    },
+    {
+      "name": "Iban Salvador",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.54
+    },
+    {
+      "name": "Equatorial Guinea Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "DEF"
+    }
+  ],
+  "Estonia": [
+    {
+      "name": "Rauno Sappinen",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.83
+    },
+    {
+      "name": "Henri Anier",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 2.25
+    },
+    {
+      "name": "Estonia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.076,
+      "position": "DEF"
+    }
+  ],
+  "Eswatini": [
+    {
+      "name": "Eswatini Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.088,
+      "position": "DEF"
+    }
+  ],
+  "Ethiopia": [
+    {
+      "name": "Ethiopia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Faroe Islands": [
+    {
+      "name": "Hanus Sørensen",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.95
+    },
+    {
+      "name": "Viljormur Davidsen",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 1.53
+    },
+    {
+      "name": "Faroe Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Fiji": [
+    {
+      "name": "Roy Krishna",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 4.3
+    },
+    {
+      "name": "Thomas Dunn",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.83
+    },
+    {
+      "name": "Fiji Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Finland": [
+    {
+      "name": "Benjamin Källman",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.086,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.75
+    },
+    {
+      "name": "Joel Pohjanpalo",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 4.03
+    },
+    {
+      "name": "Finland Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "DEF"
+    }
+  ],
+  "France": [
+    {
+      "name": "Kylian Mbappé",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.35,
+      "defense_boost": 1.0,
+      "goals": 27,
+      "weighted_score": 20.9
+    },
+    {
+      "name": "Olivier Giroud",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 6.06
+    },
+    {
+      "name": "Mike Maignan",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "GK"
+    },
+    {
+      "name": "William Saliba",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "CB"
+    }
+  ],
+  "French Guiana": [
+    {
+      "name": "French Guiana Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Gabon": [
+    {
+      "name": "Denis Bouanga",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.209,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 11.37
+    },
+    {
+      "name": "Pierre-Emerick Aubameyang",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.195,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 10.8
+    },
+    {
+      "name": "Gabon Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Gambia": [
+    {
+      "name": "Musa Barrow",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.156,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 9.19
+    },
+    {
+      "name": "Adama Sidibeh",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.117,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 7.81
+    },
+    {
+      "name": "Gambia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.088,
+      "position": "DEF"
+    }
+  ],
+  "Georgia": [
+    {
+      "name": "Georges Mikautadze",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.235,
+      "defense_boost": 1.0,
+      "goals": 15,
+      "weighted_score": 12.47
+    },
+    {
+      "name": "Khvicha Kvaratskhelia",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.177,
+      "defense_boost": 1.0,
+      "goals": 14,
+      "weighted_score": 10.06
+    },
+    {
+      "name": "Georgia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Germany": [
+    {
+      "name": "Florian Wirtz",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.112,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 7.62
+    },
+    {
+      "name": "Nick Woltemade",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.091,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.92
+    },
+    {
+      "name": "Marc-Andre ter Stegen",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "GK"
+    },
+    {
+      "name": "Antonio Rudiger",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "CB"
+    }
+  ],
+  "Ghana": [
+    {
+      "name": "Jordan Ayew",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.128,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 8.18
+    },
+    {
+      "name": "Mohammed Kudus",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.88
+    },
+    {
+      "name": "Richard Ofori",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "GK"
+    },
+    {
+      "name": "Daniel Amartey",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "CB"
+    }
+  ],
+  "Gibraltar": [
+    {
+      "name": "Gibraltar Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.051,
+      "position": "DEF"
+    }
+  ],
+  "Greece": [
+    {
+      "name": "Christos Tzolis",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.12,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 7.9
+    },
+    {
+      "name": "Anastasios Bakasetas",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.56
+    },
+    {
+      "name": "Greece Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.107,
+      "position": "DEF"
+    }
+  ],
+  "Grenada": [
+    {
+      "name": "Grenada Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.07,
+      "position": "DEF"
+    }
+  ],
+  "Guadeloupe": [
+    {
+      "name": "Guadeloupe Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.103,
+      "position": "DEF"
+    }
+  ],
+  "Guatemala": [
+    {
+      "name": "Óscar Santis",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.83
+    },
+    {
+      "name": "Rubio Rubin",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.41
+    },
+    {
+      "name": "Guatemala Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "DEF"
+    }
+  ],
+  "Guinea": [
+    {
+      "name": "Guinea Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "DEF"
+    }
+  ],
+  "Guinea-Bissau": [
+    {
+      "name": "Guinea-Bissau Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Guyana": [
+    {
+      "name": "Guyana Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.081,
+      "position": "DEF"
+    }
+  ],
+  "Haiti": [
+    {
+      "name": "Duckens Nazon",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.16,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 9.33
+    },
+    {
+      "name": "Frantzdy Pierrot",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 4.76
+    },
+    {
+      "name": "Haiti Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "DEF"
+    }
+  ],
+  "Honduras": [
+    {
+      "name": "Luis Lopez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "GK"
+    },
+    {
+      "name": "Maynor Figueroa",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "CB"
+    }
+  ],
+  "Hong Kong": [
+    {
+      "name": "Hong Kong Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Hungary": [
+    {
+      "name": "Barnabás Varga",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.221,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 11.9
+    },
+    {
+      "name": "Dominik Szoboszlai",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 5.85
+    },
+    {
+      "name": "Hungary Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.096,
+      "position": "DEF"
+    }
+  ],
+  "Iceland": [
+    {
+      "name": "Albert Guðmundsson",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.168,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 9.69
+    },
+    {
+      "name": "Orri Óskarsson",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.06
+    },
+    {
+      "name": "Iceland Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.086,
+      "position": "DEF"
+    }
+  ],
+  "India": [
+    {
+      "name": "India Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "DEF"
+    }
+  ],
+  "Indonesia": [
+    {
+      "name": "Ramadhan Sananta",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.1
+    },
+    {
+      "name": "Indonesia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Iran": [
+    {
+      "name": "Mehdi Taremi",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.264,
+      "defense_boost": 1.0,
+      "goals": 15,
+      "weighted_score": 14.03
+    },
+    {
+      "name": "Sardar Azmoun",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.187,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 10.48
+    },
+    {
+      "name": "Alireza Beiranvand",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "GK"
+    },
+    {
+      "name": "Morteza Pouraliganji",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "CB"
+    }
+  ],
+  "Iraq": [
+    {
+      "name": "Aymen Hussein",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.273,
+      "defense_boost": 1.0,
+      "goals": 15,
+      "weighted_score": 14.59
+    },
+    {
+      "name": "Mohanad Ali",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.44
+    },
+    {
+      "name": "Jalal Hassan",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "GK"
+    },
+    {
+      "name": "Ahmed Ibrahim",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "CB"
+    }
+  ],
+  "Israel": [
+    {
+      "name": "Dor Peretz",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.82
+    },
+    {
+      "name": "Mohammad Abu Fani",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.91
+    },
+    {
+      "name": "Israel Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Italy": [
+    {
+      "name": "Moise Kean",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.256,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 13.5
+    },
+    {
+      "name": "Mateo Retegui",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.173,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 9.87
+    },
+    {
+      "name": "Gianluigi Donnarumma",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "GK"
+    },
+    {
+      "name": "Alessandro Bastoni",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "CB"
+    }
+  ],
+  "Ivory Coast": [
+    {
+      "name": "Amad Diallo",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.42
+    },
+    {
+      "name": "Franck Kessié",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.08
+    },
+    {
+      "name": "Ivory Coast Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.112,
+      "position": "DEF"
+    }
+  ],
+  "Jamaica": [
+    {
+      "name": "Shamar Nicholson",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.97
+    },
+    {
+      "name": "Jon Russell",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.28
+    },
+    {
+      "name": "Andre Blake",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "GK"
+    },
+    {
+      "name": "Damion Lowe",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "CB"
+    }
+  ],
+  "Japan": [
+    {
+      "name": "Ayase Ueda",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.178,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 10.1
+    },
+    {
+      "name": "Daichi Kamada",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 6.45
+    },
+    {
+      "name": "Shuichi Gonda",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.111,
+      "position": "GK"
+    },
+    {
+      "name": "Ko Itakura",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.111,
+      "position": "CB"
+    }
+  ],
+  "Jersey": [
+    {
+      "name": "Jersey Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.103,
+      "position": "DEF"
+    }
+  ],
+  "Jordan": [
+    {
+      "name": "Yazan Al-Naimat",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.218,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 11.75
+    },
+    {
+      "name": "Musa Al-Taamari",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.165,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 9.56
+    },
+    {
+      "name": "Jordan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "DEF"
+    }
+  ],
+  "Kazakhstan": [
+    {
+      "name": "Abat Aymbetov",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 2.61
+    },
+    {
+      "name": "Bakhtiyar Zaynutdinov",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 2.22
+    },
+    {
+      "name": "Kazakhstan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Kenya": [
+    {
+      "name": "Ryan Ogam",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.081,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.58
+    },
+    {
+      "name": "Michael Olunga",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.29
+    },
+    {
+      "name": "Kenya Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "DEF"
+    }
+  ],
+  "Kosovo": [
+    {
+      "name": "Vedat Muriqi",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.164,
+      "defense_boost": 1.0,
+      "goals": 14,
+      "weighted_score": 9.49
+    },
+    {
+      "name": "Kosovo Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.098,
+      "position": "DEF"
+    }
+  ],
+  "Kuwait": [
+    {
+      "name": "Yousef Nasser",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.15
+    },
+    {
+      "name": "Mohammad Daham",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.33
+    },
+    {
+      "name": "Kuwait Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Kyrgyzstan": [
+    {
+      "name": "Joel Kojo",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.088,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.81
+    },
+    {
+      "name": "Kyrgyzstan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Laos": [
+    {
+      "name": "Laos Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.055,
+      "position": "DEF"
+    }
+  ],
+  "Latvia": [
+    {
+      "name": "Vladislavs Gutkovskis",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 4.62
+    },
+    {
+      "name": "Jānis Ikaunieks",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 2.06
+    },
+    {
+      "name": "Latvia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Lebanon": [
+    {
+      "name": "Lebanon Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.103,
+      "position": "DEF"
+    }
+  ],
+  "Lesotho": [
+    {
+      "name": "Lesotho Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Liberia": [
+    {
+      "name": "Liberia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Libya": [
+    {
+      "name": "Ezoo El Maremi",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.34
+    },
+    {
+      "name": "Libya Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "DEF"
+    }
+  ],
+  "Liechtenstein": [
+    {
+      "name": "Liechtenstein Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.057,
+      "position": "DEF"
+    }
+  ],
+  "Lithuania": [
+    {
+      "name": "Gvidas Gineitis",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.76
+    },
+    {
+      "name": "Armandas Kučys",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.51
+    },
+    {
+      "name": "Lithuania Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Luxembourg": [
+    {
+      "name": "Gerson Rodrigues",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 11,
+      "weighted_score": 5.49
+    },
+    {
+      "name": "Danel Sinani",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 2.98
+    },
+    {
+      "name": "Luxembourg Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Macau": [
+    {
+      "name": "Macau Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.054,
+      "position": "DEF"
+    }
+  ],
+  "Madagascar": [
+    {
+      "name": "Rayan Raveloson",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 6.52
+    },
+    {
+      "name": "Madagascar Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Malawi": [
+    {
+      "name": "Malawi Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "Malaysia": [
+    {
+      "name": "Malaysia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "Maldives": [
+    {
+      "name": "Maldives Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.08,
+      "position": "DEF"
+    }
+  ],
+  "Mali": [
+    {
+      "name": "Kamory Doumbia",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.17,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 9.76
+    },
+    {
+      "name": "Lassine Sinayoko",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.081,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 6.58
+    },
+    {
+      "name": "Mali Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.116,
+      "position": "DEF"
+    }
+  ],
+  "Malta": [
+    {
+      "name": "Malta Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Martinique": [
+    {
+      "name": "Martinique Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "DEF"
+    }
+  ],
+  "Mauritania": [
+    {
+      "name": "Mauritania Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "DEF"
+    }
+  ],
+  "Mauritius": [
+    {
+      "name": "Mauritius Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Mexico": [
+    {
+      "name": "Guillermo Ochoa",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "GK"
+    },
+    {
+      "name": "Cesar Montes",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "CB"
+    }
+  ],
+  "Moldova": [
+    {
+      "name": "Ion Nicolaescu",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.083,
+      "defense_boost": 1.0,
+      "goals": 11,
+      "weighted_score": 6.64
+    },
+    {
+      "name": "Moldova Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.073,
+      "position": "DEF"
+    }
+  ],
+  "Mongolia": [
+    {
+      "name": "Mongolia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.072,
+      "position": "DEF"
+    }
+  ],
+  "Montenegro": [
+    {
+      "name": "Nikola Krstović",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.54
+    },
+    {
+      "name": "Stevan Jovetić",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.29
+    },
+    {
+      "name": "Montenegro Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Montserrat": [
+    {
+      "name": "Montserrat Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.068,
+      "position": "DEF"
+    }
+  ],
+  "Morocco": [
+    {
+      "name": "Ayoub El Kaabi",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.109,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 7.53
+    },
+    {
+      "name": "Youssef En-Nesyri",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.67
+    },
+    {
+      "name": "Yassine Bounou",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.12,
+      "position": "GK"
+    },
+    {
+      "name": "Nayef Aguerd",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.12,
+      "position": "CB"
+    }
+  ],
+  "Mozambique": [
+    {
+      "name": "Geny Catamo",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.21
+    },
+    {
+      "name": "Mozambique Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "DEF"
+    }
+  ],
+  "Myanmar": [
+    {
+      "name": "Myanmar Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.06,
+      "position": "DEF"
+    }
+  ],
+  "Namibia": [
+    {
+      "name": "Peter Shalulile",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.3
+    },
+    {
+      "name": "Namibia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "DEF"
+    }
+  ],
+  "Nepal": [
+    {
+      "name": "Nepal Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Netherlands": [
+    {
+      "name": "Memphis Depay",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.287,
+      "defense_boost": 1.0,
+      "goals": 15,
+      "weighted_score": 15.53
+    },
+    {
+      "name": "Cody Gakpo",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.28,
+      "defense_boost": 1.0,
+      "goals": 18,
+      "weighted_score": 15.05
+    },
+    {
+      "name": "Bart Verbruggen",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "GK"
+    },
+    {
+      "name": "Virgil van Dijk",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "CB"
+    }
+  ],
+  "New Caledonia": [
+    {
+      "name": "New Caledonia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "DEF"
+    }
+  ],
+  "New Zealand": [
+    {
+      "name": "Chris Wood",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.213,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 11.53
+    },
+    {
+      "name": "Elijah Just",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.59
+    },
+    {
+      "name": "Stefan Marinovic",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "GK"
+    },
+    {
+      "name": "Winston Reid",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "CB"
+    }
+  ],
+  "Nicaragua": [
+    {
+      "name": "Jaime Moreno",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.35
+    },
+    {
+      "name": "Nicaragua Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "DEF"
+    }
+  ],
+  "Niger": [
+    {
+      "name": "Niger Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "DEF"
+    }
+  ],
+  "Nigeria": [
+    {
+      "name": "Victor Osimhen",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.307,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 16.84
+    },
+    {
+      "name": "Akor Adams",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.26
+    },
+    {
+      "name": "Francis Uzoho",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "GK"
+    },
+    {
+      "name": "William Troost-Ekong",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "CB"
+    }
+  ],
+  "North Korea": [
+    {
+      "name": "Jong Il-gwan",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 4.88
+    },
+    {
+      "name": "Ri Jo-guk",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.15
+    },
+    {
+      "name": "North Korea Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.086,
+      "position": "DEF"
+    }
+  ],
+  "North Macedonia": [
+    {
+      "name": "Bojan Miovski",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.112,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 7.62
+    },
+    {
+      "name": "Enis Bardhi",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.093,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 6.97
+    },
+    {
+      "name": "North Macedonia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Northern Ireland": [
+    {
+      "name": "Isaac Price",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.52
+    },
+    {
+      "name": "Dion Charles",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.16
+    },
+    {
+      "name": "Northern Ireland Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "DEF"
+    }
+  ],
+  "Norway": [
+    {
+      "name": "Erling Haaland",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.35,
+      "defense_boost": 1.0,
+      "goals": 35,
+      "weighted_score": 37.38
+    },
+    {
+      "name": "Alexander Sørloth",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.224,
+      "defense_boost": 1.0,
+      "goals": 11,
+      "weighted_score": 12.03
+    },
+    {
+      "name": "Norway Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "DEF"
+    }
+  ],
+  "Oman": [
+    {
+      "name": "Abdulrahman Al-Mushaifri",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.55
+    },
+    {
+      "name": "Muhsen Al-Ghassani",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.24
+    },
+    {
+      "name": "Oman Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.106,
+      "position": "DEF"
+    }
+  ],
+  "Pakistan": [
+    {
+      "name": "Pakistan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.056,
+      "position": "DEF"
+    }
+  ],
+  "Palestine": [
+    {
+      "name": "Oday Dabbagh",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 5.46
+    },
+    {
+      "name": "Wessam Abou Ali",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.9
+    },
+    {
+      "name": "Palestine Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "Panama": [
+    {
+      "name": "Ismael Díaz",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.138,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 8.52
+    },
+    {
+      "name": "José Fajardo",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.33
+    },
+    {
+      "name": "Luis Mejia",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "GK"
+    },
+    {
+      "name": "Fidel Escobar",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "CB"
+    }
+  ],
+  "Papua New Guinea": [
+    {
+      "name": "Tommy Semmy",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.5
+    },
+    {
+      "name": "Papua New Guinea Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.076,
+      "position": "DEF"
+    }
+  ],
+  "Paraguay": [
+    {
+      "name": "Antonio Sanabria",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.47
+    },
+    {
+      "name": "Julio Enciso",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.92
+    },
+    {
+      "name": "Antony Silva",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "GK"
+    },
+    {
+      "name": "Gustavo Gomez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "CB"
+    }
+  ],
+  "Peru": [
+    {
+      "name": "Pedro Gallese",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "GK"
+    },
+    {
+      "name": "Alexander Callens",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "CB"
+    }
+  ],
+  "Philippines": [
+    {
+      "name": "Philippines Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.084,
+      "position": "DEF"
+    }
+  ],
+  "Poland": [
+    {
+      "name": "Robert Lewandowski",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.24,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 12.69
+    },
+    {
+      "name": "Piotr Zieliński",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.111,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 7.58
+    },
+    {
+      "name": "Wojciech Szczesny",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "GK"
+    },
+    {
+      "name": "Jan Bednarek",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.092,
+      "position": "CB"
+    }
+  ],
+  "Portugal": [
+    {
+      "name": "Cristiano Ronaldo",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.35,
+      "defense_boost": 1.0,
+      "goals": 26,
+      "weighted_score": 20.97
+    },
+    {
+      "name": "Bruno Fernandes",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.22,
+      "defense_boost": 1.0,
+      "goals": 15,
+      "weighted_score": 11.85
+    },
+    {
+      "name": "Diogo Costa",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.109,
+      "position": "GK"
+    },
+    {
+      "name": "Ruben Dias",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.109,
+      "position": "CB"
+    }
+  ],
+  "Puerto Rico": [
+    {
+      "name": "Puerto Rico Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.09,
+      "position": "DEF"
+    }
+  ],
+  "Qatar": [
+    {
+      "name": "Almoez Ali",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.251,
+      "defense_boost": 1.0,
+      "goals": 14,
+      "weighted_score": 13.15
+    },
+    {
+      "name": "Akram Afif",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.151,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 8.97
+    },
+    {
+      "name": "Saad Al-Sheeb",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "GK"
+    },
+    {
+      "name": "Bassam Al-Rawi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "CB"
+    }
+  ],
+  "Republic of Ireland": [
+    {
+      "name": "Troy Parrott",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.157,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 9.23
+    },
+    {
+      "name": "Evan Ferguson",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.127,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 8.13
+    },
+    {
+      "name": "Republic of Ireland Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "DEF"
+    }
+  ],
+  "Romania": [
+    {
+      "name": "Răzvan Marin",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 6.24
+    },
+    {
+      "name": "Denis Drăguș",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 6.1
+    },
+    {
+      "name": "Romania Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "DEF"
+    }
+  ],
+  "Russia": [
+    {
+      "name": "Russia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.116,
+      "position": "DEF"
+    }
+  ],
+  "Rwanda": [
+    {
+      "name": "Rwanda Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.105,
+      "position": "DEF"
+    }
+  ],
+  "Saint Kitts and Nevis": [
+    {
+      "name": "Saint Kitts and Nevis Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.07,
+      "position": "DEF"
+    }
+  ],
+  "Saint Lucia": [
+    {
+      "name": "Saint Lucia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Saint Martin": [
+    {
+      "name": "Saint Martin Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.085,
+      "position": "DEF"
+    }
+  ],
+  "Saint Vincent and the Grenadines": [
+    {
+      "name": "Oalex Anderson",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.082,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 6.6
+    },
+    {
+      "name": "Saint Vincent and the Grenadines Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.079,
+      "position": "DEF"
+    }
+  ],
+  "Samoa": [
+    {
+      "name": "Samoa Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.061,
+      "position": "DEF"
+    }
+  ],
+  "San Marino": [
+    {
+      "name": "San Marino Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.053,
+      "position": "DEF"
+    }
+  ],
+  "Saudi Arabia": [
+    {
+      "name": "Firas Al-Buraikan",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.38
+    },
+    {
+      "name": "Saleh Al-Shehri",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 4.37
+    },
+    {
+      "name": "Mohammed Al-Owais",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "GK"
+    },
+    {
+      "name": "Ali Al-Bulaihi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "CB"
+    }
+  ],
+  "Scotland": [
+    {
+      "name": "Scott McTominay",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.192,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 10.69
+    },
+    {
+      "name": "Ryan Christie",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.54
+    },
+    {
+      "name": "Angus Gunn",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "GK"
+    },
+    {
+      "name": "Grant Hanley",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "CB"
+    }
+  ],
+  "Senegal": [
+    {
+      "name": "Sadio Mané",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.143,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 8.67
+    },
+    {
+      "name": "Pape Matar Sarr",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.53
+    },
+    {
+      "name": "Edouard Mendy",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "GK"
+    },
+    {
+      "name": "Kalidou Koulibaly",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "CB"
+    }
+  ],
+  "Serbia": [
+    {
+      "name": "Aleksandar Mitrović",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.248,
+      "defense_boost": 1.0,
+      "goals": 18,
+      "weighted_score": 13.03
+    },
+    {
+      "name": "Dušan Vlahović",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.103,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 7.32
+    },
+    {
+      "name": "Predrag Rajkovic",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.098,
+      "position": "GK"
+    },
+    {
+      "name": "Nikola Milenkovic",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.098,
+      "position": "CB"
+    }
+  ],
+  "Seychelles": [
+    {
+      "name": "Seychelles Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.03,
+      "position": "DEF"
+    }
+  ],
+  "Sierra Leone": [
+    {
+      "name": "Sierra Leone Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.083,
+      "position": "DEF"
+    }
+  ],
+  "Singapore": [
+    {
+      "name": "Singapore Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.078,
+      "position": "DEF"
+    }
+  ],
+  "Sint Maarten": [
+    {
+      "name": "Sint Maarten Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.063,
+      "position": "DEF"
+    }
+  ],
+  "Slovakia": [
+    {
+      "name": "David Strelec",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.099,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 7.18
+    },
+    {
+      "name": "Ivan Schranz",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.91
+    },
+    {
+      "name": "Slovakia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "DEF"
+    }
+  ],
+  "Slovenia": [
+    {
+      "name": "Benjamin Šeško",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.099,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 7.19
+    },
+    {
+      "name": "Adam Gnezda Čerin",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.0
+    },
+    {
+      "name": "Slovenia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "DEF"
+    }
+  ],
+  "Solomon Islands": [
+    {
+      "name": "Solomon Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.081,
+      "position": "DEF"
+    }
+  ],
+  "Somalia": [
+    {
+      "name": "Somalia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.074,
+      "position": "DEF"
+    }
+  ],
+  "South Africa": [
+    {
+      "name": "Lyle Foster",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.84
+    },
+    {
+      "name": "Oswin Appollis",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.68
+    },
+    {
+      "name": "South Africa Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.107,
+      "position": "DEF"
+    }
+  ],
+  "South Korea": [
+    {
+      "name": "Son Heung-min",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.199,
+      "defense_boost": 1.0,
+      "goals": 13,
+      "weighted_score": 10.96
+    },
+    {
+      "name": "Lee Kang-in",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.124,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 8.05
+    },
+    {
+      "name": "Kim Seung-gyu",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "GK"
+    },
+    {
+      "name": "Kim Min-jae",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.101,
+      "position": "CB"
+    }
+  ],
+  "South Sudan": [
+    {
+      "name": "South Sudan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.077,
+      "position": "DEF"
+    }
+  ],
+  "Spain": [
+    {
+      "name": "Mikel Oyarzabal",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.262,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 13.88
+    },
+    {
+      "name": "Mikel Merino",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.26,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 13.77
+    },
+    {
+      "name": "Unai Simon",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.108,
+      "position": "GK"
+    },
+    {
+      "name": "Aymeric Laporte",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.108,
+      "position": "CB"
+    }
+  ],
+  "Sri Lanka": [
+    {
+      "name": "Sri Lanka Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "DEF"
+    }
+  ],
+  "Sudan": [
+    {
+      "name": "Sudan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "Suriname": [
+    {
+      "name": "Richonell Margaret",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.92
+    },
+    {
+      "name": "Suriname Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.098,
+      "position": "DEF"
+    }
+  ],
+  "Sweden": [
+    {
+      "name": "Viktor Gyökeres",
+      "role": "attacker",
+      "tier": "elite",
+      "tier_label": "Elite",
+      "attack_boost": 1.306,
+      "defense_boost": 1.0,
+      "goals": 17,
+      "weighted_score": 16.79
+    },
+    {
+      "name": "Anthony Elanga",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.53
+    },
+    {
+      "name": "Sweden Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.089,
+      "position": "DEF"
+    }
+  ],
+  "Switzerland": [
+    {
+      "name": "Breel Embolo",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.213,
+      "defense_boost": 1.0,
+      "goals": 10,
+      "weighted_score": 11.54
+    },
+    {
+      "name": "Zeki Amdouni",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 5.62
+    },
+    {
+      "name": "Yann Sommer",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "GK"
+    },
+    {
+      "name": "Manuel Akanji",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "CB"
+    }
+  ],
+  "Syria": [
+    {
+      "name": "Omar Khribin",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 3.73
+    },
+    {
+      "name": "Syria Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "DEF"
+    }
+  ],
+  "São Tomé and Príncipe": [
+    {
+      "name": "São Tomé and Príncipe Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.043,
+      "position": "DEF"
+    }
+  ],
+  "Tahiti": [
+    {
+      "name": "Teaonui Tehau",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 2.85
+    },
+    {
+      "name": "Tahiti Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "DEF"
+    }
+  ],
+  "Taiwan": [
+    {
+      "name": "Taiwan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.062,
+      "position": "DEF"
+    }
+  ],
+  "Tajikistan": [
+    {
+      "name": "Tajikistan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.104,
+      "position": "DEF"
+    }
+  ],
+  "Tanzania": [
+    {
+      "name": "Tanzania Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.102,
+      "position": "DEF"
+    }
+  ],
+  "Thailand": [
+    {
+      "name": "Suphanat Mueanta",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 3.8
+    },
+    {
+      "name": "Thailand Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "DEF"
+    }
+  ],
+  "Timor-Leste": [
+    {
+      "name": "Timor-Leste Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.048,
+      "position": "DEF"
+    }
+  ],
+  "Togo": [
+    {
+      "name": "Togo Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "DEF"
+    }
+  ],
+  "Trinidad and Tobago": [
+    {
+      "name": "Dante Sealy",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.43
+    },
+    {
+      "name": "Marvin Phillip",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.087,
+      "position": "GK"
+    },
+    {
+      "name": "Sheldon Bateau",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.087,
+      "position": "CB"
+    }
+  ],
+  "Tunisia": [
+    {
+      "name": "Mohamed Ali Ben Romdhane",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 4.69
+    },
+    {
+      "name": "Aymen Dahmen",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "GK"
+    },
+    {
+      "name": "Montassar Talbi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "CB"
+    }
+  ],
+  "Turkey": [
+    {
+      "name": "Kerem Aktürkoğlu",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.224,
+      "defense_boost": 1.0,
+      "goals": 11,
+      "weighted_score": 12.01
+    },
+    {
+      "name": "Kenan Yıldız",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.99
+    },
+    {
+      "name": "Altay Bayindir",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "GK"
+    },
+    {
+      "name": "Merih Demiral",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "CB"
+    }
+  ],
+  "Turkmenistan": [
+    {
+      "name": "Turkmenistan Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.086,
+      "position": "DEF"
+    }
+  ],
+  "Turks and Caicos Islands": [
+    {
+      "name": "Turks and Caicos Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.065,
+      "position": "DEF"
+    }
+  ],
+  "Uganda": [
+    {
+      "name": "Rogers Mato",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.04
+    },
+    {
+      "name": "Uganda Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.094,
+      "position": "DEF"
+    }
+  ],
+  "Ukraine": [
+    {
+      "name": "Oleksiy Hutsulyak",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 6.16
+    },
+    {
+      "name": "Ruslan Malinovskyi",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.46
+    },
+    {
+      "name": "Anatoliy Trubin",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "GK"
+    },
+    {
+      "name": "Illia Zabarnyi",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.093,
+      "position": "CB"
+    }
+  ],
+  "United Arab Emirates": [
+    {
+      "name": "Fábio Lima",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.122,
+      "defense_boost": 1.0,
+      "goals": 8,
+      "weighted_score": 7.95
+    },
+    {
+      "name": "Sultan Adil",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.104,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 7.37
+    },
+    {
+      "name": "United Arab Emirates Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "United States": [
+    {
+      "name": "Jesús Ferreira",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 2.49
+    },
+    {
+      "name": "Matt Turner",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "GK"
+    },
+    {
+      "name": "Chris Richards",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "CB"
+    }
+  ],
+  "United States Virgin Islands": [
+    {
+      "name": "United States Virgin Islands Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.071,
+      "position": "DEF"
+    }
+  ],
+  "Uruguay": [
+    {
+      "name": "Giorgian de Arrascaeta",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 4,
+      "weighted_score": 5.01
+    },
+    {
+      "name": "Darwin Núñez",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 4.97
+    },
+    {
+      "name": "Sergio Rochet",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.112,
+      "position": "GK"
+    },
+    {
+      "name": "Jose Maria Gimenez",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.112,
+      "position": "CB"
+    }
+  ],
+  "Uzbekistan": [
+    {
+      "name": "Abbosbek Fayzullaev",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.087,
+      "defense_boost": 1.0,
+      "goals": 6,
+      "weighted_score": 6.77
+    },
+    {
+      "name": "Eldor Shomurodov",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 5.5
+    },
+    {
+      "name": "Eldorbek Suyunov",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "GK"
+    },
+    {
+      "name": "Rustam Ashurmatov",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.113,
+      "position": "CB"
+    }
+  ],
+  "Vanuatu": [
+    {
+      "name": "Vanuatu Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.069,
+      "position": "DEF"
+    }
+  ],
+  "Venezuela": [
+    {
+      "name": "Salomón Rondón",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.112,
+      "defense_boost": 1.0,
+      "goals": 9,
+      "weighted_score": 7.63
+    },
+    {
+      "name": "Rafael Romo",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "GK"
+    },
+    {
+      "name": "Yordan Osorio",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.099,
+      "position": "CB"
+    }
+  ],
+  "Vietnam": [
+    {
+      "name": "Vietnam Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.1,
+      "position": "DEF"
+    }
+  ],
+  "Wales": [
+    {
+      "name": "Harry Wilson",
+      "role": "attacker",
+      "tier": "star",
+      "tier_label": "Star",
+      "attack_boost": 1.193,
+      "defense_boost": 1.0,
+      "goals": 12,
+      "weighted_score": 10.71
+    },
+    {
+      "name": "Brennan Johnson",
+      "role": "attacker",
+      "tier": "key",
+      "tier_label": "Key",
+      "attack_boost": 1.082,
+      "defense_boost": 1.0,
+      "goals": 7,
+      "weighted_score": 6.6
+    },
+    {
+      "name": "Danny Ward",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "GK"
+    },
+    {
+      "name": "Ben Davies",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.095,
+      "position": "CB"
+    }
+  ],
+  "Yemen": [
+    {
+      "name": "Yemen Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.087,
+      "position": "DEF"
+    }
+  ],
+  "Zambia": [
+    {
+      "name": "Patson Daka",
+      "role": "attacker",
+      "tier": "base",
+      "tier_label": "Base",
+      "attack_boost": 1.0,
+      "defense_boost": 1.0,
+      "goals": 5,
+      "weighted_score": 3.99
+    },
+    {
+      "name": "Zambia Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.091,
+      "position": "DEF"
+    }
+  ],
+  "Zimbabwe": [
+    {
+      "name": "Zimbabwe Defensive Unit",
+      "role": "defender",
+      "tier": "defender",
+      "tier_label": "Defender",
+      "attack_boost": 1.0,
+      "defense_boost": 1.097,
+      "position": "DEF"
+    }
+  ]
+}

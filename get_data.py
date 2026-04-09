@@ -1,6 +1,8 @@
 import kagglehub
 import pandas as pd
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 DATA_DIR = Path("data")
@@ -20,4 +22,21 @@ for f in ["results.csv", "goalscorers.csv", "shootouts.csv", "rankings.csv"]:
 df = pd.read_csv(DATA_DIR / "results.csv", parse_dates=["date"])
 print(f"\nTotal matches: {len(df):,}")
 print(f"Date range: {df['date'].min().date()} to {df['date'].max().date()}")
-print(f"\nDONE! Now run: python data_loader.py")
+
+print("\nData downloaded. Running auto-updates...")
+
+# Auto-run rankings update
+print("\n" + "=" * 60)
+print("AUTO-RUNNING: update_rankings.py")
+print("=" * 60)
+subprocess.run([sys.executable, "update_rankings.py"])
+
+# Auto-run star player builder v2
+print("\n" + "=" * 60)
+print("AUTO-RUNNING: star_player_builder_v2.py")
+print("=" * 60)
+subprocess.run([sys.executable, "star_player_builder_v2.py"])
+
+print("\n" + "=" * 60)
+print("ALL DONE! Data + Rankings + Star Players updated.")
+print("=" * 60)
