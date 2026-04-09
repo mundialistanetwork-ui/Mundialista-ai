@@ -1,20 +1,23 @@
-﻿import argparse
+
+import argparse
 import os
 import sys
 import webbrowser
 
-from prediction_engine import predict
+from prediction_engine import predict, clean_match_type
 from chart_generator import generate_all_charts
+
 
 def print_divider():
     print("=" * 72)
+
 
 def print_result(team_a, team_b, result):
     print_divider()
     print("MUNDIALISTA AI - MATCH PREDICTION")
     print_divider()
-    print(team_a + " vs " + team_b)
-    print("Match Type: " + result.get("match_type", "Competitive"))
+    print(f"{team_a} vs {team_b}")
+    print(f"Match Type: {clean_match_type(result.get('match_type', 'Unknown'))}")
     print()
 
     fmt = "{:<20} Win: {:>6.1f}%"
@@ -35,71 +38,35 @@ def print_result(team_a, team_b, result):
     top_scores = result.get("top_scores", [])
     if top_scores:
         print("Most Likely Scorelines:")
-        for item in top_scores[:5]:
-            if isinstance(item, (list, tuple)) and len(item) >= 2:
-                print("  {:<8} {}".format(item[0], item[1]))
+        for score in top_scores[:5]:
+            if isinstance(score, (list, tuple)) and len(score) >= 2:
+                print(f"  {str(score[0]):<8} {score[1]}")
             else:
-                print("  {}".format(item))
+                print(f"  {score}")
         print()
 
-def interactive_mode():
-    print_divider()
-    print("MUNDIALISTA AI - INTERACTIVE MODE")
-    print_divider()
-    team_a = input("Enter Team A: ").strip()
-    team_b = input("Enter Team B: ").strip()
-    open_report = input("Open HTML report? (y/n): ").strip().lower() in ["y", "yes"]
-    return team_a, team_b, open_report
 
 def main():
-    parser = argparse.ArgumentParser(description="Predict international football matches.")
-    parser.add_argument("team_a", nargs="?", help="First team")
-    parser.add_argument("team_b", nargs="?", help="Second team")
-    parser.add_argument("--open", "-o", dest="open_report", action="store_true",
-                        help="Open HTML report in browser after generation")
-
+    parser = argparse.ArgumentParser(description="Mundialista AI match prediction CLI")
+    parser.add_argument("team_a", help="Home / Team A")
+    parser.add_argument("team_b", help="Away / Team B")
+    parser.add_argument("--home", help="Team with home advantage", default=None)
+    parser.add_argument("--open", action="store_true", help="Open HTML report in browser")
     args = parser.parse_args()
 
-    if args.team_a and args.team_b:
-        team_a = args.team_a
-        team_b = args.team_b
-        open_report = args.open_report
-    else:
-        team_a, team_b, open_report = interactive_mode()
-
-    if not team_a or not team_b:
-        print("Error: Two teams are required.")
-        sys.exit(1)
-
-    if team_a == team_b:
-        print("Error: Please choose two different teams.")
-        sys.exit(1)
-
-    try:
-        result = predict(team_a, team_b)
-    except Exception as e:
-        print("Prediction failed: " + str(e))
-        sys.exit(1)
-
-    print_result(team_a, team_b, result)
+    result = predict(args.team_a, args.team_b, home=args.home)
+    print_result(args.team_a, args.team_b, result)
 
     print("Generating charts...")
-    try:
-        charts = generate_all_charts(result, team_a, team_b)
-        print()
-        print("Generated Files:")
-        for key, path in charts.items():
-            print("  {:<12} {}".format(key, path))
-        print()
+    charts = generate_all_charts(result, args.team_a, args.team_b)
+    print()
+    print("Generated Files:")
+    for k, v in charts.items():
+        print(f"  {k:<12} {v}")
 
-        if open_report and "html" in charts:
-            abs_html = os.path.abspath(charts["html"])
-            webbrowser.open("file:///" + abs_html.replace(os.sep, "/"))
-            print("Opened report: " + charts["html"])
+    if args.open and "html" in charts and os.path.exists(charts["html"]):
+        webbrowser.open("file://" + os.path.abspath(charts["html"]))
 
-    except Exception as e:
-        print("Chart generation failed: " + str(e))
-        sys.exit(1)
 
 if __name__ == "__main__":
     main()

@@ -25,6 +25,7 @@ CONFIG = {
     "N_SIMULATIONS": 10_200,
     "DIXON_COLES_RHO": -0.04,
 
+
     # Home advantage
     "HOME_ATTACK_BOOST": 1.06,
     "HOME_DEFENSE_BOOST": 0.94,  # opponent scores less at your home
@@ -56,6 +57,29 @@ CONFIG = {
     },
     "DEFAULT_TOURNAMENT_WEIGHT": 0.65,
 }
+
+def clean_match_type(match_type):
+    """Normalize mojibake/emoji-heavy match type strings for clean display."""
+    if match_type is None:
+        return "Match"
+
+    s = str(match_type)
+
+    replacements = {
+        "ðŸ”» Total Mismatch": "Total Mismatch",
+        "ðŸ”¥ Top Team Showdown": "Top Team Showdown",
+        "âš”ï¸ Elite Clash": "Elite Clash",
+        "ðŸ“Š Clear Favorite": "Clear Favorite",
+        "âš¡ Competitive Match": "Competitive Match",
+        "⚔️ Elite Clash": "Elite Clash",
+        "🔻 Total Mismatch": "Total Mismatch",
+        "📊 Clear Favorite": "Clear Favorite",
+        "🔥 Top Team Showdown": "Top Team Showdown",
+        "⚡ Competitive Match": "Competitive Match",
+    }
+
+    return replacements.get(s, s)
+
 
 DATA_DIR = Path(__file__).parent / "data"
 

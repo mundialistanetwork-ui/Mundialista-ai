@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from prediction_engine import predict, get_all_teams, get_team_ranking
+from prediction_engine import predict, get_all_teams, get_team_ranking, clean_match_type
 from chart_generator import generate_all_charts
 
 BASE_DIR = Path(__file__).parent
@@ -621,7 +621,7 @@ if "result" in st.session_state:
     xgb = float(result.get("team_b_lambda", 0.0))
     rk_a = result.get("team_a_rank", "N/A")
     rk_b = result.get("team_b_rank", "N/A")
-    match_type = result.get("match_type", "Match")
+    match_type = clean_match_type(result.get("match_type", "Match"))
     top_scores = result.get("top_scores", [])[:5]
 
     st.markdown(f"## {da} vs {db}")
