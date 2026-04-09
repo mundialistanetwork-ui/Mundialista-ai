@@ -40,7 +40,7 @@ CONFIG = {
 
     # Star player impact
     "STAR_IMPACT_DAMPENING": 0.65,
-    "MAX_STAR_BOOST": 1.22,
+    "MAX_STAR_BOOST": 1.35,
 
     # Tournament importance weights
     "TOURNAMENT_WEIGHTS": {
@@ -325,12 +325,39 @@ def opponent_strength(opp_rank: int) -> float:
 def get_team_star_impact(team: str) -> dict:
     """
     Returns attack AND defense multipliers from active star players.
+    Supports v2 list format: [{name, role, attack_boost, defense_boost, ...}]
     """
     stars = _data.stars
     if team not in stars:
         return {"attack": 1.0, "defense": 1.0, "players": []}
 
     players = stars[team]
+
+    # v2 format: list of player dicts
+    if isinstance(players, list):
+        if not players:
+            return {"attack": 1.0, "defense": 1.0, "players": []}
+
+        dampen = CONFIG["STAR_IMPACT_DAMPENING"]
+        max_boost = CONFIG["MAX_STAR_BOOST"]
+
+        atk_boost = 1.0
+        def_boost = 1.0
+
+        for p in players:
+            atk_boost += (p.get("attack_boost", 1.0) - 1.0) * dampen
+            def_boost += (p.get("defense_boost", 1.0) - 1.0) * dampen
+
+        atk_boost = min(atk_boost, max_boost)
+        def_boost = min(def_boost, max_boost)
+
+        return {
+            "attack": round(atk_boost, 4),
+            "defense": round(def_boost, 4),
+            "players": [p.get("name", "Unknown") for p in players],
+        }
+
+    # v1 fallback: dict of player dicts
     active = {k: v for k, v in players.items() if v.get("status") == "active"}
 
     if not active:
