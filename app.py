@@ -1,13 +1,16 @@
+
 """
-Mundialista AI — Streamlit Web Interface v2
-Fixed: home advantage, CSS, H2H, score display, numpy serialization
+Mundialista AI — Streamlit Web Interface v2.1
+Fixed: cloud-safe paths, merged H2H, knockout mode, improved card simulation
 """
 
 import matplotlib
 matplotlib.use("Agg")
 
+import math
 import os
-import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -15,9 +18,8 @@ import streamlit as st
 from prediction_engine import predict, get_all_teams, get_team_ranking
 from chart_generator import generate_all_charts
 
-# ──────────────────────────────────────────────
-#  PAGE CONFIG
-# ──────────────────────────────────────────────
+BASE_DIR = Path(__file__).parent
+DATA_DIR = BASE_DIR / "data"
 
 st.set_page_config(
     page_title="Mundialista AI",
@@ -26,18 +28,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ──────────────────────────────────────────────
-#  CSS (unified — every class used in HTML exists here)
-# ──────────────────────────────────────────────
-
 st.markdown("""
 <style>
 @keyframes pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.03); }
 }
-
-/* ── Base ── */
 html, body, [class*="css"] {
     font-family: Impact, 'Arial Black', 'Trebuchet MS', sans-serif;
 }
@@ -50,8 +46,6 @@ html, body, [class*="css"] {
     padding-bottom: 2rem;
     max-width: 1200px;
 }
-
-/* ── Hero ── */
 .hero {
     text-align: center;
     padding: 2rem 1rem 1.5rem;
@@ -77,8 +71,6 @@ html, body, [class*="css"] {
     margin-top: 8px;
     font-family: 'Trebuchet MS', sans-serif;
 }
-
-/* ── Cards ── */
 .retro-card {
     background: linear-gradient(180deg, #141430, #1a1a40);
     border: 2px solid #00f0ff;
@@ -99,8 +91,6 @@ html, body, [class*="css"] {
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-
-/* ── VS Header ── */
 .vs-line {
     display: flex;
     align-items: center;
@@ -129,8 +119,6 @@ html, body, [class*="css"] {
     background: rgba(255, 215, 0, 0.1);
     animation: pulse 2s ease-in-out infinite;
 }
-
-/* ── Match Badges ── */
 .match-badge {
     display: inline-block;
     padding: 8px 16px;
@@ -147,8 +135,7 @@ html, body, [class*="css"] {
 .badge-competitive{ background: linear-gradient(90deg,#006644,#00aa66); color: #88ffcc; border: 2px solid #00ff88; }
 .badge-showdown   { background: linear-gradient(90deg,#660066,#aa00aa); color: #ff88ff; border: 2px solid #ff00ff; }
 .badge-venue      { background: rgba(255,215,0,0.15); color: #ffd700; border: 2px solid #ffd700; }
-
-/* ── Metrics ── */
+.badge-knockout   { background: linear-gradient(90deg,#4b0082,#8a2be2); color: #f3d9ff; border: 2px solid #d78cff; }
 .metric-row {
     display: flex;
     gap: 16px;
@@ -184,8 +171,6 @@ html, body, [class*="css"] {
     color: #666688;
     margin-top: 4px;
 }
-
-/* ── Probability Bars ── */
 .prob-wrap { margin: 8px 0; }
 .prob-label-row {
     display: flex;
@@ -207,8 +192,6 @@ html, body, [class*="css"] {
 .prob-fill-cyan { height:100%; background:linear-gradient(90deg,#004466,#00f0ff); border-radius:10px; box-shadow:0 0 10px rgba(0,240,255,0.4); }
 .prob-fill-gold { height:100%; background:linear-gradient(90deg,#665500,#ffd700); border-radius:10px; box-shadow:0 0 10px rgba(255,215,0,0.4); }
 .prob-fill-pink { height:100%; background:linear-gradient(90deg,#660044,#ff00aa); border-radius:10px; box-shadow:0 0 10px rgba(255,0,170,0.4); }
-
-/* ── Score Pills ── */
 .score-pill {
     display: inline-block;
     padding: 10px 16px;
@@ -228,8 +211,6 @@ html, body, [class*="css"] {
     font-size: 1.2rem;
     animation: pulse 2s ease-in-out infinite;
 }
-
-/* ── Star Players ── */
 .star-player {
     display: inline-block;
     padding: 6px 12px;
@@ -241,8 +222,6 @@ html, body, [class*="css"] {
     font-size: 0.85rem;
     font-weight: 700;
 }
-
-/* ── H2H Bar ── */
 .h2h-bar {
     display: flex;
     height: 30px;
@@ -254,8 +233,6 @@ html, body, [class*="css"] {
 .h2h-win  { background: #00f0ff; }
 .h2h-draw { background: #ffd700; }
 .h2h-loss { background: #ff00aa; }
-
-/* ── Insight ── */
 .insight-retro {
     border-left: 4px solid #ffd700;
     background: linear-gradient(90deg, rgba(255,215,0,0.05), transparent);
@@ -265,23 +242,17 @@ html, body, [class*="css"] {
     line-height: 1.6;
     font-family: 'Trebuchet MS', sans-serif;
 }
-
-/* ── Divider ── */
 .retro-divider {
     border: none;
     height: 2px;
     background: linear-gradient(90deg, transparent, #00f0ff, #ffd700, #ff00aa, transparent);
     margin: 1.2rem 0;
 }
-
-/* ── Muted text ── */
 .muted {
     color: #666688;
     font-family: 'Trebuchet MS', sans-serif;
     line-height: 1.6;
 }
-
-/* ── Streamlit overrides ── */
 .stButton > button {
     width: 100%;
     background: linear-gradient(135deg, #ff6600, #ff0033);
@@ -318,55 +289,61 @@ html, body, [class*="css"] {
 </style>
 """, unsafe_allow_html=True)
 
-
-# ──────────────────────────────────────────────
-#  DATA HELPERS
-# ──────────────────────────────────────────────
-
 @st.cache_data(ttl=300)
 def get_team_list():
-    """Get sorted team list. Tries rankings first, falls back to results."""
     try:
-        rankings = pd.read_csv("data/rankings.csv")
+        rankings = pd.read_csv(DATA_DIR / "rankings.csv")
         if "country_full" in rankings.columns:
             return sorted(rankings["country_full"].dropna().unique().tolist())
     except FileNotFoundError:
         pass
     return get_all_teams()
 
+def load_results_merged():
+    frames = []
+    for path in [DATA_DIR / "results.csv", DATA_DIR / "recent_results.csv"]:
+        if path.exists():
+            try:
+                df = pd.read_csv(path)
+                if not df.empty:
+                    frames.append(df)
+            except Exception:
+                pass
+    if not frames:
+        return pd.DataFrame(columns=["date","home_team","away_team","home_score","away_score","tournament","neutral"])
+    df = pd.concat(frames, ignore_index=True, sort=False)
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    return df.sort_values("date", ascending=False)
 
-def compute_h2h(team_a: str, team_b: str, max_matches: int = 20) -> dict:
-    """Calculate head-to-head record from results.csv."""
-    try:
-        df = pd.read_csv("data/results.csv")
-        df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    except FileNotFoundError:
+def compute_h2h(team_a, team_b, max_matches=20):
+    df = load_results_merged()
+    if df.empty:
         return {"matches": 0}
-
-    # Find all matches between the two teams
     mask = (
         ((df["home_team"] == team_a) & (df["away_team"] == team_b)) |
         ((df["home_team"] == team_b) & (df["away_team"] == team_a))
     )
-    h2h = df[mask].sort_values("date", ascending=False).head(max_matches)
-
+    h2h = df[mask].head(max_matches)
     if h2h.empty:
         return {"matches": 0}
 
-    wins_a = 0
-    wins_b = 0
-    draws = 0
+    wins_a = wins_b = draws = 0
     recent = []
 
     for _, row in h2h.iterrows():
-        hs = row.get("home_score", 0)
-        aws = row.get("away_score", 0)
+        hs_raw = row.get("home_score", 0)
+        aws_raw = row.get("away_score", 0)
+
+        hs = 0 if pd.isna(hs_raw) else int(hs_raw)
+        aws = 0 if pd.isna(aws_raw) else int(aws_raw)
+
         ht = row.get("home_team", "")
+        at = row.get("away_team", "")
 
         if hs > aws:
             winner = ht
         elif aws > hs:
-            winner = row.get("away_team", "")
+            winner = at
         else:
             winner = None
 
@@ -377,13 +354,12 @@ def compute_h2h(team_a: str, team_b: str, max_matches: int = 20) -> dict:
         else:
             draws += 1
 
-        # Last 5 for display
         if len(recent) < 5:
             recent.append({
                 "date": str(row.get("date", ""))[:10],
                 "home": ht,
-                "away": row.get("away_team", ""),
-                "score": f"{int(hs)}-{int(aws)}",
+                "away": at,
+                "score": f"{hs}-{aws}",
                 "tournament": row.get("tournament", ""),
             })
 
@@ -395,9 +371,7 @@ def compute_h2h(team_a: str, team_b: str, max_matches: int = 20) -> dict:
         "recent": recent,
     }
 
-
-def safe_json(result: dict) -> dict:
-    """Convert numpy types for JSON serialization."""
+def safe_json(result):
     clean = {}
     for k, v in result.items():
         if isinstance(v, np.ndarray):
@@ -410,583 +384,383 @@ def safe_json(result: dict) -> dict:
             clean[k] = v
     return clean
 
+def poisson_pmf(k, lam):
+    if lam < 0:
+        lam = 0.0
+    return math.exp(-lam) * (lam ** k) / math.factorial(k)
 
-# ──────────────────────────────────────────────
-#  HTML BUILDERS
-# ──────────────────────────────────────────────
-
-def get_match_badge(match_type: str) -> str:
-    badges = {
-        "⚔️ Elite Clash":       '<span class="match-badge badge-elite">⚔️🔥 ELITE CLASH 🔥⚔️</span>',
-        "🔻 Total Mismatch":    '<span class="match-badge badge-mismatch">💀 TOTAL MISMATCH 💀</span>',
-        "📊 Clear Favorite":    '<span class="match-badge badge-favorite">👑 CLEAR FAVORITE 👑</span>',
-        "🔥 Top Team Showdown": '<span class="match-badge badge-showdown">🔥 TOP TEAM SHOWDOWN 🔥</span>',
-        "⚡ Competitive Match":  '<span class="match-badge badge-competitive">⚡ COMPETITIVE ⚡</span>',
-        # Fallbacks for v6 engine format (no emojis)
-        "Elite Clash":       '<span class="match-badge badge-elite">⚔️🔥 ELITE CLASH 🔥⚔️</span>',
-        "Total Mismatch":    '<span class="match-badge badge-mismatch">💀 TOTAL MISMATCH 💀</span>',
-        "Clear Favorite":    '<span class="match-badge badge-favorite">👑 CLEAR FAVORITE 👑</span>',
-        "Competitive Match": '<span class="match-badge badge-competitive">⚡ COMPETITIVE ⚡</span>',
+def et_outcome_probs(lambda_a, lambda_b, max_goals=10, et_scale=0.28):
+    la = max(0.0, lambda_a * et_scale)
+    lb = max(0.0, lambda_b * et_scale)
+    a_win = draw = b_win = 0.0
+    for ga in range(max_goals + 1):
+        pga = poisson_pmf(ga, la)
+        for gb in range(max_goals + 1):
+            p = pga * poisson_pmf(gb, lb)
+            if ga > gb:
+                a_win += p
+            elif ga < gb:
+                b_win += p
+            else:
+                draw += p
+    total = a_win + draw + b_win
+    if total > 0:
+        a_win /= total
+        draw /= total
+        b_win /= total
+    return {
+        "a_win_et_cond": a_win,
+        "draw_et_cond": draw,
+        "b_win_et_cond": b_win,
+        "lambda_a_et": la,
+        "lambda_b_et": lb,
     }
-    return badges.get(match_type, '<span class="match-badge badge-competitive">⚽ MATCH ⚽</span>')
+
+def penalty_shootout_probs(team_a, team_b, result):
+    rank_a = float(result.get("team_a_rank", 100))
+    rank_b = float(result.get("team_b_rank", 100))
+    rank_edge = (rank_b - rank_a) / 100.0
+    boost_a = float(result.get("team_a_star_boost", 1.0))
+    boost_b = float(result.get("team_b_star_boost", 1.0))
+    def_a = float(result.get("team_a_def_boost", 1.0))
+    def_b = float(result.get("team_b_def_boost", 1.0))
+    star_edge = (boost_a - boost_b) * 0.25
+    keeper_edge = (def_a - def_b) * 0.20
+    p_a = 0.50 + 0.12 * rank_edge + star_edge + keeper_edge
+    p_a = float(np.clip(p_a, 0.40, 0.60))
+    return {"a_pen_win_cond": p_a, "b_pen_win_cond": 1.0 - p_a}
+
+def simulate_knockout(team_a, team_b, result):
+    a90 = float(result.get("team_a_win", 0.0)) / 100.0
+    d90 = float(result.get("draw", 0.0)) / 100.0
+    b90 = float(result.get("team_b_win", 0.0)) / 100.0
+    la = float(result.get("team_a_lambda", 0.0))
+    lb = float(result.get("team_b_lambda", 0.0))
+
+    et = et_outcome_probs(la, lb)
+    pens = penalty_shootout_probs(team_a, team_b, result)
+
+    a_win_90 = a90
+    b_win_90 = b90
+    a_win_et = d90 * et["a_win_et_cond"]
+    b_win_et = d90 * et["b_win_et_cond"]
+    a_win_pens = d90 * et["draw_et_cond"] * pens["a_pen_win_cond"]
+    b_win_pens = d90 * et["draw_et_cond"] * pens["b_pen_win_cond"]
+
+    return {
+        "team_a_advance": round((a_win_90 + a_win_et + a_win_pens) * 100, 1),
+        "team_b_advance": round((b_win_90 + b_win_et + b_win_pens) * 100, 1),
+        "team_a_win_90": round(a_win_90 * 100, 1),
+        "team_b_win_90": round(b_win_90 * 100, 1),
+        "team_a_win_et": round(a_win_et * 100, 1),
+        "team_b_win_et": round(b_win_et * 100, 1),
+        "team_a_win_pens": round(a_win_pens * 100, 1),
+        "team_b_win_pens": round(b_win_pens * 100, 1),
+        "draw_after_90": round(d90 * 100, 1),
+        "team_a_et_lambda": round(et["lambda_a_et"], 3),
+        "team_b_et_lambda": round(et["lambda_b_et"], 3),
+    }
+
+def compute_card_risk(team_a, team_b, result, knockout=False):
+    a_win = float(result.get("team_a_win", 33.3))
+    b_win = float(result.get("team_b_win", 33.3))
+    draw = float(result.get("draw", 33.4))
+    closeness = 1.0 - min(abs(a_win - b_win) / 100.0, 1.0)
+    draw_factor = draw / 100.0
+    xg_total = float(result.get("team_a_lambda", 1.2)) + float(result.get("team_b_lambda", 1.1))
 
 
-def get_venue_badge(is_neutral: bool) -> str:
-    if is_neutral:
-        return '<span class="match-badge badge-venue">🏟️ NEUTRAL VENUE 🏟️</span>'
-    return '<span class="match-badge badge-venue">🏠 HOME ADVANTAGE 🏠</span>'
-
-
-def build_stars_html(players: list, atk_boost: float, def_boost: float = 1.0) -> str:
-    if not players:
-        return '<div class="muted">No star player data</div>'
-    h = f'<div style="color:#ffd700;font-weight:700;margin-bottom:6px;">'
-    h += f'⚔️ ATK: x{atk_boost:.2f}'
-    if def_boost and def_boost != 1.0:
-        h += f' &nbsp;|&nbsp; 🛡️ DEF: x{def_boost:.2f}'
-    h += '</div>'
+def format_key_players(players):
+    lines = []
     for p in players[:5]:
-        h += f'<span class="star-player">🌟 {p}</span>'
-    return h
+        if isinstance(p, dict):
+            name = p.get("name", "Unknown")
+            tier = p.get("tier_label") or p.get("tier") or ""
+            role = p.get("role", "")
+            details = []
+            if tier:
+                details.append(str(tier).title())
+            if role:
+                details.append(str(role).title())
+            if details:
+                lines.append(f"- {name} ({', '.join(details)})")
+            else:
+                lines.append(f"- {name}")
+        else:
+            lines.append(f"- {p}")
+    return lines
 
+def build_simple_insight(result, team_a, team_b, knockout=False, ko_data=None):
+    a = float(result.get("team_a_win", 0.0))
+    b = float(result.get("team_b_win", 0.0))
+    d = float(result.get("draw", 0.0))
+    la = float(result.get("team_a_lambda", 0.0))
+    lb = float(result.get("team_b_lambda", 0.0))
 
-def build_h2h_html(h2h: dict, team_a: str, team_b: str) -> str:
-    if h2h["matches"] == 0:
-        return '<div class="muted">🤷 No previous meetings found in database</div>'
+    lines = []
 
-    wa = h2h["wins_a"]
-    wb = h2h["wins_b"]
-    d = h2h["draws"]
-    total = wa + wb + d
-    if total == 0:
-        total = 1
-
-    pct_a = round(100 * wa / total)
-    pct_d = round(100 * d / total)
-    pct_b = max(0, 100 - pct_a - pct_d)
-
-    out = f'<div style="color:#8888cc;margin-bottom:8px;">📊 Last <b>{h2h["matches"]}</b> meetings</div>'
-    out += '<div class="h2h-bar">'
-    if pct_a > 0:
-        out += f'<div class="h2h-win" style="width:{pct_a}%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0a2e;">{wa}W</div>'
-    if pct_d > 0:
-        out += f'<div class="h2h-draw" style="width:{pct_d}%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0a2e;">{d}D</div>'
-    if pct_b > 0:
-        out += f'<div class="h2h-loss" style="width:{pct_b}%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:#0a0a2e;">{wb}W</div>'
-    out += '</div>'
-
-    out += '<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:4px;">'
-    out += f'<span style="color:#00f0ff;">🏆 {team_a}</span>'
-    out += '<span style="color:#ffd700;">🤝 Draws</span>'
-    out += f'<span style="color:#ff00aa;">🏆 {team_b}</span></div>'
-
-    # Recent matches
-    recent = h2h.get("recent", [])
-    if recent:
-        out += '<div style="margin-top:12px;font-size:0.8rem;">'
-        for m in recent:
-            out += (
-                f'<div style="color:#8888cc;padding:2px 0;">'
-                f'{m["date"]} — <b style="color:#e0e0ff;">{m["home"]} {m["score"]} {m["away"]}</b>'
-                f' <span style="color:#666688;">[{m["tournament"]}]</span></div>'
-            )
-        out += '</div>'
-
-    return out
-
-
-def build_match_insight(result: dict, team_a: str, team_b: str) -> str:
-    a = result["team_a_win"]
-    b = result["team_b_win"]
-    d = result["draw"]
-    la = result["team_a_lambda"]
-    lb = result["team_b_lambda"]
-    mt = result.get("match_type", "Competitive")
-
-    lines = [f"<b>{mt}</b>"]
-
-    # Edge assessment
     if abs(a - b) <= 6:
-        lines.append(f"🤜🤛 {team_a} and {team_b} are neck and neck — this could go either way!")
+        lines.append(f"🤜🤛 {team_a} and {team_b} look closely matched.")
     elif a > b:
-        margin = a - b
-        if margin > 25:
-            lines.append(f"💪 {team_a} are heavy favorites ({a:.0f}% vs {b:.0f}%).")
-        else:
-            lines.append(f"📈 {team_a} have the edge, but {team_b} can't be counted out.")
+        lines.append(f"📈 {team_a} hold the edge on the 90-minute model.")
     else:
-        margin = b - a
-        if margin > 25:
-            lines.append(f"💪 {team_b} are heavy favorites ({b:.0f}% vs {a:.0f}%).")
-        else:
-            lines.append(f"📈 {team_b} have the edge, but {team_a} are dangerous.")
+        lines.append(f"📈 {team_b} hold the edge on the 90-minute model.")
 
-    # Draw assessment
-    if d >= 27:
-        lines.append("🤝 High draw probability — expect a cagey affair.")
-    elif d <= 18:
-        lines.append("⚡ Low draw chance — someone's winning this one.")
-
-    # Goals assessment
     total_xg = la + lb
     if total_xg >= 3.0:
-        lines.append(f"🔥 Goal fest alert! Combined xG of {total_xg:.1f} — expect fireworks.")
+        lines.append(f"🔥 The model expects a relatively open game ({total_xg:.1f} total xG).")
     elif total_xg <= 2.2:
-        lines.append(f"🔒 Tight, tactical battle expected (combined xG: {total_xg:.1f}).")
+        lines.append(f"🔒 This projects as a tighter tactical contest ({total_xg:.1f} total xG).")
     else:
-        lines.append(f"⚽ Expect 2-3 goals in a balanced contest (combined xG: {total_xg:.1f}).")
+        lines.append(f"⚽ Expect a balanced scoring profile ({total_xg:.1f} total xG).")
 
-    return "<br>".join(lines)
+    if d >= 27:
+        lines.append("🤝 Draw risk is meaningful after 90 minutes.")
+
+    if knockout and ko_data:
+        draw90 = float(ko_data.get("draw_after_90", 0.0))
+        pens = float(ko_data.get("team_a_win_pens", 0.0)) + float(ko_data.get("team_b_win_pens", 0.0))
+        if draw90 >= 28:
+            lines.append("⏳ Extra time is a realistic path here.")
+        if pens >= 10:
+            lines.append("🎯 Penalties are a meaningful possibility.")
+
+    return " ".join(lines)
 
 
-# ──────────────────────────────────────────────
-#  MAIN UI
-# ──────────────────────────────────────────────
+    heat_index = 4.8 + 2.0 * closeness + 1.0 * draw_factor
+    if knockout:
+        heat_index += 0.9
+    if xg_total < 2.3:
+        heat_index += 0.4
+    elif xg_total > 3.2:
+        heat_index -= 0.2
+    heat_index = float(np.clip(heat_index, 1.0, 10.0))
+
+    total_yellows = 2.6 + 0.38 * heat_index
+    red_prob = float(np.clip(0.05 + 0.025 * max(0.0, heat_index - 4.0), 0.05, 0.30))
+
+    da = float(result.get("team_a_def_boost", 1.0))
+    db = float(result.get("team_b_def_boost", 1.0))
+    split_a = float(np.clip(0.5 + (da - db) * 0.08, 0.40, 0.60))
+    split_b = 1.0 - split_a
+
+    if red_prob >= 0.22:
+        risk_label = "High"
+    elif red_prob >= 0.14:
+        risk_label = "Moderate"
+    else:
+        risk_label = "Low"
+
+    return {
+        "heat_index": round(heat_index, 1),
+        "yellows_a": round(total_yellows * split_a, 1),
+        "yellows_b": round(total_yellows * split_b, 1),
+        "total_yellows": round(total_yellows, 1),
+        "red_prob": round(red_prob * 100, 1),
+        "risk_label": risk_label,
+    }
+
+st.title("⚽ Mundialista AI")
+st.caption("World Cup 2026 Match Intelligence")
 
 teams = get_team_list()
-
 if not teams:
-    st.error("No team data found. Run `python get_data.py` first.")
+    st.error("No team data found. Run python get_data.py first.")
     st.stop()
 
-# ── Hero ──
-st.markdown("""
-<div class="hero">
-    <div class="hero-title">⚽ Mundialista AI ⚽</div>
-    <div class="hero-subtitle">World Cup 2026 Match Intelligence</div>
-    <div class="hero-tag">Dixon-Coles Poisson Model • 49,000+ Historical Matches • Monte Carlo Simulation</div>
-</div>
-""", unsafe_allow_html=True)
-
-# ── Match Setup Card ──
-st.markdown('<div class="retro-card"><div class="retro-card-title">🎮 Match Setup</div>', unsafe_allow_html=True)
-col1, col2, col3 = st.columns([1, 1, 0.6])
+col1, col2, col3 = st.columns([1,1,1])
 with col1:
     idx_a = teams.index("Argentina") if "Argentina" in teams else 0
     team_a = st.selectbox("Home / Team A", teams, index=idx_a)
 with col2:
-    idx_b = teams.index("Brazil") if "Brazil" in teams else min(1, len(teams) - 1)
+    idx_b = teams.index("Brazil") if "Brazil" in teams else min(1, len(teams)-1)
     team_b = st.selectbox("Away / Team B", teams, index=idx_b)
 with col3:
     neutral = st.checkbox("Neutral venue", value=True)
-    run_prediction = st.button("⚽ Generate Prediction")
-st.markdown("</div>", unsafe_allow_html=True)
+    knockout = st.checkbox("Knockout match", value=False)
 
-# ── Run Prediction ──
+run_prediction = st.button("⚽ Generate Prediction")
+
 if run_prediction:
     if team_a == team_b:
-        st.warning("⚠️ Please choose two different teams.")
+        st.warning("Choose two different teams.")
     else:
-        try:
-            with st.spinner("🧠 Analyzing match data and running simulations..."):
-                # FIX: Actually pass home advantage!
-                home = None if neutral else team_a
-                result = predict(team_a, team_b, home=home)
-                charts = generate_all_charts(result, team_a, team_b)
-                h2h = compute_h2h(team_a, team_b)
+        home = None if neutral else team_a
+        result = predict(team_a, team_b, home=home)
+        charts = generate_all_charts(result, team_a, team_b)
+        h2h = compute_h2h(team_a, team_b)
+        ko_data = simulate_knockout(team_a, team_b, result) if knockout else None
+        card_data = compute_card_risk(team_a, team_b, result, knockout=knockout)
 
-                st.session_state["result"] = result
-                st.session_state["charts"] = charts
-                st.session_state["h2h"] = h2h
-                st.session_state["pred_a"] = team_a
-                st.session_state["pred_b"] = team_b
-                st.session_state["neutral"] = neutral
-        except Exception as e:
-            st.error(f"❌ Prediction failed: {e}")
-            import traceback
-            st.code(traceback.format_exc())
+        st.session_state["result"] = result
+        st.session_state["charts"] = charts
+        st.session_state["h2h"] = h2h
+        st.session_state["ko_data"] = ko_data
+        st.session_state["card_data"] = card_data
+        st.session_state["pred_a"] = team_a
+        st.session_state["pred_b"] = team_b
+        st.session_state["neutral"] = neutral
+        st.session_state["knockout"] = knockout
 
-# ── Display Results ──
 if "result" in st.session_state:
     result = st.session_state["result"]
     charts = st.session_state.get("charts", {})
     h2h = st.session_state.get("h2h", {"matches": 0})
+    ko_data = st.session_state.get("ko_data")
+    card_data = st.session_state.get("card_data")
     da = st.session_state["pred_a"]
     db = st.session_state["pred_b"]
     is_neutral = st.session_state.get("neutral", True)
+    is_knockout = st.session_state.get("knockout", False)
 
+    wa = float(result.get("team_a_win", 0.0))
+    dr = float(result.get("draw", 0.0))
+    wb = float(result.get("team_b_win", 0.0))
+    xga = float(result.get("team_a_lambda", 0.0))
+    xgb = float(result.get("team_b_lambda", 0.0))
     rk_a = result.get("team_a_rank", "N/A")
     rk_b = result.get("team_b_rank", "N/A")
-    la = result.get("team_a_lambda", 0.0)
-    lb = result.get("team_b_lambda", 0.0)
-    mt = result.get("match_type", "Competitive")
-    ts = result.get("top_scores", [])[:5]
-    wa = f"{result['team_a_win']:.1f}"
-    dv = f"{result['draw']:.1f}"
-    wb = f"{result['team_b_win']:.1f}"
+    match_type = result.get("match_type", "Match")
+    top_scores = result.get("top_scores", [])[:5]
 
-    # ── Main Result Card ──
-    st.markdown('<div class="retro-card">', unsafe_allow_html=True)
+    st.markdown(f"## {da} vs {db}")
+    st.caption(f"FIFA Rank #{rk_a} vs FIFA Rank #{rk_b}")
 
-    # VS Header
-    st.markdown(f"""
-    <div class="vs-line">
-        <div>
-            <div class="team-name">{da}</div>
-            <div class="team-rank">FIFA Rank #{rk_a}</div>
-        </div>
-        <div class="vs-center">VS</div>
-        <div style="text-align:right;">
-            <div class="team-name">{db}</div>
-            <div class="team-rank">FIFA Rank #{rk_b}</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    badge_parts = [f"**{match_type}**"]
+    badge_parts.append("🏟️ Neutral Venue" if is_neutral else "🏠 Home Advantage Active")
+    if is_knockout:
+        badge_parts.append("🏆 Knockout Mode")
+    st.markdown(" • ".join(badge_parts))
 
-    # Badges
-    st.markdown(
-        get_match_badge(mt) + " " + get_venue_badge(is_neutral),
-        unsafe_allow_html=True,
-    )
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.metric(f"{da} Win", f"{wa:.1f}%")
+    with c2:
+        st.metric("Draw", f"{dr:.1f}%")
+    with c3:
+        st.metric(f"{db} Win", f"{wb:.1f}%")
 
-    # Win Probability Metrics
-    st.markdown(f"""
-    <div class="metric-row">
-        <div class="metric-box">
-            <div class="metric-label">{da} Win</div>
-            <div class="metric-value">{wa}%</div>
-            <div class="metric-sub">Analytical probability</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">Draw</div>
-            <div class="metric-value metric-value-gold">{dv}%</div>
-            <div class="metric-sub">Stalemate probability</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">{db} Win</div>
-            <div class="metric-value metric-value-pink">{wb}%</div>
-            <div class="metric-sub">Analytical probability</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("### ⚽ Expected Goals")
+    gx1, gx2 = st.columns(2)
+    with gx1:
+        st.metric(f"{da} xG", f"{xga:.2f}")
+    with gx2:
+        st.metric(f"{db} xG", f"{xgb:.2f}")
 
-    # Probability Bars
-    st.markdown('<div class="retro-divider"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="retro-card-title">📊 Win Probability</div>', unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="prob-wrap">
-        <div class="prob-label-row"><span>{da} Win</span><span>{wa}%</span></div>
-        <div class="prob-track"><div class="prob-fill-cyan" style="width:{wa}%;"></div></div>
-        <div class="prob-label-row"><span>Draw</span><span>{dv}%</span></div>
-        <div class="prob-track"><div class="prob-fill-gold" style="width:{dv}%;"></div></div>
-        <div class="prob-label-row"><span>{db} Win</span><span>{wb}%</span></div>
-        <div class="prob-track"><div class="prob-fill-pink" style="width:{wb}%;"></div></div>
-    </div>
-    """, unsafe_allow_html=True)
+    stars_a = result.get("team_a_stars", [])
+    stars_b = result.get("team_b_stars", [])
+    boost_a = float(result.get("team_a_star_boost", 1.0))
+    boost_b = float(result.get("team_b_star_boost", 1.0))
+    def_a = float(result.get("team_a_def_boost", 1.0))
+    def_b = float(result.get("team_b_def_boost", 1.0))
 
-    st.markdown('<div class="retro-divider"></div>', unsafe_allow_html=True)
+    st.markdown("### 🌟 Key Player Impact")
+    sa, sb = st.columns(2)
+    with sa:
+        st.markdown(f"**{da}** — ATK x{boost_a:.2f} | DEF x{def_a:.2f}")
+        if stars_a:
+            for line in format_key_players(stars_a):
+                st.markdown(line)
+        else:
+            st.caption("No key player data")
+    with sb:
+        st.markdown(f"**{db}** — ATK x{boost_b:.2f} | DEF x{def_b:.2f}")
+        if stars_b:
+            for line in format_key_players(stars_b):
+                st.markdown(line)
+        else:
+            st.caption("No key player data")
 
-    # ── Star Players (two columns) ──
-    sc1, sc2 = st.columns(2)
-    with sc1:
-        st.markdown(f'<div class="retro-card retro-card-gold"><div class="retro-card-title">🌟 {da} Stars</div>', unsafe_allow_html=True)
-        st.markdown(
-            build_stars_html(
-                result.get("team_a_stars", []),
-                result.get("team_a_star_boost", 1.0),
-                result.get("team_a_def_boost", 1.0),
-            ),
-            unsafe_allow_html=True,
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
-    with sc2:
-        st.markdown(f'<div class="retro-card retro-card-gold"><div class="retro-card-title">🌟 {db} Stars</div>', unsafe_allow_html=True)
-        st.markdown(
-            build_stars_html(
-                result.get("team_b_stars", []),
-                result.get("team_b_star_boost", 1.0),
-                result.get("team_b_def_boost", 1.0),
-            ),
-            unsafe_allow_html=True,
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    # ── Head to Head (REAL DATA!) ──
-    st.markdown(
-        '<div class="retro-card retro-card-pink">'
-        '<div class="retro-card-title">⚔️ Head-to-Head</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(build_h2h_html(h2h, da, db), unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # ── Expected Goals + Top Scores ──
-    s1, s2 = st.columns(2)
-    with s1:
-        st.markdown('<div class="retro-card"><div class="retro-card-title">⚽ Expected Goals</div>', unsafe_allow_html=True)
-        st.markdown(f"""
-        <div class="metric-row">
-            <div class="metric-box">
-                <div class="metric-label">{da}</div>
-                <div class="metric-value">{la:.2f}</div>
-                <div class="metric-sub">xG (expected goals)</div>
-            </div>
-            <div class="metric-box">
-                <div class="metric-label">{db}</div>
-                <div class="metric-value metric-value-pink">{lb:.2f}</div>
-                <div class="metric-sub">xG (expected goals)</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with s2:
-        st.markdown('<div class="retro-card"><div class="retro-card-title">🎯 Most Likely Scores</div>', unsafe_allow_html=True)
-        if ts:
-            pills = ""
-            for i, sc in enumerate(ts):
+    if top_scores:
+        st.markdown("### 🎯 Most Likely Scorelines")
+        score_cols = st.columns(min(5, len(top_scores)))
+        for i, sc in enumerate(top_scores):
+            with score_cols[i]:
                 if isinstance(sc, (list, tuple)) and len(sc) >= 2:
                     scoreline = str(sc[0])
                     pct = sc[1]
-                    # Format: "1-0 (15.2%)" for v7, "1-0 (x1530)" for v6
                     if isinstance(pct, float) and pct < 1:
-                        label = f"{scoreline} ({pct*100:.1f}%)"
+                        label = f"{pct*100:.1f}%"
                     elif isinstance(pct, float):
-                        label = f"{scoreline} ({pct:.1f}%)"
+                        label = f"{pct:.1f}%"
                     else:
-                        label = f"{scoreline}"
-                    css_class = "score-pill-top" if i == 0 else "score-pill"
-                    pills += f'<span class="{css_class}">{label}</span>'
-            st.markdown(pills, unsafe_allow_html=True)
-        else:
-            st.markdown('<div class="muted">No scoreline data available.</div>', unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+                        label = ""
+                    st.metric(scoreline, label)
+                else:
+                    st.write(sc)
 
-    # ── AI Insight ──
-    st.markdown('<div class="retro-divider"></div>', unsafe_allow_html=True)
-    ins = build_match_insight(result, da, db)
-    st.markdown('<div class="retro-card-title">🧠 AI Match Insight</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="insight-retro">{ins}</div>', unsafe_allow_html=True)
+    if is_knockout and ko_data:
+        st.markdown("### 🏆 Knockout Advancement Paths")
+        k1, k2, k3 = st.columns(3)
+        with k1:
+            st.metric(f"{da} Advance", f"{ko_data.get('team_a_advance', 0):.1f}%")
+            st.metric(f"{da} Win in 90", f"{ko_data.get('team_a_win_90', 0):.1f}%")
+            st.metric(f"{da} Win in ET", f"{ko_data.get('team_a_win_et', 0):.1f}%")
+            st.metric(f"{da} Win on Pens", f"{ko_data.get('team_a_win_pens', 0):.1f}%")
+        with k2:
+            st.metric("Level after 90", f"{ko_data.get('draw_after_90', 0):.1f}%")
+            st.metric(f"{da} ET xG", f"{ko_data.get('team_a_et_lambda', 0):.3f}")
+            st.metric(f"{db} ET xG", f"{ko_data.get('team_b_et_lambda', 0):.3f}")
+        with k3:
+            st.metric(f"{db} Advance", f"{ko_data.get('team_b_advance', 0):.1f}%")
+            st.metric(f"{db} Win in 90", f"{ko_data.get('team_b_win_90', 0):.1f}%")
+            st.metric(f"{db} Win in ET", f"{ko_data.get('team_b_win_et', 0):.1f}%")
+            st.metric(f"{db} Win on Pens", f"{ko_data.get('team_b_win_pens', 0):.1f}%")
 
-    st.markdown("</div>", unsafe_allow_html=True)  # Close main result card
+    st.markdown("### ⚔️ Head-to-Head")
+    if h2h.get("matches", 0) == 0:
+        st.info("No previous meetings found in database.")
+    else:
+        hc1, hc2, hc3 = st.columns(3)
+        with hc1:
+            st.metric(f"{da} Wins", h2h.get("wins_a", 0))
+        with hc2:
+            st.metric("Draws", h2h.get("draws", 0))
+        with hc3:
+            st.metric(f"{db} Wins", h2h.get("wins_b", 0))
 
-    # ── Visual Analytics ──
-    st.markdown('<div class="retro-divider"></div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="retro-card"><div class="retro-card-title">📈 Visual Analytics</div>',
-        unsafe_allow_html=True,
-    )
+        recent = h2h.get("recent", [])
+        if recent:
+            st.markdown("**Recent meetings**")
+            for m in recent:
+                st.markdown(
+                    f"- {m.get('date','')} — **{m.get('home','')} {m.get('score','')} {m.get('away','')}** "
+                    f"*[{m.get('tournament','')}]*"
+                )
 
-    chart_tabs = st.tabs([
-        "📋 Summary Card",
-        "📊 Win Probability",
-        "🔢 Score Matrix",
-        "🎯 Top Scorelines",
-        "📈 Goal Distribution",
-    ])
+    if card_data:
+        st.markdown("### 🟥 Discipline Risk")
+        d1, d2, d3 = st.columns(3)
+        with d1:
+            st.metric("Heat Index", f"{card_data.get('heat_index', 0):.1f}/10")
+        with d2:
+            st.metric("Expected Yellows", f"{card_data.get('total_yellows', 0):.1f}")
+            st.caption(f"{da}: {card_data.get('yellows_a', 0):.1f} • {db}: {card_data.get('yellows_b', 0):.1f}")
+        with d3:
+            st.metric("Red Card Risk", f"{card_data.get('red_prob', 0):.1f}%")
+            st.caption(f"{card_data.get('risk_label', 'Unknown')} risk")
 
-    chart_keys = ["summary", "probability", "matrix", "top_scores", "goals"]
+    st.markdown("### 🧠 Match Insight")
+    st.info(build_simple_insight(result, da, db, knockout=is_knockout, ko_data=ko_data))
 
-    for tab, key in zip(chart_tabs, chart_keys):
-        with tab:
-            path = charts.get(key, "")
-            if path and os.path.exists(path):
-                st.image(path, use_container_width=True)  # FIX: correct parameter
-            else:
-                st.info(f"📭 {key.title()} chart not available.")
+    if charts:
+        st.markdown("### 📈 Visual Analytics")
+        tabs = st.tabs(["Summary", "Probability", "Matrix", "Top Scores", "Goals"])
+        chart_keys = ["summary", "probability", "matrix", "top_scores", "goals"]
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        for tab, key in zip(tabs, chart_keys):
+            with tab:
+                chart_path = charts.get(key, "")
+                if chart_path and Path(chart_path).exists():
+                    st.image(str(chart_path), use_container_width=True)
+                else:
+                    st.caption(f"{key} chart not available.")
 
-    # ── Download Report ──
-    if "html" in charts and os.path.exists(charts["html"]):
-        with open(charts["html"], "r", encoding="utf-8") as f:
-            html_content = f.read()
-        st.download_button(
-            label="📥 Download Full HTML Report",
-            data=html_content,
-            file_name=f"mundialista_{da}_vs_{db}.html",
-            mime="text/html",
-        )
-
-    # ── Simulation Cross-Check (if v7 engine) ──
-    if "sim_team_a_win" in result:
-        with st.expander("🔬 Simulation Cross-Check"):
-            st.markdown(f"""
-            **Analytical Model** vs **Monte Carlo ({result.get('n_simulations', 'N/A'):,} simulations)**
-
-            | Outcome | Analytical | Simulation |
-            |---------|-----------|------------|
-            | {da} Win | {result['team_a_win']:.1f}% | {result.get('sim_team_a_win', 'N/A')}% |
-            | Draw | {result['draw']:.1f}% | {result.get('sim_draw', 'N/A')}% |
-            | {db} Win | {result['team_b_win']:.1f}% | {result.get('sim_team_b_win', 'N/A')}% |
-
-            *Close agreement confirms model stability.*
-            """)
-
-    # ── Raw Data (safe JSON) ──
     with st.expander("🔧 Raw Prediction Output"):
-        st.json(safe_json(result))  # FIX: won't crash on numpy
-
-
-else:
-    # ── Welcome Screen ──
-    st.markdown("""
-    <div class="retro-card">
-        <div class="retro-card-title">🎮 How To Play</div>
-        <div class="muted">
-            Select two national teams, choose whether the match is on neutral ground, 
-            and click <strong style="color:#ffd700;">Generate Prediction</strong> to view:<br><br>
-            ⚽ Win probabilities & expected goals<br>
-            🎯 Most likely scorelines<br>
-            ⚔️ Head-to-head history<br>
-            🌟 Star player impact analysis<br>
-            🧠 AI-generated match insight<br>
-            📈 Full visual analytics charts
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# ──────────────────────────────────────────────
-#  SIDEBAR: Admin Panel
-# ──────────────────────────────────────────────
-
-with st.sidebar:
-    st.markdown(
-        '<div class="retro-card-title">🛠️ Admin Panel</div>',
-        unsafe_allow_html=True,
-    )
-
-    # ── Add Recent Result ──
-    with st.expander("➕ Add Recent Result"):
-        ad_date = st.text_input("Date (YYYY-MM-DD)", value=str(pd.Timestamp.now().date()))
-        ad_col1, ad_col2 = st.columns(2)
-        with ad_col1:
-            ad_home = st.text_input("Home team")
-            ad_hscore = st.number_input("Home score", min_value=0, max_value=20, value=0)
-        with ad_col2:
-            ad_away = st.text_input("Away team")
-            ad_ascore = st.number_input("Away score", min_value=0, max_value=20, value=0)
-        ad_tourn = st.selectbox("Tournament", [
-            "FIFA World Cup qualification",
-            "FIFA World Cup",
-            "Friendly",
-            "UEFA Euro",
-            "Copa America",
-            "UEFA Nations League",
-            "Africa Cup of Nations",
-            "AFC Asian Cup",
-            "CONCACAF Gold Cup",
-        ])
-        ad_neutral = st.checkbox("Neutral venue", value=False, key="admin_neutral")
-
-        if st.button("💾 Save Result"):
-            if ad_home and ad_away:
-                csv_path = "data/recent_results.csv"
-                try:
-                    rdf = pd.read_csv(csv_path)
-                except FileNotFoundError:
-                    rdf = pd.DataFrame(columns=[
-                        "date", "home_team", "away_team", "home_score",
-                        "away_score", "tournament", "city", "country", "neutral",
-                    ])
-                new_row = pd.DataFrame([{
-                    "date": ad_date,
-                    "home_team": ad_home,
-                    "away_team": ad_away,
-                    "home_score": int(ad_hscore),
-                    "away_score": int(ad_ascore),
-                    "tournament": ad_tourn,
-                    "city": "",
-                    "country": "",
-                    "neutral": ad_neutral,
-                }])
-                rdf = pd.concat([rdf, new_row], ignore_index=True)
-                rdf.to_csv(csv_path, index=False)
-
-                # Clear caches
-                try:
-                    from prediction_engine import _data
-                    _data.clear_cache()
-                except Exception:
-                    pass
-                get_team_list.clear()
-
-                st.success(f"✅ {ad_home} {int(ad_hscore)}-{int(ad_ascore)} {ad_away} saved!")
-            else:
-                st.warning("⚠️ Enter both team names!")
-
-    # ── View Recent Results ──
-    with st.expander("📋 View Recent Results"):
-        try:
-            rdf_view = pd.read_csv("data/recent_results.csv")
-            if rdf_view.empty:
-                st.info("No recent results yet.")
-            else:
-                for _, rv in rdf_view.iterrows():
-                    st.markdown(
-                        f'<span style="color:#00f0ff;">{rv["date"]}</span> '
-                        f'<b style="color:#ffd700;">{rv["home_team"]} '
-                        f'{rv["home_score"]}-{rv["away_score"]} {rv["away_team"]}</b> '
-                        f'<span style="color:#8888cc;">[{rv["tournament"]}]</span>',
-                        unsafe_allow_html=True,
-                    )
-        except FileNotFoundError:
-            st.info("No recent results file found.")
-
-    # ── Card Predictor ──
-    with st.expander("🟥 Card Predictor"):
-        cp_col1, cp_col2 = st.columns(2)
-        with cp_col1:
-            cp_a = st.selectbox("Team A", teams, index=0, key="card_a")
-        with cp_col2:
-            cp_b_idx = min(1, len(teams) - 1)
-            cp_b = st.selectbox("Team B", teams, index=cp_b_idx, key="card_b")
-
-        if st.button("🟥 Predict Cards"):
-            if cp_a != cp_b:
-                try:
-                    from prediction_engine import get_team_stats as gts
-
-                    s_a = gts(cp_a)
-                    s_b = gts(cp_b)
-                    r_a = get_team_ranking(cp_a)
-                    r_b = get_team_ranking(cp_b)
-                    rank_gap = abs(r_a - r_b)
-
-                    intensity = 1.25 if rank_gap < 15 else (0.85 if rank_gap > 50 else 1.0)
-                    base_yellow = 2.8
-                    agg_a = s_a.get("defense", 1.0) * 0.6 + s_a.get("avg_ga", 1.36) * 0.2
-                    agg_b = s_b.get("defense", 1.0) * 0.6 + s_b.get("avg_ga", 1.36) * 0.2
-
-                    y_a = base_yellow * 0.5 * intensity * agg_a
-                    y_b = base_yellow * 0.5 * intensity * agg_b
-                    total_y = y_a + y_b
-
-                    red_factor = intensity * (1.3 if total_y > 4.0 else 1.0)
-                    red_prob = min(0.08 * red_factor * 2 * 4, 0.35)
-
-                    st.markdown('<div class="retro-card">', unsafe_allow_html=True)
-                    st.markdown('<div class="retro-card-title">🟥 Card Forecast</div>', unsafe_allow_html=True)
-                    st.markdown(
-                        f'🟨 <b style="color:#ffd700;">{cp_a}</b>: ~{y_a:.1f} yellows<br>'
-                        f'🟨 <b style="color:#ffd700;">{cp_b}</b>: ~{y_b:.1f} yellows<br>'
-                        f'🟨 Total: ~{total_y:.1f} yellows<br>'
-                        f'🟥 Red probability: <b>{100*red_prob:.1f}%</b>',
-                        unsafe_allow_html=True,
-                    )
-                    if red_prob > 0.25:
-                        st.markdown('🟥 <b style="color:#ff3333;">HIGH red card risk! Heated match!</b>', unsafe_allow_html=True)
-                    elif red_prob > 0.15:
-                        st.markdown('🟨 <b style="color:#ffd700;">Moderate red card risk.</b>', unsafe_allow_html=True)
-                    else:
-                        st.markdown('🟩 <b style="color:#00ff88;">Low red card risk.</b>', unsafe_allow_html=True)
-                    st.markdown("</div>", unsafe_allow_html=True)
-                except Exception as e:
-                    st.error(f"Error: {e}")
-
-    # ── Clear Data ──
-    with st.expander("🗑️ Clear Recent Data"):
-        if st.button("Clear ALL recent results"):
-            for path, cols in [
-                ("data/recent_results.csv", ["date","home_team","away_team","home_score","away_score","tournament","city","country","neutral"]),
-                ("data/recent_goalscorers.csv", ["date","home_team","away_team","team","scorer","minute","own_goal","penalty"]),
-            ]:
-                pd.DataFrame(columns=cols).to_csv(path, index=False)
-            try:
-                from prediction_engine import _data
-                _data.clear_cache()
-            except Exception:
-                pass
-            get_team_list.clear()
-            st.success("🗑️ All recent data cleared!")
+        payload = safe_json(result).copy()
+        if ko_data:
+            payload["knockout"] = ko_data
+        if card_data:
+            payload["discipline"] = card_data
+        st.json(payload)
