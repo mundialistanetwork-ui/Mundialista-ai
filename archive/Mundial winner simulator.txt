@@ -1,0 +1,2 @@
+Mundial winner simulator
+winner of Mundial with different factors like red cards per team, goals scored low/high rated defences, coach influence! 

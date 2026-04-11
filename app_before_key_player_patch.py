@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from prediction_engine import predict, get_all_teams, get_team_ranking, clean_match_type
+from prediction_engine import predict, get_all_teams, get_team_ranking
 from chart_generator import generate_all_charts
 
 BASE_DIR = Path(__file__).parent
@@ -286,107 +286,6 @@ html, body, [class*="css"] {
     color: #0a0a2e !important;
     border-color: #00f0ff !important;
 }
-.retro-spotlight {
-position: relative;
-background: linear-gradient(180deg, #2a103a 0%, #140a28 100%);
-border: 3px solid #ffd700;
-border-radius: 18px;
-padding: 24px;
-margin: 14px 0 18px 0;
-box-shadow: 0 0 22px rgba(255, 215, 0, 0.22);
-overflow: hidden;
-}
-.retro-spotlight::before {
-content: "";
-position: absolute;
-inset: 0;
-background: repeating-linear-gradient(
-to bottom,
-rgba(255,255,255,0.03),
-rgba(255,255,255,0.03) 2px,
-transparent 2px,
-transparent 4px
-);
-opacity: 0.16;
-pointer-events: none;
-}
-.retro-spotlight-title {
-position: relative;
-z-index: 1;
-color: #ffd700;
-font-size: 1.45rem;
-font-weight: 900;
-text-transform: uppercase;
-letter-spacing: 2px;
-text-shadow: 2px 2px 0 #ff6600, 0 0 14px rgba(255,215,0,0.35);
-margin-bottom: 12px;
-}
-.retro-spotlight-text {
-position: relative;
-z-index: 1;
-color: #e6e6ff;
-font-size: 1rem;
-line-height: 1.75;
-font-family: 'Trebuchet MS', sans-serif;
-}
-.retro-neon-cyan {
-color: #00f0ff;
-font-weight: 900;
-text-shadow: 0 0 10px rgba(0,240,255,0.35);
-}
-.retro-neon-pink {
-color: #ff00aa;
-font-weight: 900;
-text-shadow: 0 0 10px rgba(255,0,170,0.35);
-}
-.retro-neon-gold {
-color: #ffd700;
-font-weight: 900;
-text-shadow: 0 0 10px rgba(255,215,0,0.35);
-}
-.retro-alert {
-position: relative;
-z-index: 1;
-margin-top: 16px;
-padding: 12px 14px;
-border-left: 4px solid #00f0ff;
-background: rgba(0,240,255,0.08);
-color: #88eeff;
-font-weight: 800;
-letter-spacing: 1px;
-text-transform: uppercase;
-border-radius: 0 10px 10px 0;
-}
-.retro-prompt-box {
-background: #0a0a2e;
-border: 2px solid #ff00aa;
-border-radius: 12px;
-padding: 14px;
-color: #ffd700;
-font-family: "Courier New", monospace;
-box-shadow: 0 0 14px rgba(255,0,170,0.15);
-white-space: pre-wrap;
-}
-.retro-mini-stat {
-display: inline-block;
-margin: 6px 10px 6px 0;
-padding: 8px 12px;
-border-radius: 10px;
-background: linear-gradient(180deg, #1a1a40, #0a0a2e);
-border: 1px solid #00f0ff;
-color: #e6faff;
-font-size: 0.9rem;
-font-weight: 700;
-}
-.retro-quote {
-margin-top: 14px;
-padding: 12px 14px;
-border-left: 4px solid #ffd700;
-background: rgba(255,215,0,0.06);
-color: #ffe8a3;
-font-style: italic;
-border-radius: 0 10px 10px 0;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -570,93 +469,6 @@ def compute_card_risk(team_a, team_b, result, knockout=False):
     draw_factor = draw / 100.0
     xg_total = float(result.get("team_a_lambda", 1.2)) + float(result.get("team_b_lambda", 1.1))
 
-    heat_index = 4.8 + 2.0 * closeness + 1.0 * draw_factor
-    if knockout:
-        heat_index += 0.9
-    if xg_total < 2.3:
-        heat_index += 0.4
-    elif xg_total > 3.2:
-        heat_index -= 0.2
-    heat_index = float(np.clip(heat_index, 1.0, 10.0))
-
-    total_yellows = 2.6 + 0.38 * heat_index
-    red_prob = float(np.clip(0.05 + 0.025 * max(0.0, heat_index - 4.0), 0.05, 0.30))
-
-    da = float(result.get("team_a_def_boost", 1.0))
-    db = float(result.get("team_b_def_boost", 1.0))
-    split_a = float(np.clip(0.5 + (da - db) * 0.08, 0.40, 0.60))
-    split_b = 1.0 - split_a
-
-    if red_prob >= 0.22:
-        risk_label = "High"
-    elif red_prob >= 0.14:
-        risk_label = "Moderate"
-    else:
-        risk_label = "Low"
-
-    return {
-        "heat_index": round(heat_index, 1),
-        "yellows_a": round(total_yellows * split_a, 1),
-        "yellows_b": round(total_yellows * split_b, 1),
-        "total_yellows": round(total_yellows, 1),
-        "red_prob": round(red_prob * 100, 1),
-        "risk_label": risk_label,
-    }
-
-    heat_index = 4.8 + 2.0 * closeness + 1.0 * draw_factor
-    if knockout:
-        heat_index += 0.9
-    if xg_total < 2.3:
-        heat_index += 0.4
-    elif xg_total > 3.2:
-        heat_index -= 0.2
-    heat_index = float(np.clip(heat_index, 1.0, 10.0))
-
-    total_yellows = 2.6 + 0.38 * heat_index
-    red_prob = float(np.clip(0.05 + 0.025 * max(0.0, heat_index - 4.0), 0.05, 0.30))
-
-    da = float(result.get("team_a_def_boost", 1.0))
-    db = float(result.get("team_b_def_boost", 1.0))
-    split_a = float(np.clip(0.5 + (da - db) * 0.08, 0.40, 0.60))
-    split_b = 1.0 - split_a
-
-    if red_prob >= 0.22:
-        risk_label = "High"
-    elif red_prob >= 0.14:
-        risk_label = "Moderate"
-    else:
-        risk_label = "Low"
-
-    return {
-        "heat_index": round(heat_index, 1),
-        "yellows_a": round(total_yellows * split_a, 1),
-        "yellows_b": round(total_yellows * split_b, 1),
-        "total_yellows": round(total_yellows, 1),
-        "red_prob": round(red_prob * 100, 1),
-        "risk_label": risk_label,
-    }
-
-
-def format_key_players(players):
-    lines = []
-    for p in players[:5]:
-        if isinstance(p, dict):
-            name = p.get("name", "Unknown")
-            tier = p.get("tier_label") or p.get("tier") or ""
-            role = p.get("role", "")
-            details = []
-            if tier:
-                details.append(str(tier).title())
-            if role:
-                details.append(str(role).title())
-            if details:
-                lines.append(f"- {name} ({', '.join(details)})")
-            else:
-                lines.append(f"- {name}")
-        else:
-            lines.append(f"- {p}")
-    return lines
-
 def build_simple_insight(result, team_a, team_b, knockout=False, ko_data=None):
     a = float(result.get("team_a_win", 0.0))
     b = float(result.get("team_b_win", 0.0))
@@ -727,175 +539,8 @@ def build_simple_insight(result, team_a, team_b, knockout=False, ko_data=None):
         "red_prob": round(red_prob * 100, 1),
         "risk_label": risk_label,
     }
-def build_simple_insight(result, team_a, team_b, knockout=False, ko_data=None):
-    a = float(result.get("team_a_win", 0.0))
-    b = float(result.get("team_b_win", 0.0))
-    d = float(result.get("draw", 0.0))
-    la = float(result.get("team_a_lambda", 0.0))
-    lb = float(result.get("team_b_lambda", 0.0))
 
-    lines = []
-
-    if abs(a - b) <= 6:
-        lines.append(f"🤜🤛 {team_a} and {team_b} look closely matched.")
-    elif a > b:
-        lines.append(f"📈 {team_a} hold the edge on the 90-minute model.")
-    else:
-        lines.append(f"📈 {team_b} hold the edge on the 90-minute model.")
-
-    total_xg = la + lb
-    if total_xg >= 3.0:
-        lines.append(f"🔥 The model expects a relatively open game ({total_xg:.1f} total xG).")
-    elif total_xg <= 2.2:
-        lines.append(f"🔒 This projects as a tighter tactical contest ({total_xg:.1f} total xG).")
-    else:
-        lines.append(f"⚽ Expect a balanced scoring profile ({total_xg:.1f} total xG).")
-
-    if d >= 27:
-        lines.append("🤝 Draw risk is meaningful after 90 minutes.")
-
-    if knockout and ko_data:
-        draw90 = float(ko_data.get("draw_after_90", 0.0))
-        pens = float(ko_data.get("team_a_win_pens", 0.0)) + float(ko_data.get("team_b_win_pens", 0.0))
-        if draw90 >= 28:
-            lines.append("⏳ Extra time is a realistic path here.")
-        if pens >= 10:
-            lines.append("🎯 Penalties are a meaningful possibility.")
-
-    return " ".join(lines)
-
-
-@st.cache_data(ttl=300)
-def get_underdog_candidates():
-    fallback = ["Panama", "Jamaica", "Georgia", "Cape Verde", "Uzbekistan"]
-
-    try:
-        rankings = pd.read_csv(DATA_DIR / "rankings.csv")
-        if rankings.empty or "country_full" not in rankings.columns:
-            return fallback
-
-        rank_col = None
-        for c in rankings.columns:
-            c_low = c.lower().strip()
-            if c_low in ["rank", "ranking", "fifa_rank"]:
-                rank_col = c
-                break
-
-        if rank_col is None:
-            teams = sorted(rankings["country_full"].dropna().unique().tolist())
-            return teams[:10] if teams else fallback
-
-        df = rankings[["country_full", rank_col]].copy()
-        df = df.dropna(subset=["country_full"])
-        df[rank_col] = pd.to_numeric(df[rank_col], errors="coerce")
-        df = df.dropna(subset=[rank_col])
-
-        df = df[(df[rank_col] >= 26) & (df[rank_col] <= 80)].sort_values(rank_col)
-
-        teams = df["country_full"].dropna().unique().tolist()
-        return teams[:15] if teams else fallback
-
-    except Exception:
-        return fallback
-
-
-def get_team_rank_safe(team):
-    try:
-        rank = get_team_ranking(team)
-        if rank is None:
-            return "N/A"
-        return rank
-    except Exception:
-        return "N/A"
-
-
-def build_underdog_prompt(team, rank, story_mode="poster"):
-    if story_mode == "poster":
-        return (
-            f"80s retro football poster, {team} national team players celebrating, "
-            f"neon gold title 'THE UNDERDOG STORY WC 2026', VHS glitch effect, "
-            f"synthwave stadium lights, cinematic sports magazine cover, "
-            f"bold retro typography, electric blue and hot pink accents, "
-            f"heroic pose, dramatic shadows, rank #{rank}"
-        )
-    return (
-        f"1980s football broadcast still, {team} as World Cup underdog, "
-        f"retro television graphics, analog VHS distortion, glowing scoreboard, "
-        f"neon lights, crowd atmosphere, cinematic composition"
-    )
-
-
-def generate_underdog_story(team, rank):
-    rank_txt = f"Rank #{rank}" if str(rank) != "N/A" else "ranking signal unstable"
-
-    return f"""
-Somewhere between static, stadium lights, and football destiny... <span class="retro-neon-cyan">{team}</span> have entered the Mundialista signal.
-
-They are not the giants. They are not the automatic headline favorites. But in a <span class="retro-neon-pink">48-team World Cup</span>, chaos travels fast — and belief travels even faster.
-
-The model scans the field and detects an outsider with tournament voltage. {team} arrive with ambition, edge, and just enough mystery to make stronger nations uncomfortable.
-
-Status: <span class="retro-neon-gold">{rank_txt}</span>.
-
-If the bracket bends, if momentum catches fire, and if one big night changes the story... <span class="retro-neon-cyan">{team}</span> could become the name nobody wanted to face.
-"""
-
-
-def render_underdog_spotlight():
-    st.markdown("### 🌟 UNDERDOG OF THE WEEK — VHS SPOTLIGHT")
-
-    underdogs = get_underdog_candidates()
-    if not underdogs:
-        st.info("No underdog candidates available.")
-        return
-
-    default_team = "Panama" if "Panama" in underdogs else underdogs[0]
-    selected = st.selectbox(
-        "🎮 Choose your fighter",
-        underdogs,
-        index=underdogs.index(default_team),
-        key="underdog_select"
-    )
-
-    rank = get_team_rank_safe(selected)
-
-    c1, c2 = st.columns([2, 1])
-    with c1:
-        st.markdown(
-            f"""
-            <div class="retro-mini-stat">📡 TEAM SIGNAL: <span class="retro-neon-cyan">{selected}</span></div>
-            <div class="retro-mini-stat">🏆 FIFA RANK: <span class="retro-neon-gold">{rank}</span></div>
-            <div class="retro-mini-stat">📼 MODE: <span class="retro-neon-pink">VHS SPOTLIGHT</span></div>
-            """,
-            unsafe_allow_html=True
-        )
-    with c2:
-        generate_story = st.button("📼 Generate 80's Story", key="underdog_btn")
-
-    if generate_story:
-        story = generate_underdog_story(selected, rank)
-        prompt = build_underdog_prompt(selected, rank)
-
-        st.markdown(
-            f"""
-            <div class="retro-spotlight">
-                <div class="retro-spotlight-title">📡 1986 Style Transmission</div>
-                <div class="retro-spotlight-text">{story}</div>
-                <div class="retro-alert">Model Alert: Underdog Voltage Detected ⚡</div>
-                <div class="retro-quote">"Tonight's outsider could become tomorrow's tournament problem."</div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown("#### 🎨 Poster Prompt")
-        st.markdown(
-            f'<div class="retro-prompt-box">{prompt}</div>',
-            unsafe_allow_html=True
-        )
-
-
-st.title("⚽ Mundialista MI")
+st.title("⚽ Mundialista AI")
 st.caption("World Cup 2026 Match Intelligence")
 
 teams = get_team_list()
@@ -955,7 +600,7 @@ if "result" in st.session_state:
     xgb = float(result.get("team_b_lambda", 0.0))
     rk_a = result.get("team_a_rank", "N/A")
     rk_b = result.get("team_b_rank", "N/A")
-    match_type = clean_match_type(result.get("match_type", "Match"))
+    match_type = result.get("match_type", "Match")
     top_scores = result.get("top_scores", [])[:5]
 
     st.markdown(f"## {da} vs {db}")
@@ -989,22 +634,22 @@ if "result" in st.session_state:
     def_a = float(result.get("team_a_def_boost", 1.0))
     def_b = float(result.get("team_b_def_boost", 1.0))
 
-    st.markdown("### 🌟 Key Player Impact")
+    st.markdown("### 🌟 Star Player Impact")
     sa, sb = st.columns(2)
     with sa:
         st.markdown(f"**{da}** — ATK x{boost_a:.2f} | DEF x{def_a:.2f}")
         if stars_a:
-            for line in format_key_players(stars_a):
-                st.markdown(line)
+            for p in stars_a[:5]:
+                st.markdown(f"- {p}")
         else:
-            st.caption("No key player data")
+            st.caption("No star player data")
     with sb:
         st.markdown(f"**{db}** — ATK x{boost_b:.2f} | DEF x{def_b:.2f}")
         if stars_b:
-            for line in format_key_players(stars_b):
-                st.markdown(line)
+            for p in stars_b[:5]:
+                st.markdown(f"- {p}")
         else:
-            st.caption("No key player data")
+            st.caption("No star player data")
 
     if top_scores:
         st.markdown("### 🎯 Most Likely Scorelines")
@@ -1098,6 +743,3 @@ if "result" in st.session_state:
         if card_data:
             payload["discipline"] = card_data
         st.json(payload)
-
-st.markdown("---")
-render_underdog_spotlight()
