@@ -1,4 +1,4 @@
-﻿"""
+"""
 Mundialista AI - Prediction Engine v7
 Dixon-Coles Poisson model with ELO blending, star impacts, and Monte Carlo simulation.
 """
@@ -12,6 +12,12 @@ import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 
+# -- NEW: Coaches module --
+from coaches import (
+    get_coach_data,
+    compute_coach_matchup_edge,
+    COACH_CONFIG,
+)
 # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 #  CONFIGURATION
 # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -71,11 +77,11 @@ def clean_match_type(match_type):
         "âš”ï¸ Elite Clash": "Elite Clash",
         "ðŸ“Š Clear Favorite": "Clear Favorite",
         "âš¡ Competitive Match": "Competitive Match",
-        "⚔️ Elite Clash": "Elite Clash",
-        "🔻 Total Mismatch": "Total Mismatch",
-        "📊 Clear Favorite": "Clear Favorite",
-        "🔥 Top Team Showdown": "Top Team Showdown",
-        "⚡ Competitive Match": "Competitive Match",
+        "?? Elite Clash": "Elite Clash",
+        "?? Total Mismatch": "Total Mismatch",
+        "?? Clear Favorite": "Clear Favorite",
+        "?? Top Team Showdown": "Top Team Showdown",
+        "? Competitive Match": "Competitive Match",
     }
 
     return replacements.get(s, s)
@@ -584,7 +590,8 @@ def compute_lambdas(team_a: str, team_b: str,
                     stats_a: dict, stats_b: dict,
                     rank_a: int, rank_b: int,
                     star_a: dict, star_b: dict,
-                    home: str = None) -> tuple[float, float]:
+                    coach_a: dict, coach_b: dict,
+                    home: str = None) -> tuple:
     """
     Compute expected goals (lambda) for each team.
     Blends form-based and ranking-based estimates.
@@ -622,6 +629,24 @@ def compute_lambdas(team_a: str, team_b: str,
     if avg_star_def > 0:
         lam_a *= avg_star_def / star_b["defense"] if star_b["defense"] > 0 else 1.0
         lam_b *= avg_star_def / star_a["defense"] if star_a["defense"] > 0 else 1.0
+
+    # ????????????????????????????????????????
+    #  NEW: COACHES IMPACT
+    # ????????????????????????????????????????
+    #
+    # Layer 1: Coach's attacking system boosts own goal creation
+    lam_a *= coach_a["attack_mult"]
+    lam_b *= coach_b["attack_mult"]
+    #
+    # Layer 2: Coach's defensive organization reduces OPPONENT's goals
+    lam_a *= coach_b["defense_mult"]
+    lam_b *= coach_a["defense_mult"]
+    #
+    # Layer 3: Tier gap bonus (better coach gets an extra edge)
+    edge_a, edge_b = compute_coach_matchup_edge(coach_a, coach_b)
+    lam_a *= edge_a
+    lam_b *= edge_b
+    # ????????????????????????????????????????
 
     # â”€â”€ Home advantage â”€â”€
     if home == team_a:
@@ -693,11 +718,15 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
     points_b = get_team_points(team_b)
     star_a = get_team_star_impact(team_a)
     star_b = get_team_star_impact(team_b)
+    coach_a = get_coach_data(team_a, DATA_DIR)
+    coach_b = get_coach_data(team_b, DATA_DIR)
 
     # â”€â”€ Compute expected goals â”€â”€
     lam_a, lam_b = compute_lambdas(
         team_a, team_b, stats_a, stats_b,
-        rank_a, rank_b, star_a, star_b, home
+        rank_a, rank_b, star_a, star_b,
+        coach_a, coach_b,
+        home
     )
 
     # â”€â”€ Build score matrix (analytical) â”€â”€
@@ -761,6 +790,25 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
         "team_b_def_boost": star_b["defense"],
 
         # Form stats
+
+        # ?????????????????????????????????????
+        #  NEW: COACHES DATA
+        # ?????????????????????????????????????
+        "team_a_coach": coach_a["name"],
+        "team_b_coach": coach_b["name"],
+        "team_a_coach_tier": coach_a["tier"],
+        "team_b_coach_tier": coach_b["tier"],
+        "team_a_coach_style": coach_a["style"],
+        "team_b_coach_style": coach_b["style"],
+        "team_a_coach_atk": coach_a["attack_mult"],
+        "team_a_coach_def": coach_a["defense_mult"],
+        "team_b_coach_atk": coach_b["attack_mult"],
+        "team_b_coach_def": coach_b["defense_mult"],
+        "team_a_coach_honors": coach_a["honors"],
+        "team_b_coach_honors": coach_b["honors"],
+        "team_a_coach_notes": coach_a["notes"],
+        "team_b_coach_notes": coach_b["notes"],
+
         "team_a_attack": stats_a["attack"],
         "team_a_defense": stats_a["defense"],
         "team_b_attack": stats_b["attack"],
@@ -788,7 +836,7 @@ def predict(team_a: str, team_b: str, home: str = None) -> dict:
 
 if __name__ == "__main__":
     print("=" * 55)
-    print("  MUNDIALISTA AI â€” Prediction Engine v7")
+    print("  MUNDIALISTA AI â€” Prediction Engine v8")
     print("=" * 55)
 
     result = predict("Argentina", "Brazil")
@@ -802,6 +850,34 @@ if __name__ == "__main__":
     print(f"  Expected Goals: {result['team_a_lambda']:.2f} vs {result['team_b_lambda']:.2f}")
     print(f"  Attack/Defense: {result['team_a_attack']:.3f}/{result['team_a_defense']:.3f}"
           f"  vs  {result['team_b_attack']:.3f}/{result['team_b_defense']:.3f}")
+    # -- Coaches Matchup Display --
+    print(f"\n  +--- COACHES MATCHUP -------------------------+")
+    print(f"  ¦")
+    print(f"  ¦  {result['team_a']}:")
+    print(f"  ¦    Coach: {result['team_a_coach']}")
+    print(f"  ¦    Tier:  {result['team_a_coach_tier']}")
+    print(f"  ¦    Style: {result['team_a_coach_style']}")
+    print(f"  ¦    Impact: ATK x{result['team_a_coach_atk']:.3f}"
+          f"  |  DEF x{result['team_a_coach_def']:.3f}")
+    if result['team_a_coach_honors']:
+        honors_a = ', '.join(result['team_a_coach_honors'][:3])
+        print(f"  ¦    Honors: {honors_a}")
+    if result['team_a_coach_notes']:
+        print(f"  ¦    Notes: {result['team_a_coach_notes'][:80]}")
+    print(f"  ¦")
+    print(f"  ¦  {result['team_b']}:")
+    print(f"  ¦    Coach: {result['team_b_coach']}")
+    print(f"  ¦    Tier:  {result['team_b_coach_tier']}")
+    print(f"  ¦    Style: {result['team_b_coach_style']}")
+    print(f"  ¦    Impact: ATK x{result['team_b_coach_atk']:.3f}"
+          f"  |  DEF x{result['team_b_coach_def']:.3f}")
+    if result['team_b_coach_honors']:
+        honors_b = ', '.join(result['team_b_coach_honors'][:3])
+        print(f"  ¦    Honors: {honors_b}")
+    if result['team_b_coach_notes']:
+        print(f"  ¦    Notes: {result['team_b_coach_notes'][:80]}")
+    print(f"  ¦")
+    print(f"  +---------------------------------------------+")
     print(f"\n  Simulation cross-check ({result['n_simulations']:,} runs):")
     print(f"  Win: {result['sim_team_a_win']}% | Draw: {result['sim_draw']}% | Win: {result['sim_team_b_win']}%")
     print(f"\n  Top Predicted Scorelines:")
