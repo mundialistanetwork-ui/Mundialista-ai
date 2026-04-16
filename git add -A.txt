@@ -1,3 +1,3 @@
 git add -A 
-git commit -m "Added Coaches" 
+git commit -m "updated rankings/players" 
 git push 

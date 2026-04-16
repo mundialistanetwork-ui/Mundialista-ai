@@ -19,7 +19,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.02
+      "weighted_score": 4.0
     },
     {
       "name": "Nedim Bajrami",
@@ -29,7 +29,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 3.28
+      "weighted_score": 3.25
     },
     {
       "name": "Albania Defensive Unit",
@@ -50,7 +50,7 @@
       "attack_boost": 1.197,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 10.87
+      "weighted_score": 10.8
     },
     {
       "name": "Baghdad Bounedjah",
@@ -60,7 +60,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.52
+      "weighted_score": 5.48
     },
     {
       "name": "Rais Mbolhi",
@@ -90,7 +90,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 1.97
+      "weighted_score": 1.96
     },
     {
       "name": "Andorra Defensive Unit",
@@ -111,7 +111,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.16
+      "weighted_score": 4.13
     },
     {
       "name": "Mabululu",
@@ -121,7 +121,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.22
+      "weighted_score": 2.21
     },
     {
       "name": "Angola Defensive Unit",
@@ -164,7 +164,7 @@
       "attack_boost": 1.273,
       "defense_boost": 1.0,
       "goals": 16,
-      "weighted_score": 14.62
+      "weighted_score": 14.52
     },
     {
       "name": "Lautaro Martínez",
@@ -174,7 +174,7 @@
       "attack_boost": 1.131,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 8.26
+      "weighted_score": 8.2
     },
     {
       "name": "Emiliano Martinez",
@@ -204,7 +204,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.19
+      "weighted_score": 5.16
     },
     {
       "name": "Lucas Zelarayán",
@@ -214,7 +214,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 3.55
+      "weighted_score": 3.52
     },
     {
       "name": "Armenia Defensive Unit",
@@ -246,7 +246,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.36
+      "weighted_score": 6.32
     },
     {
       "name": "Kusini Yengi",
@@ -256,7 +256,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.11
+      "weighted_score": 6.07
     },
     {
       "name": "Mathew Ryan",
@@ -286,7 +286,7 @@
       "attack_boost": 1.287,
       "defense_boost": 1.0,
       "goals": 14,
-      "weighted_score": 15.54
+      "weighted_score": 15.44
     },
     {
       "name": "Michael Gregoritsch",
@@ -296,7 +296,7 @@
       "attack_boost": 1.234,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 12.43
+      "weighted_score": 12.34
     },
     {
       "name": "Patrick Pentz",
@@ -326,7 +326,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.65
+      "weighted_score": 2.63
     },
     {
       "name": "Azerbaijan Defensive Unit",
@@ -402,7 +402,7 @@
       "attack_boost": 1.223,
       "defense_boost": 1.0,
       "goals": 18,
-      "weighted_score": 11.95
+      "weighted_score": 11.87
     },
     {
       "name": "Kevin De Bruyne",
@@ -412,7 +412,7 @@
       "attack_boost": 1.207,
       "defense_boost": 1.0,
       "goals": 11,
-      "weighted_score": 11.29
+      "weighted_score": 11.21
     },
     {
       "name": "Thibaut Courtois",
@@ -453,7 +453,7 @@
       "attack_boost": 1.081,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 6.59
+      "weighted_score": 6.54
     },
     {
       "name": "Benin Defensive Unit",
@@ -474,7 +474,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.38
+      "weighted_score": 6.33
     },
     {
       "name": "Bermuda Defensive Unit",
@@ -506,7 +506,7 @@
       "attack_boost": 1.126,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 8.12
+      "weighted_score": 8.07
     },
     {
       "name": "Carlos Lampe",
@@ -547,7 +547,7 @@
       "attack_boost": 1.26,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 13.72
+      "weighted_score": 13.63
     },
     {
       "name": "Ermedin Demirović",
@@ -557,7 +557,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.63
+      "weighted_score": 3.6
     },
     {
       "name": "Bosnia and Herzegovina Defensive Unit",
@@ -589,7 +589,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 4.91
+      "weighted_score": 4.88
     },
     {
       "name": "Raphinha",
@@ -599,7 +599,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.48
+      "weighted_score": 4.45
     },
     {
       "name": "Alisson",
@@ -651,7 +651,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 3.69
+      "weighted_score": 3.67
     },
     {
       "name": "Bulgaria Defensive Unit",
@@ -672,7 +672,7 @@
       "attack_boost": 1.084,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.67
+      "weighted_score": 6.63
     },
     {
       "name": "Dango Ouattara",
@@ -682,7 +682,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.38
+      "weighted_score": 4.35
     },
     {
       "name": "Burkina Faso Defensive Unit",
@@ -725,7 +725,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.56
+      "weighted_score": 5.52
     },
     {
       "name": "Bryan Mbeumo",
@@ -735,7 +735,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.01
+      "weighted_score": 4.98
     },
     {
       "name": "Andre Onana",
@@ -765,7 +765,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.23
+      "weighted_score": 2.21
     },
     {
       "name": "Milan Borjan",
@@ -795,7 +795,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.11
+      "weighted_score": 6.07
     },
     {
       "name": "Cape Verde Defensive Unit",
@@ -869,7 +869,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 4.81
+      "weighted_score": 4.78
     },
     {
       "name": "China PR Defensive Unit",
@@ -890,7 +890,7 @@
       "attack_boost": 1.156,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 9.19
+      "weighted_score": 9.13
     },
     {
       "name": "Luis Suárez",
@@ -900,7 +900,7 @@
       "attack_boost": 1.08,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.54
+      "weighted_score": 6.5
     },
     {
       "name": "David Ospina",
@@ -930,7 +930,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.44
+      "weighted_score": 4.41
     },
     {
       "name": "Comoros Defensive Unit",
@@ -962,7 +962,7 @@
       "attack_boost": 1.124,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 8.03
+      "weighted_score": 7.97
     },
     {
       "name": "Manfred Ugalde",
@@ -972,7 +972,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.38
+      "weighted_score": 5.34
     },
     {
       "name": "Keylor Navas",
@@ -1002,7 +1002,7 @@
       "attack_boost": 1.294,
       "defense_boost": 1.0,
       "goals": 16,
-      "weighted_score": 15.97
+      "weighted_score": 15.86
     },
     {
       "name": "Ivan Perišić",
@@ -1012,7 +1012,7 @@
       "attack_boost": 1.108,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 7.48
+      "weighted_score": 7.43
     },
     {
       "name": "Dominik Livakovic",
@@ -1053,7 +1053,7 @@
       "attack_boost": 1.095,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 7.04
+      "weighted_score": 6.99
     },
     {
       "name": "Curaçao Defensive Unit",
@@ -1074,7 +1074,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.7
+      "weighted_score": 5.66
     },
     {
       "name": "Andronikos Kakoullis",
@@ -1084,7 +1084,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.87
+      "weighted_score": 3.85
     },
     {
       "name": "Cyprus Defensive Unit",
@@ -1105,7 +1105,7 @@
       "attack_boost": 1.128,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 8.17
+      "weighted_score": 8.12
     },
     {
       "name": "Tomáš Souček",
@@ -1115,7 +1115,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.38
+      "weighted_score": 6.34
     },
     {
       "name": "Czech Republic Defensive Unit",
@@ -1136,7 +1136,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.8
+      "weighted_score": 5.76
     },
     {
       "name": "Yoane Wissa",
@@ -1146,7 +1146,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 4.83
+      "weighted_score": 4.8
     },
     {
       "name": "DR Congo Defensive Unit",
@@ -1167,7 +1167,7 @@
       "attack_boost": 1.234,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 12.42
+      "weighted_score": 12.33
     },
     {
       "name": "Gustav Isaksen",
@@ -1177,7 +1177,7 @@
       "attack_boost": 1.109,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 7.51
+      "weighted_score": 7.46
     },
     {
       "name": "Kasper Schmeichel",
@@ -1229,7 +1229,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.59
+      "weighted_score": 4.56
     },
     {
       "name": "Dominican Republic Defensive Unit",
@@ -1250,7 +1250,7 @@
       "attack_boost": 1.15,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 8.93
+      "weighted_score": 8.87
     },
     {
       "name": "Hernan Galindez",
@@ -1280,7 +1280,7 @@
       "attack_boost": 1.25,
       "defense_boost": 1.0,
       "goals": 14,
-      "weighted_score": 13.1
+      "weighted_score": 13.01
     },
     {
       "name": "Trézéguet",
@@ -1290,7 +1290,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.2
+      "weighted_score": 5.16
     },
     {
       "name": "Mohamed El-Shenawy",
@@ -1340,7 +1340,7 @@
       "attack_boost": 1.35,
       "defense_boost": 1.0,
       "goals": 26,
-      "weighted_score": 22.2
+      "weighted_score": 22.05
     },
     {
       "name": "Bukayo Saka",
@@ -1350,7 +1350,7 @@
       "attack_boost": 1.119,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 7.85
+      "weighted_score": 7.8
     },
     {
       "name": "Jordan Pickford",
@@ -1380,7 +1380,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 4.62
+      "weighted_score": 4.59
     },
     {
       "name": "Iban Salvador",
@@ -1390,7 +1390,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.54
+      "weighted_score": 4.51
     },
     {
       "name": "Equatorial Guinea Defensive Unit",
@@ -1411,7 +1411,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.83
+      "weighted_score": 4.8
     },
     {
       "name": "Henri Anier",
@@ -1421,7 +1421,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 2.25
+      "weighted_score": 2.23
     },
     {
       "name": "Estonia Defensive Unit",
@@ -1464,7 +1464,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.95
+      "weighted_score": 5.91
     },
     {
       "name": "Viljormur Davidsen",
@@ -1474,7 +1474,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 1.53
+      "weighted_score": 1.52
     },
     {
       "name": "Faroe Islands Defensive Unit",
@@ -1495,7 +1495,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 4.3
+      "weighted_score": 4.27
     },
     {
       "name": "Thomas Dunn",
@@ -1505,7 +1505,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.83
+      "weighted_score": 2.82
     },
     {
       "name": "Fiji Defensive Unit",
@@ -1526,7 +1526,7 @@
       "attack_boost": 1.086,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.75
+      "weighted_score": 6.7
     },
     {
       "name": "Joel Pohjanpalo",
@@ -1536,7 +1536,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 4.03
+      "weighted_score": 4.0
     },
     {
       "name": "Finland Defensive Unit",
@@ -1557,7 +1557,7 @@
       "attack_boost": 1.35,
       "defense_boost": 1.0,
       "goals": 27,
-      "weighted_score": 20.9
+      "weighted_score": 20.76
     },
     {
       "name": "Olivier Giroud",
@@ -1567,7 +1567,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 6.06
+      "weighted_score": 6.02
     },
     {
       "name": "Mike Maignan",
@@ -1608,7 +1608,7 @@
       "attack_boost": 1.209,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 11.37
+      "weighted_score": 11.3
     },
     {
       "name": "Pierre-Emerick Aubameyang",
@@ -1618,7 +1618,7 @@
       "attack_boost": 1.195,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 10.8
+      "weighted_score": 10.72
     },
     {
       "name": "Gabon Defensive Unit",
@@ -1639,7 +1639,7 @@
       "attack_boost": 1.156,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 9.19
+      "weighted_score": 9.13
     },
     {
       "name": "Adama Sidibeh",
@@ -1649,7 +1649,7 @@
       "attack_boost": 1.117,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 7.81
+      "weighted_score": 7.76
     },
     {
       "name": "Gambia Defensive Unit",
@@ -1670,7 +1670,7 @@
       "attack_boost": 1.235,
       "defense_boost": 1.0,
       "goals": 15,
-      "weighted_score": 12.47
+      "weighted_score": 12.39
     },
     {
       "name": "Khvicha Kvaratskhelia",
@@ -1680,7 +1680,7 @@
       "attack_boost": 1.177,
       "defense_boost": 1.0,
       "goals": 14,
-      "weighted_score": 10.06
+      "weighted_score": 10.0
     },
     {
       "name": "Georgia Defensive Unit",
@@ -1701,7 +1701,7 @@
       "attack_boost": 1.112,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 7.62
+      "weighted_score": 7.57
     },
     {
       "name": "Nick Woltemade",
@@ -1711,7 +1711,7 @@
       "attack_boost": 1.091,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.92
+      "weighted_score": 6.87
     },
     {
       "name": "Marc-Andre ter Stegen",
@@ -1741,7 +1741,7 @@
       "attack_boost": 1.128,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 8.18
+      "weighted_score": 8.12
     },
     {
       "name": "Mohammed Kudus",
@@ -1751,7 +1751,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.88
+      "weighted_score": 5.84
     },
     {
       "name": "Richard Ofori",
@@ -1792,7 +1792,7 @@
       "attack_boost": 1.12,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 7.9
+      "weighted_score": 7.85
     },
     {
       "name": "Anastasios Bakasetas",
@@ -1802,7 +1802,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.56
+      "weighted_score": 5.53
     },
     {
       "name": "Greece Defensive Unit",
@@ -1845,7 +1845,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.83
+      "weighted_score": 5.79
     },
     {
       "name": "Rubio Rubin",
@@ -1855,7 +1855,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.41
+      "weighted_score": 4.38
     },
     {
       "name": "Guatemala Defensive Unit",
@@ -1909,7 +1909,7 @@
       "attack_boost": 1.16,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 9.33
+      "weighted_score": 9.27
     },
     {
       "name": "Frantzdy Pierrot",
@@ -1919,7 +1919,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 4.76
+      "weighted_score": 4.72
     },
     {
       "name": "Haiti Defensive Unit",
@@ -1971,7 +1971,7 @@
       "attack_boost": 1.221,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 11.9
+      "weighted_score": 11.82
     },
     {
       "name": "Dominik Szoboszlai",
@@ -1981,7 +1981,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 5.85
+      "weighted_score": 5.81
     },
     {
       "name": "Hungary Defensive Unit",
@@ -2002,7 +2002,7 @@
       "attack_boost": 1.168,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 9.69
+      "weighted_score": 9.62
     },
     {
       "name": "Orri Óskarsson",
@@ -2012,7 +2012,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.06
+      "weighted_score": 6.02
     },
     {
       "name": "Iceland Defensive Unit",
@@ -2044,7 +2044,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.1
+      "weighted_score": 3.08
     },
     {
       "name": "Indonesia Defensive Unit",
@@ -2065,7 +2065,7 @@
       "attack_boost": 1.264,
       "defense_boost": 1.0,
       "goals": 15,
-      "weighted_score": 14.03
+      "weighted_score": 13.94
     },
     {
       "name": "Sardar Azmoun",
@@ -2075,7 +2075,7 @@
       "attack_boost": 1.187,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 10.48
+      "weighted_score": 10.41
     },
     {
       "name": "Alireza Beiranvand",
@@ -2105,7 +2105,7 @@
       "attack_boost": 1.273,
       "defense_boost": 1.0,
       "goals": 15,
-      "weighted_score": 14.59
+      "weighted_score": 14.49
     },
     {
       "name": "Mohanad Ali",
@@ -2115,7 +2115,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.44
+      "weighted_score": 4.41
     },
     {
       "name": "Jalal Hassan",
@@ -2145,7 +2145,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.82
+      "weighted_score": 5.78
     },
     {
       "name": "Mohammad Abu Fani",
@@ -2155,7 +2155,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.91
+      "weighted_score": 3.88
     },
     {
       "name": "Israel Defensive Unit",
@@ -2176,7 +2176,7 @@
       "attack_boost": 1.256,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 13.5
+      "weighted_score": 13.41
     },
     {
       "name": "Mateo Retegui",
@@ -2186,7 +2186,7 @@
       "attack_boost": 1.173,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 9.87
+      "weighted_score": 9.8
     },
     {
       "name": "Gianluigi Donnarumma",
@@ -2216,7 +2216,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.42
+      "weighted_score": 4.39
     },
     {
       "name": "Franck Kessié",
@@ -2226,7 +2226,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.08
+      "weighted_score": 4.06
     },
     {
       "name": "Ivory Coast Defensive Unit",
@@ -2247,7 +2247,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.97
+      "weighted_score": 5.93
     },
     {
       "name": "Jon Russell",
@@ -2257,7 +2257,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.28
+      "weighted_score": 4.25
     },
     {
       "name": "Andre Blake",
@@ -2287,7 +2287,7 @@
       "attack_boost": 1.178,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 10.1
+      "weighted_score": 10.03
     },
     {
       "name": "Daichi Kamada",
@@ -2297,7 +2297,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 6.45
+      "weighted_score": 6.41
     },
     {
       "name": "Shuichi Gonda",
@@ -2338,7 +2338,7 @@
       "attack_boost": 1.218,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 11.75
+      "weighted_score": 11.67
     },
     {
       "name": "Musa Al-Taamari",
@@ -2348,7 +2348,7 @@
       "attack_boost": 1.165,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 9.56
+      "weighted_score": 9.5
     },
     {
       "name": "Jordan Defensive Unit",
@@ -2369,7 +2369,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 2.61
+      "weighted_score": 2.59
     },
     {
       "name": "Bakhtiyar Zaynutdinov",
@@ -2379,7 +2379,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 2.22
+      "weighted_score": 2.2
     },
     {
       "name": "Kazakhstan Defensive Unit",
@@ -2400,7 +2400,7 @@
       "attack_boost": 1.081,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.58
+      "weighted_score": 6.54
     },
     {
       "name": "Michael Olunga",
@@ -2410,7 +2410,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.29
+      "weighted_score": 6.25
     },
     {
       "name": "Kenya Defensive Unit",
@@ -2431,7 +2431,7 @@
       "attack_boost": 1.164,
       "defense_boost": 1.0,
       "goals": 14,
-      "weighted_score": 9.49
+      "weighted_score": 9.43
     },
     {
       "name": "Kosovo Defensive Unit",
@@ -2452,7 +2452,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.15
+      "weighted_score": 5.11
     },
     {
       "name": "Mohammad Daham",
@@ -2462,7 +2462,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.33
+      "weighted_score": 4.3
     },
     {
       "name": "Kuwait Defensive Unit",
@@ -2483,7 +2483,7 @@
       "attack_boost": 1.088,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.81
+      "weighted_score": 6.77
     },
     {
       "name": "Kyrgyzstan Defensive Unit",
@@ -2515,7 +2515,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 4.62
+      "weighted_score": 4.59
     },
     {
       "name": "Jānis Ikaunieks",
@@ -2525,7 +2525,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 2.06
+      "weighted_score": 2.05
     },
     {
       "name": "Latvia Defensive Unit",
@@ -2579,7 +2579,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.34
+      "weighted_score": 6.3
     },
     {
       "name": "Libya Defensive Unit",
@@ -2611,7 +2611,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.76
+      "weighted_score": 4.73
     },
     {
       "name": "Armandas Kučys",
@@ -2621,7 +2621,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.51
+      "weighted_score": 4.48
     },
     {
       "name": "Lithuania Defensive Unit",
@@ -2642,7 +2642,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 11,
-      "weighted_score": 5.49
+      "weighted_score": 5.45
     },
     {
       "name": "Danel Sinani",
@@ -2652,7 +2652,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 2.98
+      "weighted_score": 2.96
     },
     {
       "name": "Luxembourg Defensive Unit",
@@ -2684,7 +2684,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 6.52
+      "weighted_score": 6.48
     },
     {
       "name": "Madagascar Defensive Unit",
@@ -2738,7 +2738,7 @@
       "attack_boost": 1.17,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 9.76
+      "weighted_score": 9.69
     },
     {
       "name": "Lassine Sinayoko",
@@ -2748,7 +2748,7 @@
       "attack_boost": 1.081,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 6.58
+      "weighted_score": 6.54
     },
     {
       "name": "Mali Defensive Unit",
@@ -2833,7 +2833,7 @@
       "attack_boost": 1.083,
       "defense_boost": 1.0,
       "goals": 11,
-      "weighted_score": 6.64
+      "weighted_score": 6.59
     },
     {
       "name": "Moldova Defensive Unit",
@@ -2865,7 +2865,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.54
+      "weighted_score": 6.49
     },
     {
       "name": "Stevan Jovetić",
@@ -2875,7 +2875,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.29
+      "weighted_score": 3.27
     },
     {
       "name": "Montenegro Defensive Unit",
@@ -2907,7 +2907,7 @@
       "attack_boost": 1.109,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 7.53
+      "weighted_score": 7.48
     },
     {
       "name": "Youssef En-Nesyri",
@@ -2917,7 +2917,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.67
+      "weighted_score": 5.63
     },
     {
       "name": "Yassine Bounou",
@@ -2947,7 +2947,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.21
+      "weighted_score": 5.18
     },
     {
       "name": "Mozambique Defensive Unit",
@@ -2979,7 +2979,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.3
+      "weighted_score": 6.26
     },
     {
       "name": "Namibia Defensive Unit",
@@ -3011,7 +3011,7 @@
       "attack_boost": 1.287,
       "defense_boost": 1.0,
       "goals": 15,
-      "weighted_score": 15.53
+      "weighted_score": 15.43
     },
     {
       "name": "Cody Gakpo",
@@ -3021,7 +3021,7 @@
       "attack_boost": 1.28,
       "defense_boost": 1.0,
       "goals": 18,
-      "weighted_score": 15.05
+      "weighted_score": 14.95
     },
     {
       "name": "Bart Verbruggen",
@@ -3062,7 +3062,7 @@
       "attack_boost": 1.213,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 11.53
+      "weighted_score": 11.46
     },
     {
       "name": "Elijah Just",
@@ -3072,7 +3072,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.59
+      "weighted_score": 5.55
     },
     {
       "name": "Stefan Marinovic",
@@ -3102,7 +3102,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.35
+      "weighted_score": 5.31
     },
     {
       "name": "Nicaragua Defensive Unit",
@@ -3134,7 +3134,7 @@
       "attack_boost": 1.307,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 16.84
+      "weighted_score": 16.73
     },
     {
       "name": "Akor Adams",
@@ -3144,7 +3144,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.26
+      "weighted_score": 5.22
     },
     {
       "name": "Francis Uzoho",
@@ -3174,7 +3174,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 4.88
+      "weighted_score": 4.84
     },
     {
       "name": "Ri Jo-guk",
@@ -3184,7 +3184,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.15
+      "weighted_score": 4.12
     },
     {
       "name": "North Korea Defensive Unit",
@@ -3205,7 +3205,7 @@
       "attack_boost": 1.112,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 7.62
+      "weighted_score": 7.57
     },
     {
       "name": "Enis Bardhi",
@@ -3215,7 +3215,7 @@
       "attack_boost": 1.093,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 6.97
+      "weighted_score": 6.92
     },
     {
       "name": "North Macedonia Defensive Unit",
@@ -3236,7 +3236,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.52
+      "weighted_score": 6.48
     },
     {
       "name": "Dion Charles",
@@ -3246,7 +3246,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.16
+      "weighted_score": 2.15
     },
     {
       "name": "Northern Ireland Defensive Unit",
@@ -3267,7 +3267,7 @@
       "attack_boost": 1.35,
       "defense_boost": 1.0,
       "goals": 35,
-      "weighted_score": 37.38
+      "weighted_score": 37.13
     },
     {
       "name": "Alexander Sørloth",
@@ -3277,7 +3277,7 @@
       "attack_boost": 1.224,
       "defense_boost": 1.0,
       "goals": 11,
-      "weighted_score": 12.03
+      "weighted_score": 11.95
     },
     {
       "name": "Norway Defensive Unit",
@@ -3298,7 +3298,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.55
+      "weighted_score": 5.52
     },
     {
       "name": "Muhsen Al-Ghassani",
@@ -3308,7 +3308,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.24
+      "weighted_score": 4.22
     },
     {
       "name": "Oman Defensive Unit",
@@ -3340,7 +3340,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 5.46
+      "weighted_score": 5.43
     },
     {
       "name": "Wessam Abou Ali",
@@ -3350,7 +3350,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.9
+      "weighted_score": 3.87
     },
     {
       "name": "Palestine Defensive Unit",
@@ -3371,7 +3371,7 @@
       "attack_boost": 1.138,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 8.52
+      "weighted_score": 8.46
     },
     {
       "name": "José Fajardo",
@@ -3381,7 +3381,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.33
+      "weighted_score": 6.29
     },
     {
       "name": "Luis Mejia",
@@ -3411,7 +3411,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.5
+      "weighted_score": 3.47
     },
     {
       "name": "Papua New Guinea Defensive Unit",
@@ -3432,7 +3432,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.47
+      "weighted_score": 4.44
     },
     {
       "name": "Julio Enciso",
@@ -3442,7 +3442,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.92
+      "weighted_score": 3.89
     },
     {
       "name": "Antony Silva",
@@ -3503,7 +3503,7 @@
       "attack_boost": 1.24,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 12.69
+      "weighted_score": 12.6
     },
     {
       "name": "Piotr Zieliński",
@@ -3513,7 +3513,7 @@
       "attack_boost": 1.111,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 7.58
+      "weighted_score": 7.53
     },
     {
       "name": "Wojciech Szczesny",
@@ -3543,7 +3543,7 @@
       "attack_boost": 1.35,
       "defense_boost": 1.0,
       "goals": 26,
-      "weighted_score": 20.97
+      "weighted_score": 20.83
     },
     {
       "name": "Bruno Fernandes",
@@ -3553,7 +3553,7 @@
       "attack_boost": 1.22,
       "defense_boost": 1.0,
       "goals": 15,
-      "weighted_score": 11.85
+      "weighted_score": 11.77
     },
     {
       "name": "Diogo Costa",
@@ -3594,7 +3594,7 @@
       "attack_boost": 1.251,
       "defense_boost": 1.0,
       "goals": 14,
-      "weighted_score": 13.15
+      "weighted_score": 13.07
     },
     {
       "name": "Akram Afif",
@@ -3604,7 +3604,7 @@
       "attack_boost": 1.151,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 8.97
+      "weighted_score": 8.91
     },
     {
       "name": "Saad Al-Sheeb",
@@ -3634,7 +3634,7 @@
       "attack_boost": 1.157,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 9.23
+      "weighted_score": 9.16
     },
     {
       "name": "Evan Ferguson",
@@ -3644,7 +3644,7 @@
       "attack_boost": 1.127,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 8.13
+      "weighted_score": 8.07
     },
     {
       "name": "Republic of Ireland Defensive Unit",
@@ -3665,7 +3665,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 6.24
+      "weighted_score": 6.2
     },
     {
       "name": "Denis Drăguș",
@@ -3675,7 +3675,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 6.1
+      "weighted_score": 6.06
     },
     {
       "name": "Romania Defensive Unit",
@@ -3751,7 +3751,7 @@
       "attack_boost": 1.082,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 6.6
+      "weighted_score": 6.56
     },
     {
       "name": "Saint Vincent and the Grenadines Defensive Unit",
@@ -3794,7 +3794,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.38
+      "weighted_score": 6.34
     },
     {
       "name": "Saleh Al-Shehri",
@@ -3804,7 +3804,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 4.37
+      "weighted_score": 4.34
     },
     {
       "name": "Mohammed Al-Owais",
@@ -3834,7 +3834,7 @@
       "attack_boost": 1.192,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 10.69
+      "weighted_score": 10.61
     },
     {
       "name": "Ryan Christie",
@@ -3844,7 +3844,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.54
+      "weighted_score": 4.51
     },
     {
       "name": "Angus Gunn",
@@ -3874,7 +3874,7 @@
       "attack_boost": 1.143,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 8.67
+      "weighted_score": 8.61
     },
     {
       "name": "Pape Matar Sarr",
@@ -3884,7 +3884,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.53
+      "weighted_score": 5.5
     },
     {
       "name": "Edouard Mendy",
@@ -3914,7 +3914,7 @@
       "attack_boost": 1.248,
       "defense_boost": 1.0,
       "goals": 18,
-      "weighted_score": 13.03
+      "weighted_score": 12.95
     },
     {
       "name": "Dušan Vlahović",
@@ -3924,7 +3924,7 @@
       "attack_boost": 1.103,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 7.32
+      "weighted_score": 7.27
     },
     {
       "name": "Predrag Rajkovic",
@@ -3998,7 +3998,7 @@
       "attack_boost": 1.099,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 7.18
+      "weighted_score": 7.14
     },
     {
       "name": "Ivan Schranz",
@@ -4008,7 +4008,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.91
+      "weighted_score": 4.88
     },
     {
       "name": "Slovakia Defensive Unit",
@@ -4029,7 +4029,7 @@
       "attack_boost": 1.099,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 7.19
+      "weighted_score": 7.14
     },
     {
       "name": "Adam Gnezda Čerin",
@@ -4039,7 +4039,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.0
+      "weighted_score": 2.98
     },
     {
       "name": "Slovenia Defensive Unit",
@@ -4082,7 +4082,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.84
+      "weighted_score": 4.8
     },
     {
       "name": "Oswin Appollis",
@@ -4092,7 +4092,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.68
+      "weighted_score": 4.65
     },
     {
       "name": "South Africa Defensive Unit",
@@ -4113,7 +4113,7 @@
       "attack_boost": 1.199,
       "defense_boost": 1.0,
       "goals": 13,
-      "weighted_score": 10.96
+      "weighted_score": 10.89
     },
     {
       "name": "Lee Kang-in",
@@ -4123,7 +4123,7 @@
       "attack_boost": 1.124,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 8.05
+      "weighted_score": 8.0
     },
     {
       "name": "Kim Seung-gyu",
@@ -4164,7 +4164,7 @@
       "attack_boost": 1.262,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 13.88
+      "weighted_score": 13.79
     },
     {
       "name": "Mikel Merino",
@@ -4174,7 +4174,7 @@
       "attack_boost": 1.26,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 13.77
+      "weighted_score": 13.68
     },
     {
       "name": "Unai Simon",
@@ -4226,7 +4226,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.92
+      "weighted_score": 5.88
     },
     {
       "name": "Suriname Defensive Unit",
@@ -4247,7 +4247,7 @@
       "attack_boost": 1.306,
       "defense_boost": 1.0,
       "goals": 17,
-      "weighted_score": 16.79
+      "weighted_score": 16.68
     },
     {
       "name": "Anthony Elanga",
@@ -4257,7 +4257,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.53
+      "weighted_score": 4.5
     },
     {
       "name": "Sweden Defensive Unit",
@@ -4278,7 +4278,7 @@
       "attack_boost": 1.213,
       "defense_boost": 1.0,
       "goals": 10,
-      "weighted_score": 11.54
+      "weighted_score": 11.47
     },
     {
       "name": "Zeki Amdouni",
@@ -4288,7 +4288,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 5.62
+      "weighted_score": 5.58
     },
     {
       "name": "Yann Sommer",
@@ -4318,7 +4318,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 3.73
+      "weighted_score": 3.7
     },
     {
       "name": "Syria Defensive Unit",
@@ -4350,7 +4350,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 2.85
+      "weighted_score": 2.83
     },
     {
       "name": "Tahiti Defensive Unit",
@@ -4404,7 +4404,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 3.8
+      "weighted_score": 3.77
     },
     {
       "name": "Thailand Defensive Unit",
@@ -4447,7 +4447,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.43
+      "weighted_score": 5.4
     },
     {
       "name": "Marvin Phillip",
@@ -4477,7 +4477,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 4.69
+      "weighted_score": 4.66
     },
     {
       "name": "Aymen Dahmen",
@@ -4507,7 +4507,7 @@
       "attack_boost": 1.224,
       "defense_boost": 1.0,
       "goals": 11,
-      "weighted_score": 12.01
+      "weighted_score": 11.93
     },
     {
       "name": "Kenan Yıldız",
@@ -4517,7 +4517,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.99
+      "weighted_score": 5.95
     },
     {
       "name": "Altay Bayindir",
@@ -4569,7 +4569,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.04
+      "weighted_score": 5.01
     },
     {
       "name": "Uganda Defensive Unit",
@@ -4590,7 +4590,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 6.16
+      "weighted_score": 6.12
     },
     {
       "name": "Ruslan Malinovskyi",
@@ -4600,7 +4600,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.46
+      "weighted_score": 5.42
     },
     {
       "name": "Anatoliy Trubin",
@@ -4630,7 +4630,7 @@
       "attack_boost": 1.122,
       "defense_boost": 1.0,
       "goals": 8,
-      "weighted_score": 7.95
+      "weighted_score": 7.9
     },
     {
       "name": "Sultan Adil",
@@ -4640,7 +4640,7 @@
       "attack_boost": 1.104,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 7.37
+      "weighted_score": 7.32
     },
     {
       "name": "United Arab Emirates Defensive Unit",
@@ -4661,7 +4661,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 2.49
+      "weighted_score": 2.47
     },
     {
       "name": "Matt Turner",
@@ -4702,7 +4702,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 4,
-      "weighted_score": 5.01
+      "weighted_score": 4.97
     },
     {
       "name": "Darwin Núñez",
@@ -4712,7 +4712,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 4.97
+      "weighted_score": 4.94
     },
     {
       "name": "Sergio Rochet",
@@ -4742,7 +4742,7 @@
       "attack_boost": 1.087,
       "defense_boost": 1.0,
       "goals": 6,
-      "weighted_score": 6.77
+      "weighted_score": 6.73
     },
     {
       "name": "Eldor Shomurodov",
@@ -4752,7 +4752,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 5.5
+      "weighted_score": 5.46
     },
     {
       "name": "Eldorbek Suyunov",
@@ -4793,7 +4793,7 @@
       "attack_boost": 1.112,
       "defense_boost": 1.0,
       "goals": 9,
-      "weighted_score": 7.63
+      "weighted_score": 7.58
     },
     {
       "name": "Rafael Romo",
@@ -4834,7 +4834,7 @@
       "attack_boost": 1.193,
       "defense_boost": 1.0,
       "goals": 12,
-      "weighted_score": 10.71
+      "weighted_score": 10.64
     },
     {
       "name": "Brennan Johnson",
@@ -4844,7 +4844,7 @@
       "attack_boost": 1.082,
       "defense_boost": 1.0,
       "goals": 7,
-      "weighted_score": 6.6
+      "weighted_score": 6.56
     },
     {
       "name": "Danny Ward",
@@ -4885,7 +4885,7 @@
       "attack_boost": 1.0,
       "defense_boost": 1.0,
       "goals": 5,
-      "weighted_score": 3.99
+      "weighted_score": 3.96
     },
     {
       "name": "Zambia Defensive Unit",
