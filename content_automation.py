@@ -453,6 +453,15 @@ def generate_match_preview(home: str, away: str, a: dict) -> str:
 
         "",
 
+        "",
+        "COACHES MATCHUP:",
+        f"  {home}: {a.get('home_coach', 'Unknown')} ({a.get('home_coach_tier', 'N/A')})",
+        f"    Style: {a.get('home_coach_style', 'N/A')}",
+        f"    Impact: ATK x{a.get('home_coach_atk', 1.0):.3f} | DEF x{a.get('home_coach_def', 1.0):.3f}",
+        f"  {away}: {a.get('away_coach', 'Unknown')} ({a.get('away_coach_tier', 'N/A')})",
+        f"    Style: {a.get('away_coach_style', 'N/A')}",
+        f"    Impact: ATK x{a.get('away_coach_atk', 1.0):.3f} | DEF x{a.get('away_coach_def', 1.0):.3f}",
+        "",
         f" Upset probability: {a['upset_prob']:.1f}% ({a['underdog']})",
 
         "",

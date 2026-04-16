@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mundialista AI Report — Bosnia and Herzegovina vs Belgium</title>
+<style>
+:root {
+    --green: #0F5C4D;
+    --green2: #0B6B57;
+    --gold: #C9A227;
+    --ivory: #F8F7F2;
+    --white: #FFFFFF;
+    --text: #1E1E1E;
+    --muted: #6B7280;
+    --border: rgba(15, 92, 77, 0.12);
+    --shadow: 0 8px 24px rgba(0,0,0,0.05);
+    --radius: 20px;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: var(--ivory);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+.container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+}
+.hero {
+    background: linear-gradient(135deg, var(--green), var(--green2));
+    color: white;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+.hero h1 {
+    margin: 0 0 6px 0;
+    font-size: 2.25rem;
+}
+.hero p {
+    margin: 6px 0;
+    color: rgba(255,255,255,0.88);
+}
+.hero .tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(201,162,39,0.18);
+    border: 1px solid rgba(201,162,39,0.3);
+    color: #F7E7B0;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+}
+.section-title {
+    color: var(--green);
+    margin: 0 0 14px 0;
+    font-size: 1.1rem;
+}
+.vs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+.team {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--green);
+}
+.rank {
+    color: var(--muted);
+    margin-top: 4px;
+}
+.vs-badge {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(201,162,39,0.12);
+    border: 1px solid rgba(201,162,39,0.25);
+    color: #8A6B00;
+    font-weight: 800;
+}
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+}
+.metric {
+    background: #FCFCFA;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+}
+.metric .label {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+}
+.metric .value {
+    color: var(--green);
+    font-size: 1.45rem;
+    font-weight: 800;
+}
+.badges {
+    margin-top: 14px;
+}
+.badge {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 999px;
+    margin-right: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.badge-green {
+    background: rgba(15,92,77,0.10);
+    color: var(--green);
+    border: 1px solid rgba(15,92,77,0.18);
+}
+.badge-gold {
+    background: rgba(201,162,39,0.14);
+    color: #8A6B00;
+    border: 1px solid rgba(201,162,39,0.25);
+}
+.insight {
+    border-left: 4px solid var(--gold);
+    background: #FFFDF6;
+    padding: 14px 16px;
+    border-radius: 12px;
+    line-height: 1.55;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+.chart-card img {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+}
+.score-pill {
+    display: inline-block;
+    padding: 9px 12px;
+    border-radius: 12px;
+    background: #FAFAF7;
+    border: 1px solid var(--border);
+    margin: 6px 8px 0 0;
+    color: var(--green);
+    font-weight: 700;
+}
+.footer {
+    text-align: center;
+    color: var(--muted);
+    margin-top: 24px;
+    font-size: 0.9rem;
+}
+@media (max-width: 900px) {
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .vs {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>Mundialista AI</h1>
+        <p>International Match Intelligence</p>
+        <p>Bosnia and Herzegovina vs Belgium</p>
+        <span class="tag">Refined match forecast report</span>
+    </div>
+
+    <div class="card">
+        <div class="vs">
+            <div>
+                <div class="team">Bosnia and Herzegovina</div>
+                <div class="rank">FIFA Rank: 71</div>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div style="text-align:right;">
+                <div class="team">Belgium</div>
+                <div class="rank">FIFA Rank: 9</div>
+            </div>
+        </div>
+
+        <div class="badges">
+            <span class="badge badge-gold">ðŸ“Š Clear Favorite</span>
+            <span class="badge badge-green">Monte Carlo Forecast</span>
+        </div>
+
+        <div class="metrics">
+            <div class="metric"><div class="label">Bosnia and Herzegovina Win</div><div class="value">21.3%</div></div>
+            <div class="metric"><div class="label">Draw</div><div class="value" style="color:#8A6B00;">24.8%</div></div>
+            <div class="metric"><div class="label">Belgium Win</div><div class="value">53.9%</div></div>
+            <div class="metric"><div class="label">Bosnia and Herzegovina ?</div><div class="value">0.85</div></div>
+            <div class="metric"><div class="label">Belgium ?</div><div class="value">1.54</div></div>
+            <div class="metric"><div class="label">Model</div><div class="value" style="font-size:1.1rem;">Poisson + Form</div></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title">Model Insight</h3>
+        <div class="insight">ðŸ“Š Clear Favorite. Belgium hold the model edge. The draw remains a meaningful live outcome. Expected goals sit in a moderate range.</div>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title">Most Likely Scorelines</h3>
+        <div><span class="score-pill">0-1  -  14.57</span><span class="score-pill">1-1  -  11.53</span><span class="score-pill">0-2  -  10.83</span><span class="score-pill">1-2  -  9.23</span><span class="score-pill">0-0  -  8.69</span><span class="score-pill">1-0  -  8.3</span></div>
+    </div>
+
+    <div class="grid">
+        <div class="card chart-card">
+            <h3 class="section-title">Probability Profile</h3>
+            <img src="bosnia_and_herzegovina_vs_belgium_probability.png" alt="Probability chart">
+        </div>
+        <div class="card chart-card">
+            <h3 class="section-title">Score Matrix</h3>
+            <img src="bosnia_and_herzegovina_vs_belgium_matrix.png" alt="Score matrix chart">
+        </div>
+        <div class="card chart-card">
+            <h3 class="section-title">Top Scorelines</h3>
+            <img src="bosnia_and_herzegovina_vs_belgium_top_scores.png" alt="Top scores chart">
+        </div>
+        <div class="card chart-card">
+            <h3 class="section-title">Goal Distribution</h3>
+            <img src="bosnia_and_herzegovina_vs_belgium_goals.png" alt="Goal distribution chart">
+        </div>
+    </div>
+
+    <div class="footer">
+        Mundialista AI • International football prediction system
+    </div>
+</div>
+</body>
+</html>
